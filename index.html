@@ -379,6 +379,42 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 .stop-edit-btn{width:32px;height:32px;border-radius:50%;background:var(--sand-d);border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.7;transition:opacity .2s;flex-shrink:0}
 .stop-edit-btn:active{opacity:1}
 
+
+/* ── MALA ── */
+.mala-weight-bar{background:var(--white);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 4px var(--sh)}
+.mala-weight-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-l);margin-bottom:8px;font-weight:500}
+.mala-weight-row{display:flex;align-items:center;gap:10px}
+.mala-weight-track{flex:1;height:8px;border-radius:4px;background:var(--sand-d);overflow:hidden}
+.mala-weight-fill{height:100%;border-radius:4px;background:var(--sage);transition:width .4s}
+.mala-weight-fill.warn{background:var(--gold)}
+.mala-weight-fill.over{background:var(--terr)}
+.mala-weight-num{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;min-width:48px;text-align:right}
+.mala-weight-max{font-size:11px;color:var(--ink-l)}
+.mala-grp{margin-bottom:20px}
+.mala-grp-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1.5px solid var(--sand-d)}
+.mala-grp.sec-F .mala-grp-title{color:var(--ocean-m)}
+.mala-grp.sec-L .mala-grp-title{color:#B03060}
+.mala-grp.sec-AB .mala-grp-title{color:var(--sage)}
+.mala-grp.sec-TODO{margin-top:6px}
+.mala-grp.sec-TODO .mala-grp-hdr{border-bottom-color:var(--gold)}
+.mala-grp.sec-TODO .mala-grp-title{color:var(--gold)}
+.mala-item.todo-item{border-left:3px solid var(--gold)}
+.mala-grp-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;flex:1}
+.mala-grp-prog{font-size:11px;color:var(--ink-l);font-weight:500}
+.mala-item{background:var(--white);border-radius:var(--rs);padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px var(--sh);transition:opacity .2s}
+.mala-item.done{opacity:.4}
+.mala-chk{width:24px;height:24px;border-radius:6px;border:1.5px solid var(--sand-d);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:none;font-size:14px;color:transparent;transition:all .2s}
+.mala-chk.chk{background:var(--sage);border-color:var(--sage);color:var(--white)}
+.mala-info{flex:1;min-width:0}
+.mala-name{font-weight:500;font-size:13px;margin-bottom:2px}
+.mala-tip{font-size:11px;color:var(--ink-l);line-height:1.4}
+.mala-qty{flex-shrink:0;background:var(--sand-d);border-radius:6px;padding:3px 8px;font-size:12px;font-weight:500;color:var(--ink-m)}
+.mala-who{flex-shrink:0;font-size:11px;padding:2px 7px;border-radius:8px;font-weight:500}
+.mala-who.F{background:#EBF4FA;color:var(--ocean-m)}
+.mala-who.L{background:#FDEDF0;color:#B03060}
+.mala-who.AB{background:#F0F7EC;color:var(--sage)}
+.mala-who.TODO{background:#FEF6E8;color:var(--gold)}
+
 </style>
 </head>
 <body>
@@ -649,12 +685,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
   <div id="exp-list"></div>
 </div>
 
+
+<!-- ═══ MALA ═══ -->
+<div id="view-mala" class="view">
+  <div class="sect-ttl">Checklist</div>
+  <div class="sect-sub">Mala de mão · O que comprar · O que reservar</div>
+
+  <!-- Barra de progresso -->
+  <div class="mala-weight-bar">
+    <div class="mala-weight-lbl">Progresso geral</div>
+    <div class="mala-weight-row">
+      <div class="mala-weight-track"><div class="mala-weight-fill" id="mala-fill" style="width:0%"></div></div>
+      <div>
+        <div class="mala-weight-num"><span id="mala-done">0</span><span style="font-size:12px;color:var(--ink-l)">/<span id="mala-total">0</span></span></div>
+        <div class="mala-weight-max">itens</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mala-content"></div>
+</div>
+
 <!-- TABS -->
 <div class="tab-bar">
   <button class="tab-item active" onclick="showView('timeline')" id="tab-timeline"><span class="ti">🗓</span><span class="tl">Roteiro</span></button>
   <button class="tab-item" onclick="showView('places')" id="tab-places"><span class="ti">📍</span><span class="tl">Lugares</span></button>
   <button class="tab-item" onclick="showView('map')" id="tab-map"><span class="ti">🗺</span><span class="tl">Mapa</span></button>
   <button class="tab-item" onclick="showView('ai')" id="tab-ai"><span class="ti">✨</span><span class="tl">IA</span></button>
+  <button class="tab-item" onclick="showView('mala')" id="tab-mala"><span class="ti">🧳</span><span class="tl">Checklist</span></button>
   <button class="tab-item" onclick="showView('expenses')" id="tab-expenses"><span class="ti">💶</span><span class="tl">Despesas</span></button>
 </div>
 
@@ -1137,10 +1195,148 @@ const places=[
   {dest:'Capri',type:'food',icon:'🍽',name:'Villa Franca Rooftop',detail:'Viale Tommaso de Tommaso 4 · jantar especial',coords:'40.5504,14.2351',addr:'Hotel Villa Franca Capri rooftop'},
 ];
 
+
+// ══ MALA DATA ══
+const malaItems=[
+
+  // ══ FLAVIO ══
+  {group:'👕 Roupas — Flavio', who:'F', items:[
+    {id:'mf01',name:'Camisetas',qty:3,tip:'Neutras, cores que combinam'},
+    {id:'mf02',name:'Camisa social leve',qty:1,tip:'Jantares em Ravello e Capri'},
+    {id:'mf03',name:'Shorts / bermudas',qty:2,tip:''},
+    {id:'mf04',name:'Calça jeans ou chino leve',qty:1,tip:'City tour + jantar'},
+    {id:'mf05',name:'Sunga',qty:1,tip:''},
+    {id:'mf06',name:'Short de banho',qty:1,tip:'Dobra pequeno'},
+    {id:'mf07',name:'Cuecas',qty:4,tip:''},
+    {id:'mf08',name:'Meias',qty:3,tip:''},
+    {id:'mf09',name:'Moletom ou casaco leve',qty:1,tip:'Barco e noites de maio (~15°C)'},
+  ]},
+  {group:'👟 Calçados — Flavio', who:'F', items:[
+    {id:'fc01',name:'Tênis confortável',qty:1,tip:'Paralelepípedo em Roma — nada de sandália fina'},
+    {id:'fc02',name:'Aquashoes / tênis de água',qty:1,tip:'Praias de pedra na Sardenha e Capri'},
+    {id:'fc03',name:'Sandália ou chinelo',qty:1,tip:'Hotel e lazer'},
+  ]},
+  {group:'🧴 Higiene — Flavio', who:'F', items:[
+    {id:'fh01',name:'Desodorante sólido ou creme',qty:1,tip:'Aerossol não passa na bagagem de mão'},
+    {id:'fh02',name:'Shampoo sólido',qty:1,tip:'Economiza espaço e passa no raio-X'},
+    {id:'fh03',name:'Aparelho de barbear',qty:1,tip:''},
+    {id:'fh04',name:'Protetor labial com FPS',qty:1,tip:''},
+  ]},
+  {group:'⚡ Eletrônicos — Flavio', who:'F', items:[
+    {id:'fe01',name:'Carregador de celular',qty:1,tip:''},
+    {id:'fe02',name:'Fone de ouvido',qty:1,tip:'Voos longos POA→GRU→FCO'},
+    {id:'fe03',name:'Óculos de sol',qty:1,tip:''},
+  ]},
+  {group:'📋 Documentos — Flavio', who:'F', items:[
+    {id:'fd01',name:'Passaporte',qty:1,tip:'Validade mínima 6 meses além da data de volta'},
+    {id:'fd02',name:'CNH física',qty:1,tip:'Obrigatório para ALAMO e AVIS'},
+    {id:'fd03',name:'IDP — Permissão Internacional de Dirigir',qty:1,tip:'Obrigatório para locadoras na Itália'},
+    {id:'fd04',name:'Cartão de crédito físico com chip',qty:1,tip:'Pedágios e parquímetros não aceitam aproximação'},
+  ]},
+
+  // ══ LETHI ══
+  {group:'👗 Roupas — Lethi', who:'L', items:[
+    {id:'ml01',name:'Blusas versáteis',qty:3,tip:''},
+    {id:'ml02',name:'Vestido leve',qty:1,tip:'Serve para praia e jantar com acessório'},
+    {id:'ml03',name:'Vestido ou conjunto para jantar especial',qty:1,tip:'Ravello, Capri'},
+    {id:'ml04',name:'Short',qty:1,tip:''},
+    {id:'ml05',name:'Calça leve',qty:1,tip:''},
+    {id:'ml06',name:'Biquíni',qty:1,tip:''},
+    {id:'ml07',name:'Saída de praia',qty:1,tip:''},
+    {id:'ml08',name:'Calcinha',qty:4,tip:''},
+    {id:'ml09',name:'Sutiã de viagem',qty:1,tip:'Tecido que seca rápido'},
+    {id:'ml10',name:'Top',qty:1,tip:''},
+    {id:'ml11',name:'Cardigan ou casaco leve',qty:1,tip:'Barco e noites mais frias'},
+  ]},
+  {group:'👟 Calçados — Lethi', who:'L', items:[
+    {id:'lc01',name:'Tênis confortável',qty:1,tip:'Paralelepípedo em Roma e degraus em Positano'},
+    {id:'lc02',name:'Aquashoes / tênis de água',qty:1,tip:'Praias de pedra na Sardenha e Capri'},
+    {id:'lc03',name:'Sandália confortável',qty:1,tip:'Positano e Amalfi têm muitos degraus em descida'},
+  ]},
+  {group:'🧴 Higiene — Lethi', who:'L', items:[
+    {id:'lh01',name:'Desodorante sólido ou creme',qty:1,tip:'Aerossol não passa na bagagem de mão'},
+    {id:'lh02',name:'Shampoo e condicionador sólidos',qty:1,tip:'Economiza espaço'},
+    {id:'lh03',name:'Protetor labial com FPS',qty:1,tip:''},
+    {id:'lh04',name:'Maquiagem básica de viagem',qty:1,tip:'Só o essencial — espaço limitado'},
+  ]},
+  {group:'⚡ Eletrônicos — Lethi', who:'L', items:[
+    {id:'le01',name:'Carregador de celular',qty:1,tip:''},
+    {id:'le02',name:'Fone de ouvido',qty:1,tip:'Voos longos'},
+    {id:'le03',name:'Óculos de sol',qty:1,tip:''},
+  ]},
+  {group:'📋 Documentos — Lethi', who:'L', items:[
+    {id:'ld01',name:'Passaporte',qty:1,tip:'Validade mínima 6 meses além da data de volta'},
+    {id:'ld02',name:'CNH física',qty:1,tip:'Obrigatório para as locadoras'},
+    {id:'ld03',name:'IDP — Permissão Internacional de Dirigir',qty:1,tip:'Obrigatório para locadoras na Itália'},
+    {id:'ld04',name:'Cartão de crédito físico com chip',qty:1,tip:''},
+  ]},
+
+  // ══ AMBOS ══
+  {group:'🏊 Praia e Água — Ambos', who:'AB', items:[
+    {id:'pa01',name:'Snorkel + máscara',qty:2,tip:'Vale muito — Golfo di Orosei, Gruta Azul e Cala Goloritzé'},
+    {id:'pa02',name:'Protetor solar FPS 50+',qty:2,tip:'Caro e difícil de encontrar na Itália — trazer de casa'},
+    {id:'pa03',name:'Case waterproof para celular',qty:1,tip:'As cores embaixo da água no Golfo di Orosei são incríveis'},
+    {id:'pa04',name:'Toalha de microfibra',qty:2,tip:'Leve e seca em minutos'},
+    {id:'pa05',name:'Repelente',qty:1,tip:'Noites quentes na Sardenha'},
+  ]},
+  {group:'💊 Saúde — Ambos', who:'AB', items:[
+    {id:'sa01',name:'Antiemético (Dramin ou Plasil)',qty:1,tip:'Travessia de barco para Capri pode ser agitada'},
+    {id:'sa02',name:'Ibuprofeno ou analgésico',qty:1,tip:''},
+    {id:'sa03',name:'Antialérgico',qty:1,tip:''},
+    {id:'sa04',name:'Band-aids',qty:1,tip:'Bolhas de calçado novo em Roma'},
+    {id:'sa05',name:'Medicamentos pessoais',qty:1,tip:'Para os 15 dias completos'},
+  ]},
+  {group:'⚡ Eletrônicos — Ambos', who:'AB', items:[
+    {id:'ea01',name:'Powerbank 20.000mAh',qty:1,tip:'App aberto o dia todo + 2 celulares'},
+    {id:'ea02',name:'Adaptador de tomada europeu (Type C/F)',qty:2,tip:'Tomadas italianas são padrão europeu'},
+    {id:'ea03',name:'Cabo USB extra',qty:1,tip:''},
+  ]},
+  {group:'🎒 Bagagem — Ambos', who:'AB', items:[
+    {id:'ba01',name:'Mala de mão (max 55×40×20 cm)',qty:2,tip:'Verificar limite da companhia — geralmente 7-10 kg'},
+    {id:'ba02',name:'Packing cubes / organizadores',qty:1,tip:'Fundamental para 15 noites em mala de mão'},
+    {id:'ba03',name:'Cadeado para mala',qty:2,tip:''},
+    {id:'ba04',name:'Sacola reutilizável leve',qty:2,tip:'Supermercados italianos cobram pela sacola'},
+  ]},
+  {group:'💶 Dinheiro — Ambos', who:'AB', items:[
+    {id:'di01',name:'€ 200–300 em espécie',qty:1,tip:'Mercados pequenos, gorjetas, emergências'},
+    {id:'di02',name:'Cópia das confirmações das locadoras',qty:1,tip:'ALAMO: 1388216603COUNT · AVIS: 47322395BR1'},
+    {id:'di03',name:'Seguro viagem',qty:1,tip:'Cópia digital e impressa'},
+  ]},
+
+  // ══ AINDA PRECISAMOS ══
+  {group:'⚡ Urgente — Comprar agora', who:'TODO', items:[
+    {id:'ck01',name:'Ingressos do Coliseu',qty:2,tip:'Venda abre 18/04 às 08h30 em coopculture.it · Full Experience · 18/05 08h30'},
+    {id:'ck02',name:'Ingressos Roma × Lazio',qty:2,tip:'17/05 às 15h · asroma.com / vivaticket.com'},
+  ]},
+  {group:'📅 Reservar antes de embarcar', who:'TODO', items:[
+    {id:'ck03',name:'Museus Vaticanos + Capela Sistina',qty:2,tip:'museivaticani.va · ~€20 pp · reservar com semanas de antecedência'},
+    {id:'ck04',name:'Barco privado — Golfo di Orosei',qty:1,tip:'Reservar no check-in do San Francisco Hotel em Cala Gonone'},
+    {id:'ck05',name:'Barco — Arquipélago La Maddalena',qty:1,tip:'Reservar com antecedência na temporada'},
+    {id:'ck06',name:'Barco — Capri',qty:1,tip:'Ferry Molo Beverello → Capri · comprar antes'},
+    {id:'ck07',name:'Experiência gastronômica em Roma',qty:1,tip:'Airbnb Experiences, Withlocals ou EatWith · qualquer noite 17-19/mai'},
+    {id:'ck08',name:'La Fontelina Beach Club — Capri',qty:2,tip:'Reservar com antecedência — lotado na temporada'},
+    {id:'ck09',name:'La Tagliata — Positano',qty:2,tip:'Vista panorâmica · RESERVAR'},
+    {id:'ck10',name:'Tavern Allegra — Sorrento',qty:2,tip:'Reservar com antecedência'},
+  ]},
+  {group:'🛒 Comprar antes de viajar', who:'TODO', items:[
+    {id:'ck11',name:'Snorkel + máscara',qty:2,tip:'Mais barato aqui do que na Itália'},
+    {id:'ck12',name:'Aquashoes',qty:2,tip:'Um par para cada um'},
+    {id:'ck13',name:'Protetor solar FPS 50+',qty:3,tip:'Caro na Itália — trazer estoque'},
+    {id:'ck14',name:'Toalha de microfibra',qty:2,tip:''},
+    {id:'ck15',name:'Packing cubes',qty:1,tip:'Organização essencial para mala de mão em 15 noites'},
+    {id:'ck16',name:'IDP — Permissão Internacional de Dirigir',qty:2,tip:'Emitir no DETRAN ou Despachante'},
+    {id:'ck17',name:'Seguro viagem',qty:2,tip:'Contratar antes de embarcar'},
+    {id:'ck18',name:'Câmbio de euros',qty:1,tip:'€ 200–300 pp'},
+  ]},
+];
+
 // ══ MAP ENGINE ══
 let leafletMap=null, leafletMarkers=[], mapDestFilter='all', mapCatFilter='all', mapDayFilter='all';
 let customPlaces=[];
 
+
+
+// ══ MALA DATA ══
 
 // ══ MAP ENGINE ══
 
@@ -1369,6 +1565,7 @@ function showView(v){
   if(v==='checklist')renderChecklist();
   if(v==='map')setTimeout(()=>{if(!leafletMap)initLeafletMap();else{resizeMap();renderMapFilters();renderMapPins();}},120);
   if(v==='places')renderPlaces();
+  if(v==='mala'){if(!state.mala)state.mala={};renderMala();}
   if(v==='expenses'){const r=document.getElementById('exp-rate');if(r&&state.expRate)r.value=state.expRate;renderExpenses();}
   if(v!=='map'&&v!=='day'&&typeof window.scrollTo==='function')window.scrollTo(0,0);
   // URL hash para deep linking
@@ -2019,9 +2216,73 @@ function renderExpenses(){
   document.getElementById('exp-list').innerHTML=state.expenses.length?state.expenses.map(e=>'<div class="exp-item"><div class="exp-cat" style="background:'+(cc[e.cat]||'#F0F0F0')+'">'+e.cat.split(' ')[0]+'</div><div class="exp-info"><div class="exp-desc">'+e.desc+'</div><div class="exp-meta">'+e.cat+' · '+e.dest+' · '+e.date+'</div></div><div class="exp-vals"><div class="exp-eur">€'+e.val.toFixed(2)+'</div><div class="exp-brl">R$'+(e.val*rate).toFixed(0)+'</div></div><button class="exp-del" onclick="delExpense('+e.id+')">×</button></div>').join(''):'<div class="empty">Nenhuma despesa registrada</div>';
 }
 
+
+// ══ MALA ══
+function renderMala(){
+  let totalItems=0, doneItems=0;
+  let h='';
+  malaItems.forEach(function(grp){
+    const grpTotal=grp.items.length;
+    const grpDone=grp.items.filter(it=>state.mala&&state.mala[it.id]).length;
+    totalItems+=grpTotal; doneItems+=grpDone;
+    const secClass='sec-'+(grp.who||'AB');
+    h+='<div class="mala-grp '+secClass+'">';
+    h+='<div class="mala-grp-hdr">';
+    h+='<div class="mala-grp-title">'+grp.group+'</div>';
+    h+='<div class="mala-grp-prog">'+grpDone+'/'+grpTotal+'</div>';
+    h+='</div>';
+    grp.items.forEach(function(item){
+      const done=!!(state.mala&&state.mala[item.id]);
+      const who=item.who||grp.who||'AB';
+      const whoLabel=who==='F'?'Flavio':who==='L'?'Lethi':who==='TODO'?'Pendente':'Ambos';
+      h+='<div class="mala-item'+(done?' done':'')+'" id="mala_'+item.id+'">';
+      h+='<button class="mala-chk'+(done?' chk':'')+'" data-id="'+item.id+'">'+( done?'✓':'')+'</button>';
+      h+='<div class="mala-info">';
+      h+='<div class="mala-name">'+item.name+'</div>';
+      if(item.tip)h+='<div class="mala-tip">'+item.tip+'</div>';
+      h+='</div>';
+      if(item.qty>1)h+='<div class="mala-qty">×'+item.qty+'</div>';
+      h+='<div class="mala-who '+who+'">'+whoLabel+'</div>';
+      h+='</div>';
+    });
+    h+='</div>';
+  });
+  const cont=document.getElementById('mala-content');
+  if(!cont)return;
+  cont.innerHTML=h;
+  cont.onclick=function(e){
+    const btn=e.target.closest('.mala-chk');
+    if(!btn)return;
+    const id=btn.dataset.id;
+    if(!state.mala)state.mala={};
+    state.mala[id]=!state.mala[id];
+    saveState();
+    btn.classList.toggle('chk',state.mala[id]);
+    btn.textContent=state.mala[id]?'✓':'';
+    btn.closest('.mala-item').classList.toggle('done',state.mala[id]);
+    updateMalaProgress();
+  };
+  // Progresso
+  document.getElementById('mala-total').textContent=totalItems;
+  updateMalaProgress();
+}
+function updateMalaProgress(){
+  let total=0,done=0;
+  malaItems.forEach(g=>g.items.forEach(it=>{total++;if(state.mala&&state.mala[it.id])done++;}));
+  document.getElementById('mala-done').textContent=done;
+  document.getElementById('mala-total').textContent=total;
+  const pct=total?Math.round(done/total*100):0;
+  const fill=document.getElementById('mala-fill');
+  if(fill){
+    fill.style.width=pct+'%';
+    fill.className='mala-weight-fill'+(pct>90?' warn':pct===100?' over':'');
+  }
+}
+
 // ══ INIT ══
 loadState().then(()=>{
   renderChecklist();renderCountdown();refreshDayProgress();renderPlaces();
+  if(!state.mala)state.mala={};
   const r=document.getElementById('exp-rate');if(r&&state.expRate)r.value=state.expRate;
   // Deep link via hash
   const hash=location.hash.replace('#','');
