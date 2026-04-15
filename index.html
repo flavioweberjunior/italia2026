@@ -270,6 +270,66 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
   .opts,.qe-pan{background:#252535}
   .tab-bar,.ai-inp-row{background:#252535;border-color:#3A3A50}
 }
+
+/* ── REDESIGN: Places & Map Panel ── */
+.places-cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:12px}
+.places-cats::-webkit-scrollbar{display:none}
+.pcat{border:1.5px solid var(--sand-d);background:var(--white);border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;flex-shrink:0;min-height:32px;display:inline-flex;align-items:center;color:var(--ink-m);transition:all .15s;font-weight:400}
+.pcat.active{font-weight:500}
+.place-item{background:var(--white);border-radius:var(--r);padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;box-shadow:0 1px 4px var(--sh);position:relative;transition:box-shadow .15s}
+.place-item:active{box-shadow:0 2px 8px var(--shl)}
+.place-item.is-custom{border-left:3px solid var(--terr)}
+.pi-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.pi-info{flex:1;min-width:0}
+.pi-name{font-weight:500;font-size:14px;margin-bottom:2px;line-height:1.3}
+.pi-dest{font-size:11px;color:var(--ocean-m);font-weight:500;margin-bottom:3px}
+.pi-detail{font-size:12px;color:var(--ink-l);line-height:1.4;margin-bottom:2px}
+.pi-acts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.pi-btn{font-size:12px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--sand-d);background:none;cursor:pointer;color:var(--ink-m);font-family:'DM Sans',sans-serif;min-height:34px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap}
+.pi-btn.map{background:var(--ocean);border-color:var(--ocean);color:#fff}
+.pi-btn.gmap{background:var(--sand);border-color:var(--sand-d);color:var(--ink-m)}
+.pi-btn.del{background:#FEF0EC;color:var(--terr);border-color:#fdd}
+.pi-custom-badge{display:inline-block;background:#FEF0EC;color:var(--terr);font-size:10px;font-weight:500;padding:2px 7px;border-radius:8px;margin-bottom:4px}
+/* Busca de lugares */
+.place-search-wrap{position:relative;margin-bottom:12px}
+.place-search-field{width:100%;border:1.5px solid var(--sand-d);border-radius:var(--r);padding:13px 52px 13px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--white);min-height:50px;box-shadow:0 1px 4px var(--sh);transition:border-color .2s}
+.place-search-field:focus{outline:none;border-color:var(--ocean-m);box-shadow:0 0 0 3px rgba(46,123,166,.12)}
+.place-search-go{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:var(--ocean);color:#fff;border:none;border-radius:var(--rs);width:38px;height:38px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.place-search-go:active{background:var(--ocean-m)}
+.place-results-list{border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:0 4px 20px var(--shl);display:none}
+.place-results-list.open{display:block}
+.sr-item{padding:13px 14px;cursor:pointer;border-bottom:1px solid var(--sand-d);background:var(--white);display:flex;align-items:center;gap:10px;transition:background .1s;-webkit-tap-highlight-color:transparent}
+.sr-item:last-child{border-bottom:none}
+.sr-item:active{background:var(--sand)}
+.sr-icon{font-size:20px;flex-shrink:0}
+.sr-text{flex:1;min-width:0}
+.sr-name{font-weight:500;font-size:13px;color:var(--ink);margin-bottom:2px}
+.sr-addr{font-size:11px;color:var(--ink-l)}
+.sr-add-icon{font-size:22px;color:var(--ocean-m);flex-shrink:0}
+.sr-empty{padding:16px 14px;text-align:center;color:var(--ink-l);font-size:13px;background:var(--white)}
+/* Place panel (mapa) */
+#place-panel{display:none;position:fixed;bottom:60px;left:0;right:0;z-index:160;background:var(--white);border-radius:20px 20px 0 0;box-shadow:0 -6px 32px var(--shl);padding:0;max-height:55vh;overflow-y:auto}
+.pp-drag-bar{width:36px;height:4px;background:var(--sand-d);border-radius:2px;margin:14px auto 0}
+.pp-body{padding:14px 16px 16px}
+.pp-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:8px}
+.pp-emoji{font-size:32px;line-height:1;flex-shrink:0;margin-top:2px}
+.pp-head-text{flex:1;min-width:0}
+.pp-name{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;line-height:1.2;margin-bottom:6px}
+.pp-tags{display:flex;gap:6px;flex-wrap:wrap}
+.pp-tag{font-size:11px;font-weight:500;padding:3px 9px;border-radius:10px}
+.pp-tag.dest{background:var(--sand-d);color:var(--ink-m)}
+.pp-tag.day{background:#EBF4FA;color:var(--ocean-m)}
+.pp-tag.custom{background:#FEF0EC;color:var(--terr)}
+.pp-detail{font-size:13px;color:var(--ink-m);line-height:1.5;margin-bottom:14px}
+.pp-acts{display:flex;gap:8px;flex-wrap:wrap}
+.pp-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 18px;border-radius:22px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;text-decoration:none;border:none;cursor:pointer;min-height:44px;transition:all .15s;white-space:nowrap}
+.pp-btn:active{opacity:.8}
+.pp-nav{background:var(--ocean);color:#fff}
+.pp-sec{background:var(--sand);border:1.5px solid var(--sand-d);color:var(--ink-m)}
+.pp-del{background:#FEF0EC;color:var(--terr);border:1.5px solid #fdd}
+/* Busca nav */
+.nav-search{display:none}
+
 </style>
 </head>
 <body>
@@ -416,8 +476,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
   </div>
   <div id="leaflet-map"></div>
   <div id="place-panel">
-    <div class="pp-drag"></div>
-    <div id="place-panel-content"></div>
+    <div class="pp-drag-bar"></div>
+    <div class="pp-body" id="place-panel-content"></div>
   </div>
   <div id="map-overlay" onclick="closePanel()"></div>
 </div>
@@ -466,14 +526,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 <!-- ═══ LUGARES ═══ -->
 <div id="view-places" class="view">
   <div class="sect-ttl">Lugares</div>
-  <div class="sect-sub">Seus interesses — aparecem no mapa automaticamente</div>
-  <div style="display:flex;gap:8px;margin-bottom:10px">
-    <input class="inp" id="place-search-inp" type="text" placeholder="Buscar restaurante, praia, atração..."
-      onkeydown="if(event.key==='Enter'){event.preventDefault();searchPlaces()}" style="flex:1;min-height:44px">
-    <button onclick="searchPlaces()" style="background:var(--ocean);color:var(--white);border:none;border-radius:var(--rs);padding:0 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;min-height:44px;white-space:nowrap">Buscar</button>
+  <div class="sect-sub">Seus interesses — aparecem automaticamente no mapa</div>
+
+  <!-- Busca -->
+  <div class="place-search-wrap">
+    <input class="place-search-field" id="place-search-inp" type="search"
+      placeholder="🔍  Buscar restaurante, praia, atração..."
+      onkeydown="if(event.key==='Enter'){event.preventDefault();searchPlaces()}"
+      oninput="if(!this.value.trim())closePlaceSearch()">
+    <button class="place-search-go" onclick="searchPlaces()">→</button>
   </div>
-  <div class="search-res" id="place-search-results"></div>
+  <div class="place-results-list" id="place-search-results"></div>
+
+  <!-- Filtros -->
   <div class="places-cats" id="places-cats"></div>
+
+  <!-- Lista -->
   <div id="places-list-content"></div>
 </div>
 
@@ -1149,12 +1217,35 @@ function isDayPlace(p,dayId){
 
 function openPlacePanel(p){
   const emoji=catEmoji[p.type]||'📍';
-  const custom=p.custom?'<button onclick="removeCustomPlace(\''+p.id+'\')" class="pp-btn pp-del">🗑 Remover</button>':'';
+  // Descobrir em quais dias do roteiro esse lugar aparece
+  const linkedDays=Object.entries(days).filter(([k,d])=>isDayPlace(p,k)).map(([k,d])=>{
+    const dateShort=d.date?d.date.replace(/[A-Za-záéíóúãõâêîôûàèìòù]+,?\s+/,'').replace(/·.*/,'').trim():'';
+    return dateShort;
+  }).slice(0,2);
+  const destLabel=p.dest||'';
+  let tags='<span class="pp-tag dest">'+destLabel+'</span>';
+  linkedDays.forEach(function(d){tags+='<span class="pp-tag day">'+d+'</span>';});
+  if(p.custom)tags+='<span class="pp-tag custom">📌 Adicionado por você</span>';
+  const delBtn=p.custom
+    ?'<button data-pid="'+p.id+'" class="pp-btn pp-del" id="pp-del-btn">🗑 Remover lugar</button>'
+    :'';
   document.getElementById('place-panel-content').innerHTML=
-    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:18px">'+emoji+'</span><div class="pp-name" style="margin:0">'+p.name+'</div></div>'+
-    '<div class="pp-det">'+(p.detail||'')+(p.custom?' · <em>adicionado por você</em>':'')+'</div>'+
-    '<div class="pp-acts"><a href="'+navUrl(p)+'" target="_blank" class="pp-btn pp-nav">🧭 Navegar</a>'+
-    '<a href="'+placeUrl(p)+'" target="_blank" class="pp-btn pp-sec">🗺 Ver no Maps</a>'+custom+'</div>';
+    '<div class="pp-header">'+
+      '<div class="pp-emoji">'+emoji+'</div>'+
+      '<div class="pp-head-text">'+
+        '<div class="pp-name">'+p.name+'</div>'+
+        '<div class="pp-tags">'+tags+'</div>'+
+      '</div>'+
+    '</div>'+
+    (p.detail?'<div class="pp-detail">'+p.detail+'</div>':'')+
+    '<div class="pp-acts">'+
+      '<a href="'+navUrl(p)+'" target="_blank" class="pp-btn pp-nav">🧭 Navegar</a>'+
+      '<a href="'+placeUrl(p)+'" target="_blank" class="pp-btn pp-sec">🗺 Google Maps</a>'+
+      delBtn+
+    '</div>';
+  // Handler para remover
+  const d2=document.getElementById('pp-del-btn');
+  if(d2)d2.onclick=function(){removeCustomPlace(this.dataset.pid);};
   document.getElementById('place-panel').style.display='block';
   document.getElementById('map-overlay').style.display='block';
 }
@@ -1484,21 +1575,29 @@ function renderPlaces(){
   const listEl=document.getElementById('places-list-content');
   if(!listEl)return;
   if(!filtered.length){listEl.innerHTML='<div class="empty">Nenhum lugar nesta categoria</div>';return;}
+  const bg2={hotel:'#DDEEF6',food:'#FEF0E0',view:'#E8EFF4',boat:'#E8EEF5',car:'#FEF6E8',nature:'#EBF4E8',custom:'#FEF0EC'};
   listEl.innerHTML=filtered.map(function(p){
-    return '<div class="place-item">'
-      +'<div class="pi-icon" style="background:'+(bg[p.type]||'#F5F5F5')+'">'+(catEmoji[p.type]||'📍')+'</div>'
-      +'<div class="pi-info"><div class="pi-name">'+p.name+'</div><div class="pi-detail">'+p.detail+'</div>'
+    const isCustom=!!p.custom;
+    return '<div class="place-item'+(isCustom?' is-custom':'')+'">'
+      +'<div class="pi-icon" style="background:'+(bg2[p.type]||'#F5F5F5')+'">'+(catEmoji[p.type]||'📍')+'</div>'
+      +'<div class="pi-info">'
+      +(isCustom?'<div class="pi-custom-badge">📌 Adicionado por você</div>':'')
+      +'<div class="pi-name">'+p.name+'</div>'
+      +'<div class="pi-dest">'+p.dest+'</div>'
+      +(p.detail?'<div class="pi-detail">'+p.detail+'</div>':'')
       +'<div class="pi-acts">'
       +(p.coords?'<button class="pi-btn map" data-action="open-map" data-dest="'+p.dest+'" data-name="'+p.name.replace(/"/g,'&quot;')+'">📍 Ver no mapa</button>':'')
-      +'<a href="'+placeUrl(p)+'" target="_blank" class="pi-btn map">🗺 Google Maps</a>'
-      +(p.custom?'<button class="pi-btn del" data-action="del-place" data-id="'+p.id+'">Remover</button>':'')
+      +'<a href="'+placeUrl(p)+'" target="_blank" class="pi-btn gmap">🗺 Google Maps</a>'
+      +(isCustom?'<button class="pi-btn del" data-action="del-place" data-id="'+p.id+'">🗑 Remover</button>':'')
       +'</div></div></div>';
   }).join('');
-  // Event delegation para lista de lugares
   listEl.onclick=function(e){
     const t=e.target.closest('[data-action]');if(!t)return;
     if(t.dataset.action==='open-map')openInMap(t.dataset.dest,t.dataset.name);
-    else if(t.dataset.action==='del-place')removeCustomPlace(t.dataset.id);
+    else if(t.dataset.action==='del-place'){
+      if(confirm('Remover "'+t.closest('.place-item').querySelector('.pi-name').textContent+'" da lista?'))
+        removeCustomPlace(t.dataset.id);
+    }
   };
 }
 function setPlaceCat(id){placeCatFilter=id;renderPlaces();}
@@ -1513,13 +1612,41 @@ function searchPlaces(){
   const res=document.getElementById('place-search-results');
   res.innerHTML='<div class="sr-item"><div class="sr-name" style="color:var(--ink-l)">🔍 Buscando...</div></div>';
   res.classList.add('open');
+  const typeGuess=function(name){
+    const n=name.toLowerCase();
+    if(/ristorante|trattoria|osteria|pizz|restaurant|bar|café|cafe/.test(n))return{e:'🍽',l:'Restaurante'};
+    if(/hotel|albergo|hostel|resort|b&b/.test(n))return{e:'🏨',l:'Hotel'};
+    if(/spiaggia|beach|cala|baia/.test(n))return{e:'🏖',l:'Praia'};
+    if(/chiesa|basilica|duomo|museum|museo/.test(n))return{e:'🏛',l:'Atração'};
+    return{e:'📍',l:'Lugar'};
+  };
   geocodeItaly(q,6).then(data=>{
-    if(!data.length){res.innerHTML='<div class="sr-item"><div class="sr-name" style="color:var(--terr)">Nenhum resultado.</div></div>';return;}
+    if(!data.length){
+      res.innerHTML='<div class="sr-empty">Nenhum resultado. Tente "'+q+' Italia"</div>';
+      res.classList.add('open');return;
+    }
     res._data=data;
-    res.innerHTML=data.map((d,i)=>'<div class="sr-item" onclick="addPlaceFromSearch('+i+')"><div class="sr-name">'+d.name+'</div><div class="sr-addr">'+d.addr+'</div></div>').join('');
-  }).catch(()=>{
+    res.innerHTML=data.map(function(d,i){
+      const tg=typeGuess(d.name+' '+d.addr);
+      return '<div class="sr-item" data-idx="'+i+'">'
+        +'<div class="sr-icon">'+tg.e+'</div>'
+        +'<div class="sr-text"><div class="sr-name">'+d.name+'</div><div class="sr-addr">'+d.addr+'</div></div>'
+        +'<div class="sr-add-icon">＋</div>'
+        +'</div>';
+    }).join('');
+    res.onclick=function(e){
+      const item=e.target.closest('.sr-item');
+      if(item)addPlaceFromSearch(parseInt(item.dataset.idx));
+    };
+    res.classList.add('open');
+  }).catch(function(){
     const qv=document.getElementById('place-search-inp').value.trim();
-    res.innerHTML='<div class="sr-item" style="padding:12px 14px"><div style="font-size:12px;color:var(--terr);margin-bottom:8px">Não foi possível buscar online.</div><a href="https://www.google.com/maps/search/'+encodeURIComponent(qv)+' Italy" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--ocean);color:#fff;border-radius:20px;padding:8px 14px;font-size:12px;text-decoration:none;font-weight:500">🗺 Buscar no Google Maps</a></div>';
+    res.innerHTML='<div class="sr-empty" style="padding:14px">'
+      +'<div style="margin-bottom:10px">Não foi possível buscar agora.</div>'
+      +'<a href="https://www.google.com/maps/search/'+encodeURIComponent(qv)+' Italy" target="_blank" '
+      +'style="display:inline-flex;align-items:center;gap:6px;background:var(--ocean);color:#fff;border-radius:20px;padding:10px 16px;font-size:13px;text-decoration:none;font-weight:500">🗺 Buscar no Google Maps</a>'
+      +'</div>';
+    res.classList.add('open');
   });
 }
 function addPlaceFromSearch(i){
@@ -1537,9 +1664,11 @@ function addPlaceFromSearch(i){
   const p={id:'cp_'+Date.now(),name:d.name,coords:lat.toFixed(5)+','+lng.toFixed(5),dest,type,detail:d.addr||dest,addr:d.name,custom:true};
   customPlaces.push(p);state.customPlaces=customPlaces;saveState();
   document.getElementById('place-search-inp').value='';
-  document.getElementById('place-search-results').classList.remove('open');
+  closePlaceSearch();
   renderPlaces();
-  const btn=document.querySelector('#view-places button:last-of-type');
+  // Feedback visual de confirmação
+  const inp=document.getElementById('place-search-inp');
+  if(inp){inp.placeholder='✓ '+p.name+' adicionado!';setTimeout(function(){inp.placeholder='🔍  Buscar restaurante, praia, atração...';},2500);}
 }
 
 // ══ ADD PLACE MODAL ══
