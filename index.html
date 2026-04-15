@@ -376,7 +376,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 #ap-results .sr-item:active{opacity:.7}
 
 /* Botão editar parada */
-.stop-edit-btn{width:28px;height:28px;border-radius:50%;background:var(--sand);border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.6;transition:opacity .2s}
+.stop-edit-btn{width:32px;height:32px;border-radius:50%;background:var(--sand-d);border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.7;transition:opacity .2s;flex-shrink:0}
 .stop-edit-btn:active{opacity:1}
 
 </style>
@@ -1370,7 +1370,7 @@ function showView(v){
   if(v==='map')setTimeout(()=>{if(!leafletMap)initLeafletMap();else{resizeMap();renderMapFilters();renderMapPins();}},120);
   if(v==='places')renderPlaces();
   if(v==='expenses'){const r=document.getElementById('exp-rate');if(r&&state.expRate)r.value=state.expRate;renderExpenses();}
-  if(v!=='map')window.scrollTo(0,0);
+  if(v!=='map'&&v!=='day'&&typeof window.scrollTo==='function')window.scrollTo(0,0);
   // URL hash para deep linking
   history.replaceState(null,'','#'+v);
   // Wake lock — manter tela ligada no roteiro e mapa
@@ -1821,6 +1821,8 @@ function openAddPlace(){
   const note=document.getElementById('ap-note');if(note)note.value='';
   document.getElementById('ap-coords').value='';
   document.getElementById('ap-results').innerHTML='';
+  document.getElementById('ap-type-val').value='view';
+  document.getElementById('ap-dest-val').value='Roma';
   apResult=null;
   setTimeout(()=>document.getElementById('ap-name').focus(),250);
 }
