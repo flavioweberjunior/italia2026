@@ -330,6 +330,55 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 /* Busca nav */
 .nav-search{display:none}
 
+
+/* ════ BOTTOM SHEETS (modais redesenhados) ════ */
+.bs{background:var(--white);border-radius:24px 24px 0 0;padding:0 16px 40px;width:100%;max-height:92vh;overflow-y:auto;position:relative}
+.bs-handle{width:40px;height:4px;border-radius:2px;background:var(--sand-d);margin:12px auto 0}
+.bs-head{display:flex;align-items:center;justify-content:space-between;padding:14px 0 4px;margin-bottom:4px}
+.bs-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--ink)}
+.bs-close{width:32px;height:32px;border-radius:50%;background:var(--sand-d);border:none;cursor:pointer;font-size:14px;color:var(--ink-l);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bs-hint{font-size:13px;color:var(--ink-l);margin-bottom:14px;line-height:1.5}
+.bs-section-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-l);font-weight:500;margin:14px 0 8px}
+.bs-confirm-card{background:var(--sand);border-radius:var(--r);padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.bs-confirm-card .cc-icon{font-size:28px;flex-shrink:0}
+.bs-confirm-card .cc-name{font-weight:500;font-size:15px;margin-bottom:2px}
+.bs-confirm-card .cc-addr{font-size:12px;color:var(--ink-l)}
+.bs-cta{width:100%;background:var(--ocean);color:#fff;border:none;border-radius:14px;padding:15px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;margin-top:12px;min-height:52px;transition:opacity .2s}
+.bs-cta:active{opacity:.8}
+.bs-back{width:100%;background:none;border:none;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-l);cursor:pointer;margin-top:4px}
+.bs-del{width:100%;background:#FEF0EC;color:var(--terr);border:none;border-radius:14px;padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:8px;min-height:48px}
+
+/* Campos modernos */
+.mf-grp{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.mf-lbl{font-size:12px;font-weight:500;color:var(--ink-m);letter-spacing:.01em}
+.mf-inp{border:1.5px solid var(--sand-d);border-radius:12px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--sand);width:100%;min-height:48px;transition:border-color .2s,box-shadow .2s}
+.mf-inp:focus{outline:none;border-color:var(--ocean-m);background:var(--white);box-shadow:0 0 0 3px rgba(46,123,166,.10)}
+.mf-ta{border:1.5px solid var(--sand-d);border-radius:12px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--sand);width:100%;min-height:90px;resize:vertical;line-height:1.5;transition:border-color .2s}
+.mf-ta:focus{outline:none;border-color:var(--ocean-m);background:var(--white);box-shadow:0 0 0 3px rgba(46,123,166,.10)}
+.mf-maps{font-size:13px;color:var(--ink-l)}
+.mf-row2{display:flex;gap:10px;margin-bottom:0}
+.sfield{display:flex;gap:8px;margin-bottom:12px}
+.sfield-inp{flex:1;border:1.5px solid var(--sand-d);border-radius:12px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--sand);min-height:50px;transition:all .2s}
+.sfield-inp:focus{outline:none;border-color:var(--ocean-m);background:var(--white);box-shadow:0 0 0 3px rgba(46,123,166,.10)}
+.sfield-btn{background:var(--ocean);color:#fff;border:none;border-radius:12px;padding:0 20px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;min-height:50px;white-space:nowrap;flex-shrink:0;transition:opacity .2s}
+.sfield-btn:active{opacity:.8}
+
+/* Type chips (substituem os selects) */
+.type-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.type-chip{border:1.5px solid var(--sand-d);background:var(--sand);border-radius:20px;padding:7px 14px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;flex-shrink:0;color:var(--ink-m);transition:all .18s;min-height:36px;display:inline-flex;align-items:center;gap:4px}
+.type-chip:active{opacity:.7}
+.type-chip.sel{background:var(--ocean);color:#fff;border-color:var(--ocean);font-weight:500}
+.type-chip.sel-dest{background:var(--terr);color:#fff;border-color:var(--terr);font-weight:500}
+
+/* Resultados de busca no modal */
+#ap-results .sr-item{padding:13px 4px;border-bottom:1px solid var(--sand-d);display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#ap-results .sr-item:last-child{border-bottom:none}
+#ap-results .sr-item:active{opacity:.7}
+
+/* Botão editar parada */
+.stop-edit-btn{width:28px;height:28px;border-radius:50%;background:var(--sand);border:none;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.6;transition:opacity .2s}
+.stop-edit-btn:active{opacity:1}
+
 </style>
 </head>
 <body>
@@ -612,86 +661,140 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 <button class="fab" id="fab-add" onclick="openAddPlace()">+</button>
 
 <!-- MODAL: Adicionar lugar -->
+<!-- MODAL: Adicionar lugar ao mapa -->
 <div class="modal" id="ap-modal">
-  <div class="modal-sheet">
-    <div class="modal-drag"></div>
-    <div class="modal-ttl">Adicionar interesse</div>
-    <div style="display:flex;gap:8px;margin-bottom:10px">
-      <input class="inp" id="ap-name" type="text" placeholder="Ex: La Fontelina, Capri"
-        onkeydown="if(event.key==='Enter'){event.preventDefault();apSearch()}"
-        oninput="clearPreview()" style="flex:1">
-      <button onclick="apSearch()" style="background:var(--ocean-m);color:var(--white);border:none;border-radius:var(--rs);padding:0 16px;font-size:13px;font-weight:500;cursor:pointer;min-height:44px;white-space:nowrap">Buscar</button>
+  <div class="bs">
+    <div class="bs-handle"></div>
+    <div class="bs-head">
+      <div class="bs-title">Novo lugar</div>
+      <button class="bs-close" onclick="closeAddPlace()">✕</button>
     </div>
-    <div id="ap-results"></div>
-    <div id="ap-extra" style="display:none">
-      <div class="row2">
-        <div class="field"><label>Tipo</label>
-          <select class="sel" id="ap-type">
-            <option value="food">🍽 Restaurante</option><option value="view">📍 Atração</option>
-            <option value="hotel">🏨 Hotel</option><option value="boat">⛵ Barco</option><option value="custom">📌 Outro</option>
-          </select></div>
-        <div class="field"><label>Destino</label>
-          <select class="sel" id="ap-dest">
-            <option>Roma</option><option>Sardenha</option><option>Sorrento/Costa</option><option>Nápoles</option><option>Capri</option>
-          </select></div>
+    <!-- Step 1: busca -->
+    <div id="ap-step1">
+      <div class="bs-hint">Digite o nome e toque em Buscar para encontrar o lugar.</div>
+      <div class="sfield">
+        <input class="sfield-inp" id="ap-name" type="search" placeholder="Ex: La Fontelina, Capri"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();apSearch()}"
+          oninput="if(!this.value)clearPreview()">
+        <button class="sfield-btn" onclick="apSearch()">Buscar</button>
       </div>
-      <input class="inp" id="ap-note" placeholder="Nota opcional" type="text" style="margin-bottom:10px">
-      <input type="hidden" id="ap-coords">
-      <button class="btn-primary" onclick="apSave()">✓ Adicionar ao mapa</button>
+      <div id="ap-results"></div>
     </div>
-    <button class="btn-ghost" onclick="closeAddPlace()">Cancelar</button>
+    <!-- Step 2: confirmação -->
+    <div id="ap-step2" style="display:none">
+      <div class="bs-confirm-card" id="ap-confirm-card"></div>
+      <div class="bs-section-label">Categoria</div>
+      <div class="type-chips" id="ap-type-chips">
+        <button class="type-chip" data-val="food">🍽 Restaurante</button>
+        <button class="type-chip" data-val="view">📍 Atração</button>
+        <button class="type-chip" data-val="hotel">🏨 Hotel</button>
+        <button class="type-chip" data-val="boat">⛵ Barco</button>
+        <button class="type-chip" data-val="custom">📌 Outro</button>
+      </div>
+      <div class="bs-section-label">Destino</div>
+      <div class="type-chips" id="ap-dest-chips">
+        <button class="type-chip" data-val="Roma">🏛 Roma</button>
+        <button class="type-chip" data-val="Sardenha">🏝 Sardenha</button>
+        <button class="type-chip" data-val="Sorrento/Costa">🍋 Costa</button>
+        <button class="type-chip" data-val="Nápoles">🍕 Nápoles</button>
+        <button class="type-chip" data-val="Capri">⛵ Capri</button>
+      </div>
+      <div class="mf-row">
+        <input class="mf-inp" id="ap-note" type="text" placeholder="Nota opcional (ex: reservar com antecedência)">
+      </div>
+      <input type="hidden" id="ap-coords">
+      <input type="hidden" id="ap-type-val" value="view">
+      <input type="hidden" id="ap-dest-val" value="Roma">
+      <button class="bs-cta" onclick="apSave()">Adicionar ao mapa</button>
+      <button class="bs-back" onclick="apBack()">← Buscar outro lugar</button>
+    </div>
   </div>
 </div>
 
 <!-- MODAL: Editar parada -->
 <div class="modal" id="edit-stop-modal">
-  <div class="modal-sheet">
-    <div class="modal-drag"></div>
-    <div class="modal-ttl" id="edit-stop-ttl">Editar parada</div>
-    <div class="field"><label>Horário</label><input class="inp" id="es-time" placeholder="Ex: 09h30"></div>
-    <div class="field"><label>Nome</label><input class="inp" id="es-name" placeholder="Nome da parada"></div>
-    <div class="field"><label>Descrição</label><textarea class="ta" id="es-desc" placeholder="Detalhes, dicas, observações..."></textarea></div>
-    <div class="row2">
-      <div class="field"><label>Tipo</label>
-        <select class="sel" id="es-type">
-          <option value="view">📍 Atração</option><option value="food">🍽 Refeição</option>
-          <option value="star">⭐ Destaque</option><option value="couple">♡ Casal</option>
-          <option value="boat">⛵ Barco</option><option value="nature">🌿 Natureza</option>
-          <option value="info">ℹ️ Info/Logística</option>
-        </select></div>
-      <div class="field"><label>Link Maps (opcional)</label><input class="inp" id="es-maps" placeholder="Nome+Lugar+Italy"></div>
+  <div class="bs">
+    <div class="bs-handle"></div>
+    <div class="bs-head">
+      <div class="bs-title" id="edit-stop-ttl">Editar parada</div>
+      <button class="bs-close" onclick="closeModal('edit-stop-modal')">✕</button>
     </div>
+    <div class="mf-row2">
+      <div class="mf-grp" style="flex:0 0 90px">
+        <label class="mf-lbl">Horário</label>
+        <input class="mf-inp" id="es-time" placeholder="08h00" maxlength="6">
+      </div>
+      <div class="mf-grp" style="flex:1">
+        <label class="mf-lbl">Nome da parada</label>
+        <input class="mf-inp" id="es-name" placeholder="Ex: Coliseu">
+      </div>
+    </div>
+    <div class="mf-grp">
+      <label class="mf-lbl">Descrição</label>
+      <textarea class="mf-ta" id="es-desc" placeholder="Endereço, dicas, observações..."></textarea>
+    </div>
+    <div class="bs-section-label">Tipo</div>
+    <div class="type-chips" id="es-type-chips">
+      <button class="type-chip" data-val="view">📍 Atração</button>
+      <button class="type-chip" data-val="food">🍽 Refeição</button>
+      <button class="type-chip" data-val="star">⭐ Destaque</button>
+      <button class="type-chip" data-val="couple">♡ Casal</button>
+      <button class="type-chip" data-val="boat">⛵ Barco</button>
+      <button class="type-chip" data-val="nature">🌿 Natureza</button>
+      <button class="type-chip" data-val="info">ℹ️ Info</button>
+    </div>
+    <div class="mf-grp">
+      <label class="mf-lbl">🗺 Link Maps (opcional)</label>
+      <input class="mf-inp mf-maps" id="es-maps" placeholder="Ex: Colosseo+Roma+Italy">
+    </div>
+    <input type="hidden" id="es-type-val" value="view">
     <input type="hidden" id="es-day-id">
     <input type="hidden" id="es-stop-idx">
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn-primary" style="flex:1" onclick="saveEditStop()">Salvar</button>
-      <button class="btn-danger" onclick="deleteStop()">Remover</button>
-    </div>
-    <button class="btn-ghost" onclick="closeModal('edit-stop-modal')">Cancelar</button>
+    <button class="bs-cta" onclick="saveEditStop()">Salvar alterações</button>
+    <button class="bs-del" onclick="deleteStop()">Remover esta parada</button>
   </div>
 </div>
 
-<!-- MODAL: Adicionar parada -->
+<!-- MODAL: Nova parada -->
 <div class="modal" id="add-stop-modal">
-  <div class="modal-sheet">
-    <div class="modal-drag"></div>
-    <div class="modal-ttl">Nova parada</div>
-    <div class="field"><label>Horário</label><input class="inp" id="ns-time" placeholder="Ex: 14h30"></div>
-    <div class="field"><label>Nome *</label><input class="inp" id="ns-name" placeholder="Ex: Pizzarium Bonci"></div>
-    <div class="field"><label>Descrição</label><textarea class="ta" id="ns-desc" placeholder="Endereço, dicas, observações..."></textarea></div>
-    <div class="row2">
-      <div class="field"><label>Tipo</label>
-        <select class="sel" id="ns-type">
-          <option value="view">📍 Atração</option><option value="food">🍽 Refeição</option>
-          <option value="star">⭐ Destaque</option><option value="couple">♡ Casal</option>
-          <option value="boat">⛵ Barco</option><option value="nature">🌿 Natureza</option>
-          <option value="info">ℹ️ Info/Logística</option>
-        </select></div>
-      <div class="field"><label>Link Maps (opcional)</label><input class="inp" id="ns-maps" placeholder="Nome+Lugar+Italy"></div>
+  <div class="bs">
+    <div class="bs-handle"></div>
+    <div class="bs-head">
+      <div class="bs-title">Nova parada</div>
+      <button class="bs-close" onclick="closeModal('add-stop-modal')">✕</button>
     </div>
+    <div class="bs-hint" id="add-stop-day-label"></div>
+    <div class="mf-row2">
+      <div class="mf-grp" style="flex:0 0 90px">
+        <label class="mf-lbl">Horário</label>
+        <input class="mf-inp" id="ns-time" placeholder="08h00" maxlength="6">
+      </div>
+      <div class="mf-grp" style="flex:1">
+        <label class="mf-lbl">Nome <span style="color:var(--terr)">*</span></label>
+        <input class="mf-inp" id="ns-name" placeholder="Ex: Pizzarium Bonci">
+      </div>
+    </div>
+    <div class="mf-grp">
+      <label class="mf-lbl">Descrição</label>
+      <textarea class="mf-ta" id="ns-desc" placeholder="Endereço, dicas, observações..."></textarea>
+    </div>
+    <div class="bs-section-label">Tipo</div>
+    <div class="type-chips" id="ns-type-chips">
+      <button class="type-chip" data-val="view">📍 Atração</button>
+      <button class="type-chip" data-val="food">🍽 Refeição</button>
+      <button class="type-chip" data-val="star">⭐ Destaque</button>
+      <button class="type-chip" data-val="couple">♡ Casal</button>
+      <button class="type-chip" data-val="boat">⛵ Barco</button>
+      <button class="type-chip" data-val="nature">🌿 Natureza</button>
+      <button class="type-chip" data-val="info">ℹ️ Info</button>
+    </div>
+    <div class="mf-grp">
+      <label class="mf-lbl">🗺 Link Maps (opcional)</label>
+      <input class="mf-inp mf-maps" id="ns-maps" placeholder="Ex: Pizzarium+Bonci+Roma">
+    </div>
+    <input type="hidden" id="ns-type-val" value="view">
     <input type="hidden" id="ns-day-id">
-    <button class="btn-primary" onclick="saveNewStop()">Adicionar ao dia</button>
-    <button class="btn-ghost" onclick="closeModal('add-stop-modal')">Cancelar</button>
+    <button class="bs-cta" onclick="saveNewStop()">Adicionar ao dia</button>
   </div>
 </div>
 
@@ -1413,26 +1516,28 @@ function openEditStop(dayId,idx){
   document.getElementById('es-time').value=s.time||'';
   document.getElementById('es-name').value=s.name||'';
   document.getElementById('es-desc').value=s.desc||'';
-  document.getElementById('es-type').value=s.type||'view';
   document.getElementById('es-maps').value=s.maps||'';
-  document.getElementById('edit-stop-ttl').textContent='Editar · '+s.name;
+  document.getElementById('edit-stop-ttl').textContent=s.name;
+  initChips('es-type-chips','es-type-val',s.type||'view');
   openModal('edit-stop-modal');
+  setTimeout(()=>document.getElementById('es-name').focus(),200);
 }
 
 function saveEditStop(){
   const dayId=document.getElementById('es-day-id').value;
   const idx=parseInt(document.getElementById('es-stop-idx').value);
+  const name=document.getElementById('es-name').value.trim();
+  if(!name){alert('O nome não pode estar vazio.');return;}
   if(!editedDays[dayId])editedDays[dayId]={};
   if(!editedDays[dayId].editedStops)editedDays[dayId].editedStops=[];
-  // Remover edição anterior do mesmo índice
   editedDays[dayId].editedStops=editedDays[dayId].editedStops.filter(e=>e._origIdx!==idx);
   editedDays[dayId].editedStops.push({
     _origIdx:idx,
-    time:document.getElementById('es-time').value,
-    name:document.getElementById('es-name').value,
-    desc:document.getElementById('es-desc').value,
-    type:document.getElementById('es-type').value,
-    maps:document.getElementById('es-maps').value,
+    time:document.getElementById('es-time').value.trim(),
+    name,
+    desc:document.getElementById('es-desc').value.trim(),
+    type:getChipVal('es-type-val'),
+    maps:document.getElementById('es-maps').value.trim(),
   });
   saveState();
   closeModal('edit-stop-modal');
@@ -1459,6 +1564,11 @@ function openAddStop(dayId){
   document.getElementById('ns-name').value='';
   document.getElementById('ns-desc').value='';
   document.getElementById('ns-maps').value='';
+  // Mostrar nome do dia no hint
+  const d=getDayData(dayId);
+  const lbl=document.getElementById('add-stop-day-label');
+  if(lbl&&d)lbl.textContent='Adicionando ao dia: '+d.date;
+  initChips('ns-type-chips','ns-type-val','view');
   openModal('add-stop-modal');
   setTimeout(()=>document.getElementById('ns-name').focus(),200);
 }
@@ -1466,16 +1576,16 @@ function openAddStop(dayId){
 function saveNewStop(){
   const dayId=document.getElementById('ns-day-id').value;
   const name=document.getElementById('ns-name').value.trim();
-  if(!name){alert('Digite o nome da parada.');return;}
+  if(!name){document.getElementById('ns-name').focus();return;}
   if(!editedDays[dayId])editedDays[dayId]={};
   if(!editedDays[dayId].extraStops)editedDays[dayId].extraStops=[];
   editedDays[dayId].extraStops.push({
     _isExtra:true,
-    time:document.getElementById('ns-time').value,
+    time:document.getElementById('ns-time').value.trim(),
     name,
-    desc:document.getElementById('ns-desc').value,
-    type:document.getElementById('ns-type').value,
-    maps:document.getElementById('ns-maps').value,
+    desc:document.getElementById('ns-desc').value.trim(),
+    type:getChipVal('ns-type-val'),
+    maps:document.getElementById('ns-maps').value.trim(),
   });
   saveState();
   closeModal('add-stop-modal');
@@ -1671,46 +1781,152 @@ function addPlaceFromSearch(i){
   if(inp){inp.placeholder='✓ '+p.name+' adicionado!';setTimeout(function(){inp.placeholder='🔍  Buscar restaurante, praia, atração...';},2500);}
 }
 
+
+// ── Type chips ──
+function initChips(groupId, hiddenId, defaultVal){
+  const grp = document.getElementById(groupId);
+  if(!grp) return;
+  grp.querySelectorAll('.type-chip').forEach(function(btn){
+    btn.classList.toggle('sel', btn.dataset.val === defaultVal);
+    btn.onclick = function(){
+      grp.querySelectorAll('.type-chip').forEach(b=>b.classList.remove('sel','sel-dest'));
+      btn.classList.add('sel');
+      document.getElementById(hiddenId).value = btn.dataset.val;
+    };
+  });
+  document.getElementById(hiddenId).value = defaultVal;
+}
+function initDestChips(groupId, hiddenId, defaultVal){
+  const grp = document.getElementById(groupId);
+  if(!grp) return;
+  grp.querySelectorAll('.type-chip').forEach(function(btn){
+    btn.classList.toggle('sel-dest', btn.dataset.val === defaultVal);
+    btn.onclick = function(){
+      grp.querySelectorAll('.type-chip').forEach(b=>b.classList.remove('sel','sel-dest'));
+      btn.classList.add('sel-dest');
+      document.getElementById(hiddenId).value = btn.dataset.val;
+    };
+  });
+  document.getElementById(hiddenId).value = defaultVal;
+}
+function getChipVal(hiddenId){ return document.getElementById(hiddenId).value; }
+
 // ══ ADD PLACE MODAL ══
 let apResult=null;
-function openAddPlace(){document.getElementById('ap-modal').classList.add('open');['ap-name','ap-note'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('ap-coords').value='';document.getElementById('ap-results').innerHTML='';document.getElementById('ap-extra').style.display='none';apResult=null;setTimeout(()=>document.getElementById('ap-name').focus(),200);}
+function openAddPlace(){
+  document.getElementById('ap-modal').classList.add('open');
+  document.getElementById('ap-step1').style.display='';
+  document.getElementById('ap-step2').style.display='none';
+  const n=document.getElementById('ap-name');if(n)n.value='';
+  const note=document.getElementById('ap-note');if(note)note.value='';
+  document.getElementById('ap-coords').value='';
+  document.getElementById('ap-results').innerHTML='';
+  apResult=null;
+  setTimeout(()=>document.getElementById('ap-name').focus(),250);
+}
 function closeAddPlace(){document.getElementById('ap-modal').classList.remove('open');}
-function clearPreview(){apResult=null;document.getElementById('ap-extra').style.display='none';document.getElementById('ap-results').innerHTML='';}
+function clearPreview(){
+  apResult=null;
+  document.getElementById('ap-step1').style.display='';
+  document.getElementById('ap-step2').style.display='none';
+  document.getElementById('ap-results').innerHTML='';
+}
+function apBack(){ clearPreview(); }
 function apSearch(){
   const name=document.getElementById('ap-name').value.trim();if(!name)return;
   const res=document.getElementById('ap-results');
-  res.innerHTML='<div style="font-size:12px;color:var(--ink-l);padding:6px 0">🔍 Buscando...</div>';
-  document.getElementById('ap-extra').style.display='none';
-  geocodeItaly(name,5).then(results=>{
-    if(!results.length){res.innerHTML='<div style="font-size:12px;color:var(--terr);padding:6px 0">Nenhum resultado.</div>';return;}
+  res.innerHTML='<div style="font-size:13px;color:var(--ink-l);padding:10px 4px">🔍 Buscando...</div>';
+  geocodeItaly(name,5).then(function(results){
+    if(!results.length){
+      res.innerHTML='<div style="font-size:13px;color:var(--terr);padding:10px 4px">Nenhum resultado. Tente adicionar "Italy" ao nome.</div>';
+      return;
+    }
     res._data=results;
-    res.innerHTML=results.map((d,i)=>'<button onclick="apSelect('+i+')" class="sr-item" style="display:block;width:100%;text-align:left;background:none;border:none;cursor:pointer"><div class="sr-name">'+d.name+'</div><div class="sr-addr">'+d.addr+'</div></button>').join('');
-  }).catch(()=>{res.innerHTML='<div style="font-size:12px;color:var(--terr);padding:6px 0">Erro na busca.</div>';});
+    const typeG=function(n){
+      n=n.toLowerCase();
+      if(/ristorante|trattoria|osteria|pizz|restaurant/.test(n))return'🍽';
+      if(/hotel|albergo|hostel/.test(n))return'🏨';
+      if(/spiaggia|beach|cala/.test(n))return'🏖';
+      if(/chiesa|basilica|museo|museum/.test(n))return'🏛';
+      return'📍';
+    };
+    res.innerHTML=results.map(function(d,i){
+      return'<div class="sr-item" data-idx="'+i+'">'
+        +'<span style="font-size:22px">'+typeG(d.name+' '+d.addr)+'</span>'
+        +'<div><div style="font-weight:500;font-size:14px">'+d.name+'</div>'
+        +'<div style="font-size:12px;color:var(--ink-l);margin-top:2px">'+d.addr+'</div></div>'
+        +'<span style="margin-left:auto;font-size:20px;color:var(--ocean-m)">＋</span>'
+        +'</div>';
+    }).join('');
+    res.onclick=function(e){
+      const item=e.target.closest('[data-idx]');
+      if(item)apSelect(parseInt(item.dataset.idx));
+    };
+  }).catch(function(){
+    const qv=document.getElementById('ap-name').value.trim();
+    res.innerHTML='<div style="padding:10px 0">'
+      +'<div style="font-size:13px;color:var(--terr);margin-bottom:10px">Não foi possível buscar agora.</div>'
+      +'<a href="https://www.google.com/maps/search/'+encodeURIComponent(qv)+' Italy" target="_blank" '
+      +'style="display:inline-flex;align-items:center;gap:6px;background:var(--ocean);color:#fff;border-radius:20px;padding:10px 16px;font-size:13px;text-decoration:none;font-weight:500">🗺 Buscar no Google Maps</a>'
+      +'</div>';
+  });
 }
 function apSelect(i){
   const data=document.getElementById('ap-results')._data;if(!data||!data[i])return;
-  const d=data[i];apResult=d;
-  document.getElementById('ap-name').value=d.name;
+  const d=data[i]; apResult=d;
   document.getElementById('ap-coords').value=d.lat.toFixed(5)+','+d.lon.toFixed(5);
-  if(leafletMap)leafletMap.setView([d.lat,d.lon],15);
+  // Inferir destino
   const lat=d.lat,lng=d.lon;let dest='Roma';
   if(lng>8.5&&lng<10.2&&lat>38.5&&lat<41.5)dest='Sardenha';
   else if(lat>40.52&&lat<40.59&&lng>14.18&&lng<14.27)dest='Capri';
   else if(lat>40.4&&lat<40.75&&lng>14.1&&lng<14.65)dest='Sorrento/Costa';
   else if(lat>40.8&&lat<40.93&&lng>14.1&&lng<14.35)dest='Nápoles';
-  document.getElementById('ap-dest').value=dest;
-  document.getElementById('ap-results').innerHTML='<div style="background:#F0F7EC;border-radius:var(--rs);padding:9px 12px;font-size:12px;color:var(--sage);margin-bottom:8px">✓ '+d.name+(d.addr?', '+d.addr:'')+'</div>';
-  document.getElementById('ap-extra').style.display='block';
+  // Inferir tipo
+  const nm=(d.name+' '+d.addr).toLowerCase();
+  let type='view';
+  if(/ristorante|trattoria|osteria|pizz|restaurant|osteria/.test(nm))type='food';
+  else if(/hotel|albergo|hostel|resort/.test(nm))type='hotel';
+  else if(/spiaggia|beach|cala|baia/.test(nm))type='view';
+  // Mostrar card de confirmação + step 2
+  document.getElementById('ap-confirm-card').innerHTML=
+    '<div class="cc-icon">📍</div>'
+    +'<div><div class="cc-name">'+d.name+'</div><div class="cc-addr">'+(d.addr||'')+'</div></div>';
+  document.getElementById('ap-step1').style.display='none';
+  document.getElementById('ap-step2').style.display='';
+  initChips('ap-type-chips','ap-type-val',type);
+  initDestChips('ap-dest-chips','ap-dest-val',dest);
+  if(leafletMap) leafletMap.setView([lat,lng],15);
 }
 function apSave(){
-  const name=document.getElementById('ap-name').value.trim(),coords=document.getElementById('ap-coords').value.trim();
-  if(!name||!coords){alert('Selecione um resultado primeiro.');return;}
-  const p={id:'cp_'+Date.now(),name,coords,dest:document.getElementById('ap-dest').value,type:document.getElementById('ap-type').value,detail:document.getElementById('ap-note').value.trim()||'Adicionado por você',addr:name,custom:true};
-  customPlaces.push(p);state.customPlaces=customPlaces;saveState();
-  closeAddPlace();mapCatFilter='all';renderMapFilters();renderMapPins();
-  if(leafletMap){const[la,lo]=coords.split(',').map(Number);leafletMap.setView([la,lo],15);setTimeout(()=>openPlacePanel(p),400);}
+  const coords=document.getElementById('ap-coords').value.trim();
+  if(!coords||!apResult){alert('Selecione um resultado primeiro.');return;}
+  const name=apResult.name;
+  const p={
+    id:'cp_'+Date.now(), name, coords,
+    dest: getChipVal('ap-dest-val'),
+    type: getChipVal('ap-type-val'),
+    detail: document.getElementById('ap-note').value.trim() || apResult.addr || 'Adicionado por você',
+    addr: name, custom:true
+  };
+  customPlaces.push(p); state.customPlaces=customPlaces; saveState();
+  closeAddPlace(); renderPlaces();
+  // Ir para o mapa e mostrar o pin
+  mapCatFilter='all';
+  const dg=destGroups.find(g=>g.dest===p.dest);
+  if(dg){mapDestFilter=dg.id;}
+  showView('map');
+  setTimeout(function(){
+    renderMapFilters(); renderMapPins();
+    const[la,lo]=coords.split(',').map(Number);
+    if(leafletMap)leafletMap.setView([la,lo],15);
+    setTimeout(()=>openPlacePanel(p),500);
+  },200);
 }
-function removeCustomPlace(id){customPlaces=customPlaces.filter(p=>p.id!==id);state.customPlaces=customPlaces;saveState();closePanel();renderMapPins();renderPlaces();}
+function removeCustomPlace(id){
+  customPlaces=customPlaces.filter(p=>p.id!==id);
+  state.customPlaces=customPlaces; saveState();
+  closePanel(); renderMapPins(); renderPlaces();
+}
 
 // ══ SHARE ══
 async function shareDay(){
