@@ -150,7 +150,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 #leaflet-map{width:100%;height:calc(100dvh - 182px);margin-top:70px;min-height:280px}
 .lf-pin{display:flex;align-items:center;justify-content:center;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2.5px solid rgba(255,255,255,.9);box-shadow:0 2px 6px rgba(0,0,0,.28);cursor:pointer}
 .lf-inner{transform:rotate(45deg);line-height:1}
-#place-panel{display:none;position:fixed;bottom:60px;left:0;right:0;z-index:160;background:var(--white);border-radius:16px 16px 0 0;box-shadow:0 -4px 20px var(--shl);padding:16px 16px 12px;max-height:50vh;overflow-y:auto}
+
 .pp-drag{width:36px;height:4px;background:var(--sand-d);border-radius:2px;margin:0 auto 12px}
 .pp-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;margin-bottom:3px}
 .pp-det{font-size:12px;color:var(--ink-l);margin-bottom:12px;line-height:1.5}
@@ -607,12 +607,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
     <div class="chips-row" id="map-specific-days" style="margin-top:4px;display:none"></div>
   </div>
   <div id="leaflet-map"></div>
-  <div id="place-panel">
-    <div class="pp-drag-bar"></div>
-    <div class="pp-body" id="place-panel-content"></div>
-  </div>
-  <div id="map-overlay" onclick="closePanel()"></div>
 </div>
+
+<!-- place-panel e overlay fora do view-map para evitar display:none do parent -->
+<div id="place-panel">
+  <div class="pp-drag-bar"></div>
+  <div class="pp-body" id="place-panel-content"></div>
+</div>
+<div id="map-overlay" onclick="closePanel()"></div>
 
 
 
@@ -1535,7 +1537,7 @@ function initLeafletMap(){
   const el=document.getElementById('leaflet-map');
   if(!window.L||!el||el.offsetHeight<10){setTimeout(initLeafletMap,150);return;}
   try{
-    leafletMap=L.map('leaflet-map',{zoomControl:true,preferCanvas:true}).setView([41.9,13.0],6);
+    leafletMap=L.map('leaflet-map',{zoomControl:true,preferCanvas:false}).setView([41.9,13.0],6);
     const tiles=[
       {url:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',opts:{subdomains:'abcd',maxZoom:19}},
       {url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',opts:{maxZoom:19}},
@@ -1652,13 +1654,16 @@ function renderMapPins(){
 }
 
 function isDayPlace(p,dayId){
-  const d=days[dayId];if(!d||!d.stops)return p.type==='hotel'||p.type==='car';
-  if(p.type==='hotel'||p.type==='car')return true;
+  const d=days[dayId];
+  if(!d)return false;
+  // Hotel/locadora: destacar só se é do mesmo destino do dia
+  if(p.type==='hotel'||p.type==='car')return p.dest===d.dest;
+  if(!d.stops)return false;
   const pn=p.name.toLowerCase().split('·')[0].trim();
   const pw=pn.split(/\s+/).filter(w=>w.length>3);
-  return d.stops.some(s=>{
-    if(s.maps&&pw.some(w=>s.maps.toLowerCase().includes(w)))return true;
-    if(s.name&&pw.some(w=>s.name.toLowerCase().includes(w)))return true;
+  return d.stops.some(function(s){
+    if(s.maps&&pw.some(function(w){return s.maps.toLowerCase().includes(w);}))return true;
+    if(s.name&&pw.some(function(w){return s.name.toLowerCase().includes(w);}))return true;
     return false;
   });
 }
