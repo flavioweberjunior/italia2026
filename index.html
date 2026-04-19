@@ -2327,12 +2327,12 @@ async function sendAiMessage(){
   document.getElementById('ai-messages').appendChild(typing);
   scrollAiDown();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    // WORKER_URL: após deploy no Cloudflare, substitua pela URL do seu Worker
+    // Ex: https://italia2026.SEU-USUARIO.workers.dev
+    const WORKER_URL='https://italia2026.flavioweberjunior.workers.dev';
+    const res=await fetch(WORKER_URL,{
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'anthropic-dangerous-direct-browser-calls':'true'
-      },
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1024,
