@@ -415,6 +415,53 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 .mala-who.AB{background:#F0F7EC;color:var(--sage)}
 .mala-who.TODO{background:#FEF6E8;color:var(--gold)}
 
+
+/* ════ CHAT IA ════ */
+#view-ai.active{display:flex;flex-direction:column}
+.chat-wrap{display:flex;flex-direction:column;height:calc(100dvh - 52px - 60px);background:var(--sand)}
+.chat-header{background:var(--ocean);padding:14px 16px 12px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.chat-avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.chat-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:#fff;letter-spacing:.02em}
+.chat-sub{font-size:11px;color:rgba(255,255,255,.65);margin-top:1px}
+.chat-presets{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:10px 14px;flex-shrink:0;background:var(--white);border-bottom:1px solid var(--sand-d)}
+.chat-presets::-webkit-scrollbar{display:none}
+.chat-preset{background:var(--sand);border:1.5px solid var(--sand-d);border-radius:20px;padding:7px 14px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;flex-shrink:0;color:var(--ink-m);white-space:nowrap;transition:all .15s;min-height:34px}
+.chat-preset:active{background:var(--ocean);color:#fff;border-color:var(--ocean)}
+.chat-messages{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:12px;overscroll-behavior:contain}
+.chat-msg-user{align-self:flex-end;max-width:82%;display:flex;flex-direction:column;align-items:flex-end}
+.chat-msg-ai{align-self:flex-start;max-width:88%;display:flex;flex-direction:column;align-items:flex-start}
+.chat-bubble{padding:11px 15px;border-radius:18px;font-size:14px;line-height:1.55;word-break:break-word}
+.chat-msg-user .chat-bubble{background:var(--ocean);color:#fff;border-bottom-right-radius:5px}
+.chat-msg-ai .chat-bubble{background:var(--white);color:var(--ink);border-bottom-left-radius:5px;box-shadow:0 1px 4px var(--sh)}
+.chat-time{font-size:10px;color:var(--ink-l);margin-top:3px;padding:0 4px}
+.chat-typing{align-self:flex-start;background:var(--white);border-radius:18px;border-bottom-left-radius:5px;padding:12px 16px;display:flex;gap:5px;align-items:center;box-shadow:0 1px 4px var(--sh)}
+.chat-dot{width:7px;height:7px;border-radius:50%;background:var(--ink-l);animation:chatPulse 1.3s ease-in-out infinite}
+.chat-dot:nth-child(2){animation-delay:.2s}
+.chat-dot:nth-child(3){animation-delay:.4s}
+@keyframes chatPulse{0%,60%,100%{transform:scale(.7);opacity:.4}30%{transform:scale(1);opacity:1}}
+.chat-input-bar{display:flex;align-items:flex-end;gap:10px;padding:10px 14px 12px;background:var(--white);border-top:1px solid var(--sand-d);flex-shrink:0}
+.chat-input{flex:1;border:1.5px solid var(--sand-d);border-radius:22px;padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--sand);resize:none;line-height:1.4;min-height:44px;max-height:100px;overflow-y:auto;transition:border-color .2s}
+.chat-input:focus{outline:none;border-color:var(--ocean-m);background:var(--white)}
+.chat-send{width:44px;height:44px;border-radius:50%;background:var(--ocean);border:none;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.chat-send:active{background:var(--ocean-m);transform:scale(.95)}
+.chat-send:disabled{opacity:.4;cursor:default}
+
+
+.modal{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.45);align-items:flex-end}
+.modal.open{display:flex}
+
+
+/* ── Contexto histórico ── */
+.ctx-section{margin-bottom:14px}
+.ctx-label{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-l);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ctx-label::after{content:'';flex:1;height:1px;background:var(--sand-d)}
+.ctx-card{background:linear-gradient(135deg,var(--ocean) 0%,#0D3550 100%);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;color:var(--sand);position:relative;overflow:hidden}
+.ctx-card::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.06)}
+.ctx-card-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.ctx-icon{font-size:22px;flex-shrink:0;line-height:1}
+.ctx-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:400;color:var(--gold-l);letter-spacing:.02em}
+.ctx-text{font-size:13px;line-height:1.65;color:rgba(245,239,228,.88)}
+
 </style>
 </head>
 <body>
@@ -631,24 +678,46 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 </div>
 
 <!-- ═══ IA ═══ -->
-<div id="view-ai" class="view">
-  <div class="ai-view">
-    <div class="ai-presets" id="ai-presets">
-      <button class="ai-preset" onclick="aiPreset(this)">O que fazer em Capri?</button>
-      <button class="ai-preset" onclick="aiPreset(this)">Restaurantes em Positano</button>
-      <button class="ai-preset" onclick="aiPreset(this)">Dicas para Golfo di Orosei</button>
-      <button class="ai-preset" onclick="aiPreset(this)">Como ir de Nápoles a Sorrento?</button>
-      <button class="ai-preset" onclick="aiPreset(this)">O que comprar na Sardenha?</button>
+<div id="view-ai" class="view" style="padding:0">
+  <div class="chat-wrap">
+
+    <!-- Cabeçalho -->
+    <div class="chat-header">
+      <div class="chat-avatar">✨</div>
+      <div>
+        <div class="chat-name">Assistente de Viagem</div>
+        <div class="chat-sub">Especialista em Itália · maio 2026</div>
+      </div>
     </div>
-    <div class="ai-msgs" id="ai-messages">
-      <div class="ai-msg assistant">Olá, Flavio! 🇮🇹 Sou seu assistente de viagem para a Itália. Posso ajudar com dicas de restaurantes, atrações, logística, clima, o que visitar em cada destino... Pergunte à vontade!</div>
+
+    <!-- Sugestões rápidas -->
+    <div class="chat-presets" id="chat-presets">
+      <button class="chat-preset" onclick="aiPreset(this)">O que fazer em Capri?</button>
+      <button class="chat-preset" onclick="aiPreset(this)">Restaurantes em Positano</button>
+      <button class="chat-preset" onclick="aiPreset(this)">Golfo di Orosei — dicas</button>
+      <button class="chat-preset" onclick="aiPreset(this)">Como ir de Nápoles a Sorrento?</button>
+      <button class="chat-preset" onclick="aiPreset(this)">O que comprar na Sardenha?</button>
+      <button class="chat-preset" onclick="aiPreset(this)">Clima em maio na Costa Amalfitana</button>
     </div>
-    <div class="ai-inp-row">
-      <textarea class="ai-ta" id="ai-input" placeholder="Pergunte sobre a viagem..." rows="1"
+
+    <!-- Mensagens -->
+    <div class="chat-messages" id="ai-messages">
+      <div class="chat-msg chat-msg-ai">
+        <div class="chat-bubble">Olá, Flavio! 🇮🇹 Sou seu assistente especializado na viagem de vocês. Posso ajudar com dicas de restaurantes, o que visitar, como se locomover, o que levar, clima... Pergunte à vontade!</div>
+        <div class="chat-time">agora</div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input-bar">
+      <textarea class="chat-input" id="ai-input" placeholder="Pergunte sobre a viagem..." rows="1"
         onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAiMessage()}"
-        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
-      <button class="ai-send" id="ai-send-btn" onclick="sendAiMessage()">➤</button>
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+      <button class="chat-send" id="ai-send-btn" onclick="sendAiMessage()" aria-label="Enviar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
     </div>
+
   </div>
 </div>
 
@@ -913,6 +982,10 @@ function resetDayEdits(dayId){
 
 const days={
   roma1:{title:'Chegada + Derby della Capitale',date:'Dom 17 mai · Roma',dest:'Roma',
+    context:[
+      {icon:'🏟',title:'Estádio Olímpico',text:'Inaugurado em 1953, o Stadio Olimpico fica na colina Foro Italico, construída por Mussolini. Roma e Lazio dividem o mesmo estádio — o Derby della Capitale é considerado um dos clássicos mais intensos da Europa. Roma torce no setor Sul, Lazio no Norte.'},
+      {icon:'🍝',title:'Cacio e Pepe',text:'O prato mais romano de todos. Feito com apenas 3 ingredientes — pecorino romano, pimenta-do-reino e massa. A técnica é o segredo: o queijo não pode empelotar. Em Trastevere você encontra a versão mais autêntica, longe dos restaurantes turísticos.'},
+    ],
     alerts:[{type:'blue',text:'✈️ Chegada FCO 11h30. Hotel: Piemonte Hotel, Via Vicenza 32c — próximo à Termini.'}],
     stops:[
       {time:'13h',type:'info',name:'Check-in · Piemonte Hotel',desc:'Via Vicenza 32c · 3 noites + café da manhã',maps:'Piemonte+Hotel+Via+Vicenza+Roma'},
@@ -922,7 +995,13 @@ const days={
         {name:'Trattoria local',detail:'Qualquer cantina · sem reserva',maps:'Trastevere+trattoria+Rome'},
       ]},
     ],notes:true},
-  roma2:{title:'Coliseu + Cripta dos Capuchinhos',date:'Seg 18 mai · Roma',dest:'Roma',
+  roma2:{title:'Coliseu · Foro Romano · Palatino',date:'Seg 18 mai · Roma',dest:'Roma',
+    context:[
+      {icon:'🏛',title:'Coliseu — 72 d.C.',text:'Maior anfiteatro já construído: 50.000 espectadores, 80 arcos, 4 andares. Levou apenas 8 anos para construir — com mão de obra escrava judaica após a destruição de Jerusalém em 70 d.C. Os jogos podiam durar 100 dias seguidos. O nome Coliseu vem da estátua colossal de Nero que ficava ao lado, hoje desaparecida.'},
+      {icon:'🗺',title:'Foro Romano',text:'Por 1.000 anos foi o centro político, religioso e comercial do mundo ocidental. Aqui Júlio César foi assassinado (44 a.C.), Marco Antônio fez seu discurso e os imperadores celebravam seus triunfos. Hoje são ruínas, mas caminhando pelo Foro você percorre literalmente o coração da civilização romana.'},
+      {icon:'👑',title:'Monte Palatino',text:'A colina mais antiga de Roma — segundo a lenda, onde Rômulo fundou a cidade em 753 a.C. Foi onde os imperadores construíram seus palácios. A palavra palácio em todas as línguas ocidentais vem de Palatinus. Vista do Foro Romano de cima é uma das mais bonitas de Roma.'},
+      {icon:'💡',title:'Dica prática',text:'O ingresso do Coliseu inclui Foro Romano e Palatino. A visita completa leva 3-4h. Chegue às 08h30 (abertura) para o Coliseu quase vazio — em julho tem fila de 2h mesmo com ingresso. Sapatos confortáveis são essenciais: são 3km de caminhada no paralelepípedo.'},
+    ],
     alerts:[{type:'green',text:'🎟 Ingresso Coliseu €24 reservado para hoje. Chegue 08h15.'}],
     stops:[
       {time:'08h30',type:'star',name:'Coliseu + Foro Romano + Palatino',desc:'Comece cedo — menos calor e menos gente. ~2h30 no total.',maps:'Colosseum+Rome+Italy'},
@@ -938,6 +1017,12 @@ const days={
       ]},
     ],notes:true},
   roma3:{title:'Museus Vaticanos · Roma livre',date:'Ter 19 mai · Roma',dest:'Roma',
+    context:[
+      {icon:'⛪',title:'Vaticano — o menor país do mundo',text:'Com apenas 0,44 km², é o menor Estado soberano do planeta. Tornou-se independente da Itália em 1929 pelo Tratado de Latrão, assinado por Mussolini e o Papa Pio XI. Tem sua própria moeda (euro vaticano, raridade para colecionadores), correio, rádio e guarda suíça desde 1506.'},
+      {icon:'🎨',title:'Museus Vaticanos — 500 anos de coleção',text:'Fundados pelo Papa Júlio II em 1503 com uma única estátua (o Laocoonte, encontrada enterrada em Roma). Hoje são 54 galerias com 70.000 obras. A Escola de Atenas de Rafael, as tapeçarias flamengas e os mapas geográficos do séc. XVI estão no caminho para a Sistina.'},
+      {icon:'✨',title:'Capela Sistina — Michelangelo',text:'Michelangelo levou 4 anos pintando o teto (1508-1512) — deitado em andaimes, não de costas como o mito diz. Pintou 300 figuras em 500m². O Juízo Final na parede do altar veio 23 anos depois, quando ele tinha 60 anos. Os cardeais se reúnem aqui para eleger o Papa — o conclave.'},
+      {icon:'🏛',title:'Basílica de São Pedro',text:'A maior igreja do mundo — cabe Notre-Dame inteira dentro dela. Construída sobre o túmulo de São Pedro, o primeiro papa, crucificado de cabeça para baixo em 64 d.C. A cúpula de Michelangelo tem 136m de altura e levou 120 anos para construir. Da cúpula você vê toda Roma em 360°.'},
+    ],
     alerts:[{type:'amber',text:'🎟 Museus Vaticanos: reservar com antecedência em museivaticani.va (~€20 pp). Entrada às 08h é o único horário tranquilo. Se não conseguir ingresso, a Basílica + Praça são gratuitas e sem reserva — e igualmente inesquecíveis.'}],
     planAB:{
       question:'Conseguiram ingresso para os Museus Vaticanos?',
@@ -959,6 +1044,9 @@ const days={
       ]},
     ],notes:true},
   roma4:{title:'Partida para Sardenha',date:'Qua 20 mai · Roma → Sardenha',dest:'Roma',
+    context:[
+      {icon:'✈️',title:'Aeroporto de Ciampino',text:'O menor dos dois aeroportos de Roma, usado principalmente por companhias low-cost. Fica a 15km do centro — mais perto que o Fiumicino. Construído em 1916, foi o primeiro aeroporto da Itália e hoje também o mais antigo em operação do país.'},
+    ],
     alerts:[{type:'red',text:'✈️ Voo Roma Ciampino (CIA) → Cagliari 10h55. Sair do hotel às 08h30.'}],
     stops:[
       {time:'07h',type:'food',name:'Café da manhã + check-out',desc:'Café incluso. Último espresso romano.'},
@@ -966,6 +1054,11 @@ const days={
       {time:'10h55',type:'star',name:'✈️ Roma → Cagliari',desc:'Chegada 12h. Retirada ALAMO no aeroporto às 12h30.',maps:'Cagliari+Elmas+Airport'},
     ],notes:false},
   sard1:{title:'Chegada em Cala Gonone',date:'Qua 20 mai · Sardenha',dest:'Sardenha',
+    context:[
+      {icon:'🏝',title:'Sardenha — a ilha dos centenários',text:'A Sardenha é uma das 5 Zonas Azuis do mundo — regiões onde as pessoas vivem mais de 100 anos em proporção muito acima da média global. Os sardos atribuem isso à alimentação (pecorino, vinho Cannonau, pão pizoccheri), ao ritmo de vida e aos laços comunitários fortes.'},
+      {icon:'🌊',title:'Golfo di Orosei',text:'Considerado o trecho de costa mais selvagem da Itália. As praias só são acessíveis de barco ou por trilhas de horas — o que preservou a água em um azul turquesa impossível. A região faz parte do Parque Nacional do Gennargentu, criado em 1998.'},
+      {icon:'🐟',title:'Culinária sarda',text:'Completamente diferente da italiana continental. Culurgiones são pastéis recheados de batata e menta, fechados à mão com uma trança típica. O porceddu (leitão assado em espeto de mirto) é o prato de festa. O vinho local Cannonau (grenache) tem o maior teor de resveratrol do mundo — talvez o segredo dos centenários.'},
+    ],
     alerts:[{type:'amber',text:'🚗 Drive Cagliari → Cala Gonone ~2h30. Hotel: San Francisco Hotel, Via Magellano 8. Reserve o barco privado logo no check-in!'}],
     stops:[
       {time:'15h30',type:'info',name:'Check-in · San Francisco Hotel',desc:'Via Magellano 8 · Cala Gonone · à beira-mar · café incluso',maps:'San+Francisco+Hotel+Cala+Gonone+Sardinia'},
@@ -976,6 +1069,10 @@ const days={
       ]},
     ],notes:true},
   sard2:{title:'Golfo di Orosei — barco privado ⭐',date:'Qui 21 mai · Cala Gonone',dest:'Sardenha',
+    context:[
+      {icon:'🪨',title:'Cala Goloritzé — UNESCO',text:'Eleita a praia mais bela da Europa pela Lonely Planet. O arco natural de pedra calcária que emerge do mar tem 30m de altura. Só acessível de barco ou por 2h de trilha pela Serra Ovasi. As águas têm entre 15-20m de visibilidade — é por isso que o snorkel aqui é diferente de qualquer lugar.'},
+      {icon:'🏊',title:'Cala Mariolu',text:'O nome vem de mariolo — ladrão em sardo — porque a praia ficava escondida e era usada por contrabandistas. Pedras brancas arredondadas, água azul-esmeralda e verde, com fundo de areia branca visível a 10m de profundidade. Uma das praias mais fotografadas da Itália.'},
+    ],
     alerts:[{type:'green',text:'🚤 Barco privado — só vocês dois. Saída 08h. Protetor solar, água, snorkel.'}],
     stops:[
       {time:'08h–17h',type:'boat',name:'🚤 Barco privado · Golfo di Orosei ⭐',desc:'Cala Luna, Cala Mariolu, Cala Goloritzé (UNESCO). Paradas para mergulho.',couple:true,maps:'Gulf+of+Orosei+Cala+Gonone+Sardinia'},
@@ -985,6 +1082,9 @@ const days={
       ]},
     ],notes:true},
   sard3:{title:'Cala Gonone → Palau',date:'Sex 22 mai · Sardenha',dest:'Sardenha',
+    context:[
+      {icon:'🏖',title:'Cala Brandinchi — "Taiti sardo"',text:'O apelido não é exagero: a água tem tom turquesa caribenho mesmo sendo Mediterrâneo. Fica em San Teodoro, no meio do caminho entre Cala Gonone e Palau. A areia é fina e branca, o fundo é raso e plano — perfeita para entrar devagar e apreciar a cor.'},
+    ],
     alerts:[{type:'blue',text:'🚗 Drive ~1h30. Parada em Cala Brandinchi. Hotel: Club Esse Posada, Palau.'}],
     stops:[
       {time:'10h',type:'view',name:'🏖 Cala Brandinchi — parada obrigatória',desc:'Uma das mais bonitas da Sardenha no caminho. Água cor de Caribe.',couple:true,maps:'Cala+Brandinchi+San+Teodoro+Sardinia'},
@@ -992,7 +1092,11 @@ const days={
       {time:'17h',type:'view',name:'Capo d\'Orso — o urso de granito',desc:'~€5 · caminhada 10 min · vista para o arquipélago e Córsega.',maps:'Capo+d+Orso+Palau+Sardinia'},
       {time:'20h',type:'food',name:'Jantar em Palau',desc:'Bottarga sobre massa + Vermentino.',maps:'restaurants+Palau+Sardinia'},
     ],notes:true},
-  sard4:{title:'Arquipélago La Maddalena ⭐',date:'Sáb 23 mai · La Maddalena',dest:'Sardenha',
+  sard4:{title:'Arquipélago de La Maddalena ⭐',date:'Sáb 23 mai · Sardenha',dest:'Sardenha',
+    context:[
+      {icon:'⛵',title:'La Maddalena — Parque Nacional',text:'Arquipélago com 7 ilhas principais e dezenas de ilhotas, protegido como Parque Nacional Marinho desde 1994. Napoleão ficou aqui exilado brevemente em 1793 antes de Elba. Garibaldi, herói da unificação italiana, escolheu a ilha de Caprera para viver e morrer — a casa dele é museu aberto ao público.'},
+      {icon:'💧',title:'A água de La Maddalena',text:'A transparência vem da combinação de fundos de granito rosa (que não soltam sedimentos), correntes que renovam a água constantemente e ausência de rios na região. O granito cor-de-rosa é a rocha característica da ilha e aparece em formações escultóricas nas praias.'},
+    ],
     alerts:[{type:'blue',text:'Ferry Palau → La Maddalena ~20 min (~€8 pp). Hotel: Hotel Miralonga, check-in partir 15h.'}],
     stops:[
       {time:'09h–17h',type:'boat',name:'⛵ Arquipélago La Maddalena ⭐',desc:'Budelli (Praia Rosa), Spargi, Santa Maria. Só acessíveis por barco.',couple:true,maps:'La+Maddalena+Archipelago+Sardinia',options:[
@@ -1002,14 +1106,20 @@ const days={
       {time:'17h30',type:'info',name:'Check-in · Hotel Miralonga',desc:'Strada Panoramica Via Don Vico 1 · La Maddalena',maps:'Hotel+Miralonga+La+Maddalena+Sardinia'},
       {time:'20h',type:'food',name:'Jantar em La Maddalena',desc:'Ricci di mare se disponível.',maps:'restaurants+La+Maddalena+Sardinia'},
     ],notes:true},
-  sard5:{title:'Caprera + La Maddalena',date:'Dom 24 mai · La Maddalena',dest:'Sardenha',
+  sard5:{title:'Dia livre na Sardenha',date:'Dom 24 mai · Sardenha',dest:'Sardenha',
+    context:[
+      {icon:'🌿',title:'Juniper e Macchia mediterrânea',text:'A vegetação baixa e aromática que cobre as colinas sardas — rosmaninho, murta, lentisco e zimbro — é chamada de macchia. O zimbro (ginepro) é especialmente importante: é usado para defumar a carne, aromatizar a grappa e fazer cestas. O cheiro forte ao caminhar faz parte da experiência sarda.'},
+    ],
     stops:[
       {time:'08h30',type:'nature',name:'Cala Coticcio "Tahiti"',desc:'Caprera. Trilha 40 min ou barco. Azul-turquesa entre granito rosa. €3 pp + guia.',couple:true,maps:'Cala+Coticcio+Caprera+La+Maddalena'},
       {time:'12h',type:'view',name:'Cala Portese + praias Caprera',desc:'Acessível de carro. Almoço na areia.',maps:'Cala+Portese+Caprera+Sardinia'},
       {time:'18h',type:'couple',name:'♡ Aperitivo pôr do sol · Vermentino',desc:'Qualquer bar com vista para o porto.',couple:true,maps:'La+Maddalena+porto+Sardinia'},
       {time:'20h',type:'food',name:'Último jantar na Sardenha ⭐',desc:'Peça fregola com frutos do mar.',couple:true,maps:'restaurants+La+Maddalena'},
     ],notes:true},
-  sard6:{title:'La Maddalena → Nápoles',date:'Seg 25 mai · Partida',dest:'Sardenha',
+  sard6:{title:'Sardenha → Nápoles',date:'Seg 25 mai · Sardenha',dest:'Sardenha',
+    context:[
+      {icon:'🍕',title:'Chegando em Nápoles',text:'Nápoles é o caos mais fascinante da Itália. Foi capital do Reino das Duas Sicílias por séculos e ainda tem personalidade completamente própria — diferente do Norte e do Centro. A pizza foi inventada aqui: a Margherita foi criada em 1889 em homenagem à Rainha Margherita de Savoia, com as cores da bandeira italiana (tomate, mussarela, manjericão).'},
+    ],
     alerts:[{type:'red',text:'⚠️ Check-out até 10h. Drive ~3h. Devolução ALAMO 10h. Voo 13h50.'}],
     stops:[
       {time:'09h30',type:'info',name:'Ferry + drive Cagliari',desc:'Ferry ~20 min + drive ~2h30. Devolução ALAMO aeroporto.',maps:'Cagliari+Elmas+Airport'},
@@ -1020,7 +1130,11 @@ const days={
         {name:'Da Nennella',detail:'Bairro Espanhol · garçons cantam · ~€15 pp',maps:'Trattoria+Da+Nennella+Naples'},
       ]},
     ],notes:true},
-  costa1:{title:'Chegada em Sorrento',date:'Seg 25 mai · Sorrento',dest:'Sorrento/Costa',
+  costa1:{title:'Chegada em Sorrento',date:'Seg 25 mai · Sorrento/Costa',dest:'Sorrento/Costa',
+    context:[
+      {icon:'🍋',title:'Sorrento e o limoncello',text:'Sorrento é a capital mundial do limoncello. Os limões aqui (Limone di Sorrento IGP) são enormes, de casca grossa e perfumada — usados principalmente pela casca, não pelo suco. A Costa Amalfitana inteira é coberta de limoeiros em terraços suspensos sobre o mar, uma paisagem única.'},
+      {icon:'🌊',title:'Costa Amalfitana — UNESCO',text:'Patrimônio Mundial da UNESCO desde 1997. A SS163 — a estrada que liga Sorrento a Salerno — foi construída entre 1832 e 1853 na rocha viva sobre o mar. Tem 40km de curvas fechadas, túneis e viadutos. Em maio o trânsito já é intenso — saída cedo é essencial.'},
+    ],
     alerts:[{type:'blue',text:'🚗 AVIS retirado em Nápoles 15h30. Use A3 + SS145. Hotel: Villa Igea, Via Capo 96 · 4 noites + café.'}],
     stops:[
       {time:'16h30',type:'info',name:'Check-in · Villa Igea',desc:'Via Capo 96 · Sorrento',maps:'Villa+Igea+Via+Capo+Sorrento'},
@@ -1030,7 +1144,12 @@ const days={
         {name:'O\'Parruchiano La Favorita',detail:'Corso Italia 71 · jardim de limoneiros · desde 1868',maps:'O+Parruchiano+La+Favorita+Sorrento'},
       ]},
     ],notes:true},
-  costa2:{title:'Ravello + Amalfi + Fiordo',date:'Ter 26 mai · Costa Amalfitana',dest:'Sorrento/Costa',
+  costa2:{title:'Ravello · Amalfi · Atrani',date:'Ter 26 mai · Sorrento/Costa',dest:'Sorrento/Costa',
+    context:[
+      {icon:'🎵',title:'Ravello — a cidade da música',text:'Richard Wagner compôs parte de Parsifal aqui em 1880, inspirado pelos jardins da Villa Rufolo. Desde 1953 o Festival de Ravello acontece todo verão no terraço suspenso sobre o mar — um dos cenários mais bonitos de qualquer festival do mundo. Villa Cimbrone era o retiro secreto de Greta Garbo e seu amante Leopold Stokowski nos anos 1930.'},
+      {icon:'⚓',title:'Amalfi — a primeira república marítima',text:'Entre os séculos IX e XI, Amalfi era uma das cidades mais poderosas do Mediterrâneo — antes que Veneza, Gênova e Pisa a superassem. Os amalfitanos inventaram a bússola náutica e o sistema de navegação que abriu o Mediterrâneo ao comércio. A Tavola Amalfitana, código marítimo do séc. XI, foi lei em todo o Mediterrâneo por 300 anos.'},
+      {icon:'🏘',title:'Atrani',text:'O menor município da Itália continental — menos de 1km² e cerca de 900 habitantes. Praticamente fundida com Amalfi, mas sem os turistas. A única praia acessível por escadaria, a piazza minúscula e os prédios coloridos que chegam até a água fazem dela um dos lugares mais fotografados da costa sem que quase ninguém saiba o nome.'},
+    ],
     alerts:[{type:'blue',text:'🚗 Saída 07h30 pela SS163. Priorize barco/transfer. Volte de noite com trânsito esvaziado.'}],
     stops:[
       {time:'09h–13h',type:'couple',name:'♡ Ravello — jardins suspensos ⭐',desc:'Villa Cimbrone: Terraço do Infinito. Villa Rufolo: jardins medievais.',couple:true,maps:'Ravello+Amalfi+Coast'},
@@ -1045,7 +1164,11 @@ const days={
         {name:'Jantar em Sorrento',detail:'Se voltarem direto',maps:'restaurants+Sorrento'},
       ]},
     ],notes:true},
-  costa3:{title:'Positano — dia inteiro',date:'Qua 27 mai · Positano',dest:'Sorrento/Costa',
+  costa3:{title:'Positano — dia inteiro',date:'Qua 27 mai · Sorrento/Costa',dest:'Sorrento/Costa',
+    context:[
+      {icon:'🎨',title:'Positano',text:'At\u00e9 1950 era vila de pescadores. Steinbeck a descreveu em 1953 como um sonho que parece irreal e desencadeou o turismo. Hoje \u00e9 uma das cidades mais caras da It\u00e1lia.'},
+      {icon:'🚶',title:'Sentiero degli Dei — Trilha dos Deuses',text:'O nome vem da crença de que os deuses gregos usavam este caminho para se deslocar entre o Olimpo e o Mar. São 7,8km de trilha entre Agerola e Nocelle, a 600m de altitude, com vista permanente do mar e da costa. É uma das 10 trilhas mais bonitas da Europa. Descida por 1.800 degraus até Positano.'},
+    ],
     planAB:{question:'Como querem o dia de Positano?',A:'🥾 Ativo — Sentiero degli Dei + Positano',B:'🏖 Contemplativo — praia + rooftop + jantar'},
     alerts:[{type:'blue',text:'🚗 Saída 07h30. Estacione no topo (Viale Pasitea). Ferry recomendado para o retorno (~€20 pp).'}],
     stops:[
@@ -1060,7 +1183,11 @@ const days={
         {name:'Drive noturno SS163',detail:'Estrada vazia, costa iluminada',maps:'SS163+Amalfi+Coast'},
       ]},
     ],notes:true},
-  costa4:{title:'Dia livre · Praia e Sorrento',date:'Qui 28 mai · Sorrento',dest:'Sorrento/Costa',
+  costa4:{title:'Furore · Praiano · Snorkeling',date:'Qui 28 mai · Sorrento/Costa',dest:'Sorrento/Costa',
+    context:[
+      {icon:'🎬',title:'Fiordo di Furore',text:'O fiordo mais meridional da Europa — tecnicamente um canyão de calcário onde um riacho encontra o mar. Tem apenas 30m de largura. Cenas do filme Amarcord de Fellini foram gravadas aqui. Em agosto acontece o Campeonato Mundial de Salto da Ponte — atletas saltam da ponte da SS163 (30m de altura) direto no fiordo.'},
+      {icon:'🌊',title:'Praiano — o segredo da costa',text:'Enquanto Positano e Amalfi explodiram de turismo, Praiano manteve o ritmo de village. Os moradores são na maioria pescadores e artesãos de cerâmica. A marina de Praiano — Gavitella — fica ao final de 300 degraus e tem água tão clara quanto qualquer praia famosa da costa.'},
+    ],
     alerts:[{type:'green',text:'☀️ Dia sem roteiro fixo. Plano B disponível: Pompeia (30 min de carro).'}],
     stops:[
       {time:'Manhã',type:'view',name:'Praias nos arredores',desc:'',options:[
@@ -1075,7 +1202,10 @@ const days={
         {name:'Restaurante com vista para o mar',detail:'Peixe do dia + Falanghina',maps:'sea+view+restaurant+Sorrento'},
       ]},
     ],notes:true},
-  costa5:{title:'Sorrento → Capri',date:'Sex 29 mai · Partida',dest:'Sorrento/Costa',
+  costa5:{title:'Sorrento → Capri',date:'Sex 29 mai · Sorrento/Costa',dest:'Sorrento/Costa',
+    context:[
+      {icon:'🚗',title:'Devolução do carro — AVIS Nápoles',text:'O aeroporto de Capodichino fica no norte de Nápoles. A devolução é às 08h — saída de Sorrento às 06h30 pela A3 (40km, ~40min). Atenção: o GPS italiano às vezes sugere a SS145 pela costa, que pode demorar 1h30 no trânsito matinal. Prefira a autoestrada.'},
+    ],
     alerts:[{type:'red',text:'⚠️ Devolução AVIS Capodichino até 08h00. Saiam de Sorrento às ~06h.'}],
     stops:[
       {time:'06h',type:'info',name:'Saída de Sorrento',desc:'Drive ~1h pela A3 até Aeroporto Nápoles.',maps:'Naples+Capodichino+Airport'},
@@ -1083,7 +1213,12 @@ const days={
       {time:'08h15',type:'info',name:'Transfer → Porto de Nápoles',desc:'Táxi/Uber ~€15 · ~20 min · Molo Beverello.',maps:'Molo+Beverello+Naples+Ferry'},
       {time:'~09h30',type:'boat',name:'⛴️ Ferry Nápoles → Capri',desc:'~50 min. A vista de Capri chegando pelo mar é inesquecível.',couple:true,maps:'Capri+ferry+Naples'},
     ],notes:false},
-  capri1:{title:'Chegada em Capri',date:'Sex 29 mai · Capri',dest:'Capri',
+  capri1:{title:'Chegada em Capri · Explorar a ilha',date:'Sex 29 mai · Capri',dest:'Capri',
+    context:[
+      {icon:'🏝',title:'Capri — 2.000 anos de fuga da realidade',text:'O imperador Augusto trocou a ilha de Ischia por Capri em 29 a.C., dizendo que ela tinha clima mais saudável. Tibério governou o Império Romano de Capri por 10 anos (26-37 d.C.) sem nunca voltar a Roma. Na Belle Époque virou refúgio de artistas, escritores e aristocratas europeus. Axel Munthe, Graham Greene e Pablo Neruda viveram aqui.'},
+      {icon:'🪨',title:'Faraglioni',text:'Os três rochedos que emergem do mar ao sul da ilha são o símbolo de Capri. Têm nomes: Stella (ligado à costa), Mezzo (separado) e Scopolo (o mais distante, onde vive a lagartinha azul Lacerta caerulea — espécie encontrada apenas em Capri). Passar de barco pelos arcos naturais entre eles traz boa sorte, segundo a tradição local.'},
+      {icon:'🔵',title:'Gruta Azul — Grotta Azzurra',text:'Descoberta por pescadores em 1826 e revelada ao mundo pelo pintor alemão August Kopisch. A luz entra por uma abertura submersa, refrata na areia branca do fundo e ilumina a caverna inteira em azul fosforescente. Na época romana era santuário de Netuno — foram encontradas estátuas no fundo. Entra-se deitado no barquinho.'},
+    ],
     alerts:[{type:'amber',text:'🚤 Sem pressa de reservar o barco ao chegar. Reserve hoje ou amanhã conforme o ânimo.'}],
     stops:[
       {time:'10h30',type:'info',name:'Chegada Marina Grande',desc:'Locker ~€5. Reserve barco para amanhã. brasilecapri.com — guia em português.',maps:'Marina+Grande+Capri'},
@@ -1096,7 +1231,11 @@ const days={
         {name:'Trattoria local',detail:'Ravioli alla caprese — prato símbolo da ilha',maps:'trattoria+Capri+Island'},
       ]},
     ],notes:true},
-  capri2:{title:'Volta de barco + Anacapri ⭐',date:'Sáb 30 mai · Capri',dest:'Capri',
+  capri2:{title:'Capri — barco + Gruta Azul',date:'Sáb 30 mai · Capri',dest:'Capri',
+    context:[
+      {icon:'⛰',title:'Monte Solaro — 589 metros',text:'O ponto mais alto de Capri, em Anacapri. Da seggiovia (teleférico de cadeira aberta) você vê o Vesúvio, a Península de Sorrento, a Costa Amalfitana e — nos dias claros — a Sicília e a Calábria. Anacapri foi por séculos isolada de Capri: a única ligação era uma escada de 881 degraus chamada Scala Fenicia, construída pelos gregos.'},
+      {icon:'🌸',title:'Gardens of Augustus',text:'Construídos no local da antiga villa do imperador Augusto. Os jardins suspensos sobre o mar foram reformados no início do séc. XX por Friedrich Krupp, industrial alemão que construiu a Via Krupp — a estrada em ziguezague que desce os penhascos até Marina Piccola. Krupp foi expulso da ilha em 1902 após escândalos, mas a estrada ficou.'},
+    ],
     alerts:[{type:'green',text:'🚤 O grande dia de Capri. Barco privado de manhã. Tarde em Anacapri.'}],
     stops:[
       {time:'08h30–13h',type:'boat',name:'🚤 Barco privado — volta completa ⭐',desc:'Faraglioni por baixo do arco. Gruta Azul (€14 pp + gorjeta em dinheiro). brasilecapri.com.',couple:true,maps:'Marina+Grande+Capri+boat+tours'},
@@ -1112,7 +1251,11 @@ const days={
         {name:'Trattoria local',detail:'Totani e patate + Falanghina',maps:'trattoria+Capri+Island'},
       ]},
     ],notes:true},
-  capri3:{title:'Partida — Capri → Brasil',date:'Dom 31 mai · Capri → Brasil',dest:'Capri',
+  capri3:{title:'Último dia em Capri · Voo de volta',date:'Dom 31 mai · Capri',dest:'Capri',
+    context:[
+      {icon:'🛫',title:'Rota de volta',text:'Ferry Capri → Nápoles (Molo Beverello) · ~1h. Do porto ao Aeroporto de Capodichino são 4km (~20min de táxi). O voo NAP→FCO→GIG→POA é longo — use a mochila com tudo que precisar no avião (carregador, remédio, documentos) e deixe a mala despachada se conseguirem no check-in.'},
+      {icon:'💭',title:'Uma última coisa',text:'Os italianos têm uma expressão: il dolce far niente — a doce arte de não fazer nada. Capri é o lugar perfeito para isso. Não tentem cobrir tudo no último dia. Um café na Piazzetta, olhar os barcos chegando em Marina Grande, um gelato de limão. A viagem já foi.'},
+    ],
     alerts:[{type:'red',text:'✈️ Voo NAP 19h35 → FCO → GIG → POA (01/06 09h45). Ferry de Capri às 15h no máximo.'}],
     stops:[
       {time:'Manhã',type:'view',name:'Última manhã em Capri',desc:'Antes das 10h — silenciosa e local. Espresso, compras de limoncello e cerâmica.',couple:true,maps:'Piazza+Umberto+I+Capri'},
@@ -1201,15 +1344,16 @@ const malaItems=[
 
   // ══ FLAVIO ══
   {group:'👕 Roupas — Flavio', who:'F', items:[
-    {id:'mf01',name:'Camisetas',qty:3,tip:'Neutras, cores que combinam'},
-    {id:'mf02',name:'Camisa social leve',qty:1,tip:'Jantares em Ravello e Capri'},
-    {id:'mf03',name:'Shorts / bermudas',qty:2,tip:''},
-    {id:'mf04',name:'Calça jeans ou chino leve',qty:1,tip:'City tour + jantar'},
-    {id:'mf05',name:'Sunga',qty:1,tip:''},
-    {id:'mf06',name:'Short de banho',qty:1,tip:'Dobra pequeno'},
-    {id:'mf07',name:'Cuecas',qty:4,tip:''},
-    {id:'mf08',name:'Meias',qty:3,tip:''},
-    {id:'mf09',name:'Moletom ou casaco leve',qty:1,tip:'Barco e noites de maio (~15°C)'},
+    {id:'mf01',name:'Camisetas',qty:7,tip:'Dry-fit ou algodão leve — não amassam e secam rápido'},
+    {id:'mf02',name:'Camisa social leve',qty:2,tip:'Uma para Roma/Sardenha, outra para Costa/Capri'},
+    {id:'mf03',name:'Shorts / bermudas',qty:4,tip:''},
+    {id:'mf04',name:'Calça jeans leve',qty:1,tip:'Roma + jantares'},
+    {id:'mf05',name:'Calça chino leve',qty:1,tip:'Alternando com a jeans'},
+    {id:'mf06',name:'Cuecas',qty:8,tip:'Lavar 3-4 à mão — seca em uma noite com ar condicionado'},
+    {id:'mf07',name:'Meias',qty:6,tip:'Idem — lavar à mão conforme precisar'},
+    {id:'mf08',name:'Short de banho',qty:2,tip:''},
+    {id:'mf09',name:'Moletom ou casaco leve',qty:1,tip:'Barco no Golfo di Orosei e noites de maio (~15°C)'},
+    {id:'mf10',name:'Pijama leve',qty:1,tip:'Opcional — short + camiseta resolve'},
   ]},
   {group:'👟 Calçados — Flavio', who:'F', items:[
     {id:'fc01',name:'Tênis confortável',qty:1,tip:'Paralelepípedo em Roma — nada de sandália fina'},
@@ -1218,7 +1362,7 @@ const malaItems=[
   ]},
   {group:'🧴 Higiene — Flavio', who:'F', items:[
     {id:'fh01',name:'Desodorante sólido ou creme',qty:1,tip:'Aerossol não passa na bagagem de mão'},
-    {id:'fh02',name:'Shampoo sólido',qty:1,tip:'Economiza espaço e passa no raio-X'},
+    {id:'fh02',name:'Shampoo sólido',qty:1,tip:'Economiza espaço — barra dura semanas'},
     {id:'fh03',name:'Aparelho de barbear',qty:1,tip:''},
     {id:'fh04',name:'Protetor labial com FPS',qty:1,tip:''},
   ]},
@@ -1236,28 +1380,28 @@ const malaItems=[
 
   // ══ LETHI ══
   {group:'👗 Roupas — Lethi', who:'L', items:[
-    {id:'ml01',name:'Blusas versáteis',qty:3,tip:''},
-    {id:'ml02',name:'Vestido leve',qty:1,tip:'Serve para praia e jantar com acessório'},
-    {id:'ml03',name:'Vestido ou conjunto para jantar especial',qty:1,tip:'Ravello, Capri'},
-    {id:'ml04',name:'Short',qty:1,tip:''},
-    {id:'ml05',name:'Calça leve',qty:1,tip:''},
-    {id:'ml06',name:'Biquíni',qty:1,tip:''},
-    {id:'ml07',name:'Saída de praia',qty:1,tip:''},
-    {id:'ml08',name:'Calcinha',qty:4,tip:''},
-    {id:'ml09',name:'Sutiã de viagem',qty:1,tip:'Tecido que seca rápido'},
-    {id:'ml10',name:'Top',qty:1,tip:''},
+    {id:'ml01',name:'Blusas versáteis',qty:7,tip:'Mix de básicas e uma ou duas com estilo para jantar'},
+    {id:'ml02',name:'Vestidos casuais',qty:3,tip:'Servem para praia, passeio e jantar com acessório'},
+    {id:'ml03',name:'Vestido ou conjunto especial',qty:1,tip:'Jantar especial em Ravello ou Capri'},
+    {id:'ml04',name:'Shorts',qty:3,tip:''},
+    {id:'ml05',name:'Calça leve',qty:2,tip:'Uma para city tour, uma mais arrumada'},
+    {id:'ml06',name:'Biquíni',qty:2,tip:''},
+    {id:'ml07',name:'Saída de praia',qty:1,tip:'Funciona como saia casual também'},
+    {id:'ml08',name:'Calcinha',qty:8,tip:'Lavar à mão — seca em uma noite'},
+    {id:'ml09',name:'Sutiã',qty:3,tip:''},
+    {id:'ml10',name:'Sutiã de biquíni extra',qty:1,tip:'Para variar com calcinha normal'},
     {id:'ml11',name:'Cardigan ou casaco leve',qty:1,tip:'Barco e noites mais frias'},
   ]},
   {group:'👟 Calçados — Lethi', who:'L', items:[
     {id:'lc01',name:'Tênis confortável',qty:1,tip:'Paralelepípedo em Roma e degraus em Positano'},
     {id:'lc02',name:'Aquashoes / tênis de água',qty:1,tip:'Praias de pedra na Sardenha e Capri'},
-    {id:'lc03',name:'Sandália confortável',qty:1,tip:'Positano e Amalfi têm muitos degraus em descida'},
+    {id:'lc03',name:'Sandália confortável e elegante',qty:1,tip:'Serve para passeio e jantares — chave para economizar espaço'},
   ]},
   {group:'🧴 Higiene — Lethi', who:'L', items:[
     {id:'lh01',name:'Desodorante sólido ou creme',qty:1,tip:'Aerossol não passa na bagagem de mão'},
-    {id:'lh02',name:'Shampoo e condicionador sólidos',qty:1,tip:'Economiza espaço'},
+    {id:'lh02',name:'Shampoo e condicionador sólidos',qty:1,tip:'Economiza espaço — barra dura semanas'},
     {id:'lh03',name:'Protetor labial com FPS',qty:1,tip:''},
-    {id:'lh04',name:'Maquiagem básica de viagem',qty:1,tip:'Só o essencial — espaço limitado'},
+    {id:'lh04',name:'Maquiagem de viagem (mínimo)',qty:1,tip:'Só o essencial — BB cream, rímel, batom'},
   ]},
   {group:'⚡ Eletrônicos — Lethi', who:'L', items:[
     {id:'le01',name:'Carregador de celular',qty:1,tip:''},
@@ -1273,10 +1417,10 @@ const malaItems=[
 
   // ══ AMBOS ══
   {group:'🏊 Praia e Água — Ambos', who:'AB', items:[
-    {id:'pa01',name:'Snorkel + máscara',qty:2,tip:'Vale muito — Golfo di Orosei, Gruta Azul e Cala Goloritzé'},
-    {id:'pa02',name:'Protetor solar FPS 50+',qty:2,tip:'Caro e difícil de encontrar na Itália — trazer de casa'},
+    {id:'pa01',name:'Snorkel + máscara',qty:2,tip:'Um para cada — Golfo di Orosei e Gruta Azul são imperdíveis'},
+    {id:'pa02',name:'Protetor solar FPS 50+',qty:3,tip:'Caro e difícil na Itália — trazer estoque de casa'},
     {id:'pa03',name:'Case waterproof para celular',qty:1,tip:'As cores embaixo da água no Golfo di Orosei são incríveis'},
-    {id:'pa04',name:'Toalha de microfibra',qty:2,tip:'Leve e seca em minutos'},
+    {id:'pa04',name:'Toalha de microfibra',qty:2,tip:'Leve e seca em minutos — uma para cada'},
     {id:'pa05',name:'Repelente',qty:1,tip:'Noites quentes na Sardenha'},
   ]},
   {group:'💊 Saúde — Ambos', who:'AB', items:[
@@ -1288,16 +1432,18 @@ const malaItems=[
   ]},
   {group:'⚡ Eletrônicos — Ambos', who:'AB', items:[
     {id:'ea01',name:'Powerbank 20.000mAh',qty:1,tip:'App aberto o dia todo + 2 celulares'},
-    {id:'ea02',name:'Adaptador de tomada europeu (Type C/F)',qty:2,tip:'Tomadas italianas são padrão europeu'},
+    {id:'ea02',name:'Adaptador de tomada europeu (Type C/F)',qty:2,tip:'Um na mala, um na mochila'},
     {id:'ea03',name:'Cabo USB extra',qty:1,tip:''},
   ]},
   {group:'🎒 Bagagem — Ambos', who:'AB', items:[
-    {id:'ba01',name:'Mala de mão (max 55×40×20 cm)',qty:2,tip:'Verificar limite da companhia — geralmente 7-10 kg'},
-    {id:'ba02',name:'Packing cubes / organizadores',qty:1,tip:'Fundamental para 15 noites em mala de mão'},
-    {id:'ba03',name:'Cadeado para mala',qty:2,tip:''},
-    {id:'ba04',name:'Sacola reutilizável leve',qty:2,tip:'Supermercados italianos cobram pela sacola'},
+    {id:'ba01',name:'Mala de mão (max 55×40×20 cm)',qty:2,tip:'Verificar limite exato da companhia — geralmente 7-10 kg'},
+    {id:'ba02',name:'Mochila de cabine',qty:2,tip:'Eletrônicos, documentos e espaço livre para compras na volta'},
+    {id:'ba03',name:'Packing cubes / organizadores',qty:1,tip:'Fundamental para maximizar espaço em mala de mão'},
+    {id:'ba04',name:'Cadeado para mala',qty:2,tip:''},
+    {id:'ba05',name:'Sacola reutilizável leve dobrável',qty:2,tip:'Supermercados italianos cobram pela sacola'},
+    {id:'ba06',name:'Saquinhos plásticos zip para molhados',qty:1,tip:'Roupa de banho, protetor solar'},
   ]},
-  {group:'💶 Dinheiro — Ambos', who:'AB', items:[
+  {group:'💶 Dinheiro e Docs — Ambos', who:'AB', items:[
     {id:'di01',name:'€ 200–300 em espécie',qty:1,tip:'Mercados pequenos, gorjetas, emergências'},
     {id:'di02',name:'Cópia das confirmações das locadoras',qty:1,tip:'ALAMO: 1388216603COUNT · AVIS: 47322395BR1'},
     {id:'di03',name:'Seguro viagem',qty:1,tip:'Cópia digital e impressa'},
@@ -1305,28 +1451,31 @@ const malaItems=[
 
   // ══ AINDA PRECISAMOS ══
   {group:'⚡ Urgente — Comprar agora', who:'TODO', items:[
-    {id:'ck01',name:'Ingressos do Coliseu',qty:2,tip:'Venda abre 18/04 às 08h30 em coopculture.it · Full Experience · 18/05 08h30'},
+    {id:'ck01',name:'Ingressos do Coliseu',qty:2,tip:'coopculture.it · Full Experience · 18/05 às 08h30 · venda já aberta'},
     {id:'ck02',name:'Ingressos Roma × Lazio',qty:2,tip:'17/05 às 15h · asroma.com / vivaticket.com'},
   ]},
   {group:'📅 Reservar antes de embarcar', who:'TODO', items:[
     {id:'ck03',name:'Museus Vaticanos + Capela Sistina',qty:2,tip:'museivaticani.va · ~€20 pp · reservar com semanas de antecedência'},
     {id:'ck04',name:'Barco privado — Golfo di Orosei',qty:1,tip:'Reservar no check-in do San Francisco Hotel em Cala Gonone'},
     {id:'ck05',name:'Barco — Arquipélago La Maddalena',qty:1,tip:'Reservar com antecedência na temporada'},
-    {id:'ck06',name:'Barco — Capri',qty:1,tip:'Ferry Molo Beverello → Capri · comprar antes'},
-    {id:'ck07',name:'Experiência gastronômica em Roma',qty:1,tip:'Airbnb Experiences, Withlocals ou EatWith · qualquer noite 17-19/mai'},
-    {id:'ck08',name:'La Fontelina Beach Club — Capri',qty:2,tip:'Reservar com antecedência — lotado na temporada'},
-    {id:'ck09',name:'La Tagliata — Positano',qty:2,tip:'Vista panorâmica · RESERVAR'},
-    {id:'ck10',name:'Tavern Allegra — Sorrento',qty:2,tip:'Reservar com antecedência'},
+    {id:'ck06',name:'Barco — Capri (ferry Nápoles)',qty:1,tip:'Molo Beverello → Capri · comprar antes para garantir horário'},
+    {id:'ck07',name:'Experiência gastronômica em Roma',qty:1,tip:'Airbnb Experiences, Withlocals ou EatWith · qualquer noite 17–19/mai'},
+    {id:'ck08',name:'La Fontelina Beach Club — Capri',qty:2,tip:'Acesso por barco ou escadaria · RESERVAR — lotado na temporada'},
+    {id:'ck09',name:'La Tagliata — Positano',qty:2,tip:'Vista panorâmica · RESERVAR com antecedência'},
+    {id:'ck10',name:'Tavern Allegra — Sorrento',qty:2,tip:'RESERVAR com antecedência'},
   ]},
   {group:'🛒 Comprar antes de viajar', who:'TODO', items:[
-    {id:'ck11',name:'Snorkel + máscara',qty:2,tip:'Mais barato aqui do que na Itália'},
-    {id:'ck12',name:'Aquashoes',qty:2,tip:'Um par para cada um'},
+    {id:'ck11',name:'Snorkel + máscara',qty:2,tip:'Mais barato e melhor seleção aqui do que na Itália'},
+    {id:'ck12',name:'Aquashoes',qty:2,tip:'Um par para cada'},
     {id:'ck13',name:'Protetor solar FPS 50+',qty:3,tip:'Caro na Itália — trazer estoque'},
     {id:'ck14',name:'Toalha de microfibra',qty:2,tip:''},
     {id:'ck15',name:'Packing cubes',qty:1,tip:'Organização essencial para mala de mão em 15 noites'},
-    {id:'ck16',name:'IDP — Permissão Internacional de Dirigir',qty:2,tip:'Emitir no DETRAN ou Despachante'},
-    {id:'ck17',name:'Seguro viagem',qty:2,tip:'Contratar antes de embarcar'},
-    {id:'ck18',name:'Câmbio de euros',qty:1,tip:'€ 200–300 pp'},
+    {id:'ck16',name:'Desodorante sólido ou creme',qty:2,tip:'Um para cada'},
+    {id:'ck17',name:'Shampoo sólido',qty:2,tip:''},
+    {id:'ck18',name:'IDP — Permissão Internacional de Dirigir',qty:2,tip:'Emitir no DETRAN ou despachante — leva alguns dias'},
+    {id:'ck19',name:'Seguro viagem',qty:2,tip:'Contratar antes de embarcar'},
+    {id:'ck20',name:'Câmbio de euros',qty:1,tip:'€ 200–300 pp'},
+    {id:'ck21',name:'Case waterproof para celular',qty:1,tip:''},
   ]},
 ];
 
@@ -1621,6 +1770,17 @@ function showDay(id){
       +'</div>';
   }
   if(raw.alerts)raw.alerts.forEach(function(a){h+='<div class="abox '+a.type+'">'+a.text+'</div>';});
+  // Contexto histórico
+  if(raw.context&&raw.context.length){
+    h+='<div class="ctx-section"><div class="ctx-label">Saiba antes de ir</div>';
+    raw.context.forEach(function(c){
+      h+='<div class="ctx-card">'
+        +'<div class="ctx-card-head"><span class="ctx-icon">'+c.icon+'</span><span class="ctx-title">'+c.title+'</span></div>'
+        +'<div class="ctx-text">'+c.text+'</div>'
+        +'</div>';
+    });
+    h+='</div>';
+  }
   if(raw.planAB){
     const c=state.plans[id]||null;
     h+='<div class="plan-box"><div class="plan-ttl">📋 '+raw.planAB.question+'</div><div class="plan-btns">'
@@ -2140,33 +2300,95 @@ async function shareDay(){
 
 // ══ IA CHAT ══
 let aiHistory=[];
-const AI_SYS=`Você é um assistente de viagem especializado na viagem de Flavio e Lethiane à Itália em maio de 2026. Roteiro: Roma (17-20/mai), Sardenha/Cala Gonone/La Maddalena (20-25/mai), Sorrento+Costa Amalfitana (25-29/mai), Capri (29-31/mai). Perfil: casal, ritmo equilibrado, gastronômico/romântico/natureza. Responda em português, seja direto e específico.`;
+const AI_SYS=`Você é um assistente de viagem especializado na viagem de Flavio Weber Junior e Lethiane Dorneles Caletti à Itália em maio de 2026.
+
+Roteiro: Roma (17-20/mai, hotel Piemonte Via Vicenza 32c), Sardenha/Cala Gonone/La Maddalena (20-25/mai, San Francisco Hotel), Sorrento+Costa Amalfitana (25-29/mai, carro AVIS Nápoles), Capri (29-31/mai).
+Voos: POA→GRU→FCO (chega 17/mai 11h30) | NAP→GIG→POA (31/mai).
+Perfil: casal, ritmo equilibrado, gastronômico + romântico + natureza. Decidem restaurantes na hora. Manhãs cedo.
+
+Responda sempre em português brasileiro. Seja direto, específico e prático. Quando sugerir lugares mencione o nome exato, localização e uma dica prática. Use emojis com moderação.`;
 
 async function sendAiMessage(){
-  const inp=document.getElementById('ai-input');const msg=inp.value.trim();if(!msg)return;
+  const inp=document.getElementById('ai-input');
+  const msg=inp.value.trim();
+  if(!msg)return;
   inp.value='';inp.style.height='44px';
-  addAiMsg('user',msg);aiHistory.push({role:'user',content:msg});
-  const btn=document.getElementById('ai-send-btn');btn.disabled=true;
-  const th=document.createElement('div');th.className='ai-thinking';th.id='ai-thinking';
-  th.innerHTML='<div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>';
-  document.getElementById('ai-messages').appendChild(th);scrollAiDown();
+  // Esconder presets após primeira mensagem
+  const presets=document.getElementById('chat-presets');
+  if(presets&&aiHistory.length===0)presets.style.display='none';
+  addAiMsg('user',msg);
+  aiHistory.push({role:'user',content:msg});
+  const btn=document.getElementById('ai-send-btn');
+  btn.disabled=true;
+  // Typing indicator
+  const typing=document.createElement('div');
+  typing.className='chat-typing';typing.id='ai-typing';
+  typing.innerHTML='<div class="chat-dot"></div><div class="chat-dot"></div><div class="chat-dot"></div>';
+  document.getElementById('ai-messages').appendChild(typing);
+  scrollAiDown();
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:AI_SYS,messages:aiHistory})});
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'anthropic-dangerous-direct-browser-calls':'true'
+      },
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1024,
+        system:AI_SYS,
+        messages:aiHistory
+      })
+    });
+    document.getElementById('ai-typing')?.remove();
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      throw new Error(err.error?.message||'HTTP '+res.status);
+    }
     const data=await res.json();
-    const reply=data.content&&data.content[0]?data.content[0].text:'Não consegui responder agora.';
+    const reply=(data.content&&data.content[0]&&data.content[0].text)||'Não consegui responder agora.';
     aiHistory.push({role:'assistant',content:reply});
-    document.getElementById('ai-thinking')?.remove();
-    addAiMsg('assistant',reply);
-  }catch(e){document.getElementById('ai-thinking')?.remove();addAiMsg('assistant','⚠️ Erro de conexão.');}
+    addAiMsg('ai',reply);
+  }catch(e){
+    document.getElementById('ai-typing')?.remove();
+    const isNetwork=e.message.includes('fetch')||e.message.includes('network')||e.message.includes('Failed');
+    const errMsg=isNetwork
+      ?'Sem conexão com a internet. Verifique sua rede e tente novamente.'
+      :'Não foi possível responder agora ('+e.message+'). Tente novamente.';
+    addAiMsg('ai',errMsg);
+    // Recolocar a mensagem no input para o usuário tentar de novo
+    inp.value=msg;
+    aiHistory.pop(); // remover a mensagem que não foi respondida
+  }
   btn.disabled=false;
+  inp.focus();
 }
+
 function addAiMsg(role,text){
-  const el=document.createElement('div');el.className='ai-msg '+role;
-  el.innerHTML=text.replace(/\n/g,'<br>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
-  document.getElementById('ai-messages').appendChild(el);scrollAiDown();
+  const isUser=role==='user';
+  const wrap=document.createElement('div');
+  wrap.className=isUser?'chat-msg-user':'chat-msg-ai';
+  const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  // Formatar markdown simples
+  const formatted=text
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+  wrap.innerHTML='<div class="chat-bubble">'+formatted+'</div><div class="chat-time">'+now+'</div>';
+  document.getElementById('ai-messages').appendChild(wrap);
+  scrollAiDown();
 }
-function scrollAiDown(){const el=document.getElementById('ai-messages');if(el)setTimeout(()=>el.scrollTop=el.scrollHeight,50);}
-function aiPreset(btn){document.getElementById('ai-input').value=btn.textContent;sendAiMessage();}
+
+function scrollAiDown(){
+  const el=document.getElementById('ai-messages');
+  if(el)setTimeout(()=>{el.scrollTo({top:el.scrollHeight,behavior:'smooth'});},60);
+}
+
+function aiPreset(btn){
+  const inp=document.getElementById('ai-input');
+  if(inp){inp.value=btn.textContent;inp.style.height='auto';}
+  sendAiMessage();
+}
 
 // ══ DESPESAS ══
 function saveExpRate(v){state.expRate=parseFloat(v)||6.20;saveState();}
