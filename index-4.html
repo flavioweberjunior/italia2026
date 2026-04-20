@@ -1,0 +1,2688 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Flavio & Lethi · Itália 2026</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Itália 2026">
+<meta name="theme-color" content="#1B4F72">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22It%C3%A1lia+2026%22%2C%22short_name%22%3A%22It%C3%A1lia+2026%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23F5EFE4%22%2C%22theme_color%22%3A%22%231B4F72%22%7D">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+:root{--sand:#F5EFE4;--sand-d:#EDE4D4;--terr:#C4622D;--ocean:#1B4F72;--ocean-m:#2E7BA6;--ocean-l:#A8D4E8;--sage:#6B7F5E;--gold:#C9973A;--gold-l:#F0D080;--ink:#1A1410;--ink-m:#3D3028;--ink-l:#7A6A58;--white:#FDFAF6;--sh:rgba(26,20,16,.10);--shl:rgba(26,20,16,.20);--r:12px;--rs:8px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);min-height:100vh;padding-bottom:68px}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--ocean);height:52px;display:flex;align-items:center;padding:0 14px;box-shadow:0 2px 12px var(--shl)}
+.nav-title{font-family:'Cormorant Garamond',serif;color:var(--sand);font-size:16px;font-weight:300;letter-spacing:.04em}
+.nav-title span{color:var(--gold-l);font-style:italic}
+.tab-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--white);border-top:1px solid var(--sand-d);display:flex;height:60px;box-shadow:0 -2px 12px var(--sh)}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;border:none;background:none;padding:0}
+.tab-item .ti{font-size:20px;line-height:1;transition:transform .15s}
+.tab-item .tl{font-size:10px;color:var(--ink-l);letter-spacing:.02em}
+.tab-item.active .ti{transform:scale(1.12)}
+.tab-item.active .tl{color:var(--ocean);font-weight:500}
+.view{display:none;padding:64px 12px 20px;max-width:600px;margin:0 auto}
+.view.active{display:block}
+#view-map{padding:0;max-width:600px;margin:0 auto}
+/* Trip header */
+.trip-hdr{background:linear-gradient(135deg,var(--ocean),#0D3550);border-radius:var(--r);padding:20px;color:var(--sand);margin-bottom:14px;position:relative;overflow:hidden}
+.trip-hdr::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(201,151,58,.15)}
+.trip-hdr h2{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;letter-spacing:.04em;margin-bottom:4px;position:relative;z-index:1}
+.trip-dates{font-size:12px;color:var(--ocean-l);margin-bottom:14px;position:relative;z-index:1}
+.trip-stats{display:flex;gap:16px;position:relative;z-index:1}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--gold-l);line-height:1}
+.stat-lbl{font-size:10px;color:var(--ocean-l);margin-top:1px;text-transform:uppercase;letter-spacing:.07em}
+.cd-box{background:rgba(255,255,255,.12);border-radius:8px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;margin-top:14px;position:relative;z-index:1}
+.cd-val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--gold-l)}
+.cd-lbl{font-size:10px;color:var(--ocean-l);text-transform:uppercase;letter-spacing:.07em}
+.cd-sub{font-size:11px;color:var(--gold-l);margin-top:2px}
+/* Alerts */
+.a-urg,.alert-urgent{background:linear-gradient(135deg,#8B2500,var(--terr));border-radius:var(--rs);padding:12px 14px;color:var(--white);margin-bottom:8px;display:flex;gap:10px}
+.a-urg .icon,.alert-urgent .icon{font-size:18px;flex-shrink:0}
+.a-urg .title,.alert-urgent .title{font-weight:500;font-size:13px;margin-bottom:2px}
+.a-urg .desc,.alert-urgent .desc{font-size:12px;opacity:.85;line-height:1.4}
+.a-urg .dl,.alert-urgent .deadline{background:rgba(255,255,255,.2);border-radius:5px;padding:2px 7px;font-size:11px;font-weight:500;margin-top:4px;display:inline-block}
+.abox{border-radius:var(--rs);padding:10px 12px;font-size:12px;line-height:1.5;margin-bottom:8px;border-left:3px solid}
+.abox.green{background:#F0F7EC;border-color:var(--sage);color:#3D5535}
+.abox.blue{background:#EBF4FA;border-color:var(--ocean-m);color:#1B4060}
+.abox.amber{background:#FEF6E8;border-color:var(--gold);color:#6B4500}
+.abox.red{background:#FEF0EC;border-color:var(--terr);color:#7A2800}
+/* Dest blocks */
+.dest-blk{margin-bottom:18px}
+.dest-lbl{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.dest-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400}
+.dest-line{flex:1;height:1px;background:var(--sand-d)}
+.dest-dates{font-size:10px;color:var(--ink-l);white-space:nowrap}
+.days-grid{display:flex;flex-direction:column;gap:6px}
+/* Day card */
+.day-card{background:var(--white);border-radius:var(--rs);padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer;border:1.5px solid transparent;transition:all .15s;box-shadow:0 1px 3px var(--sh)}
+.day-card:active{opacity:.8;transform:scale(.99)}
+.day-num{width:36px;height:36px;border-radius:7px;background:var(--sand-d);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.dn-n{font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1;color:var(--ocean)}
+.dn-m{font-size:8px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-l)}
+.day-info{flex:1;min-width:0}
+.day-tt{font-weight:500;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.day-sub{font-size:11px;color:var(--ink-l);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.day-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.dtag{font-size:10px;padding:2px 6px;border-radius:8px}
+.dtag.boat{background:#DDEEF6;color:var(--ocean)}.dtag.food{background:#FEF0E0;color:#A05A00}
+.dtag.hike{background:#E8F0E4;color:var(--sage)}.dtag.view{background:#E8EEF5;color:var(--ocean-m)}
+.dtag.star{background:#FDF5E0;color:var(--gold)}.dtag.couple{background:#FDEDF0;color:#B03060}
+.dtag.warn{background:#FEE8E0;color:var(--terr)}
+.day-arrow{color:var(--ink-l);font-size:16px;flex-shrink:0}
+.day-prog{display:flex;align-items:center;gap:5px;margin-top:4px}
+.dp-bar{flex:1;height:3px;border-radius:2px;background:var(--sand-d);overflow:hidden}
+.dp-fill{height:100%;background:var(--sage);border-radius:2px}
+.dp-txt{font-size:10px;color:var(--ink-l);white-space:nowrap}
+/* Day detail */
+.dd-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back-btn{min-width:44px;min-height:44px;background:var(--white);border:1.5px solid var(--sand-d);border-radius:var(--rs);cursor:pointer;font-size:18px;color:var(--ink-m);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dd-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;line-height:1.2}
+.dd-date{font-size:11px;color:var(--ink-l);margin-top:2px}
+/* Plan AB */
+.plan-box{background:var(--white);border:1.5px solid var(--gold);border-radius:var(--r);padding:12px;margin-bottom:12px}
+.plan-ttl{font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:.07em;font-weight:500;margin-bottom:8px}
+.plan-btns{display:flex;flex-direction:column;gap:6px}
+.plan-btn{padding:10px 12px;border-radius:var(--rs);border:1.5px solid var(--sand-d);background:var(--sand);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-m);text-align:left;min-height:44px;transition:all .2s}
+.plan-btn.sel{background:var(--ocean);border-color:var(--ocean);color:var(--white)}
+/* Stop cards */
+.stop{background:var(--white);border-radius:var(--r);padding:14px;margin-bottom:8px;border-left:3px solid transparent;box-shadow:0 1px 3px var(--sh)}
+.stop.type-boat{border-left-color:var(--ocean-m)}.stop.type-food{border-left-color:var(--gold)}
+.stop.type-view,.stop.type-info{border-left-color:var(--ocean)}.stop.type-nature{border-left-color:var(--sage)}
+.stop.type-star{border-left-color:var(--terr)}.stop.type-couple{border-left-color:#D06080}
+.stop.done{opacity:.4}
+.stop-hdr{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.stop-time{font-size:11px;color:var(--ink-l);white-space:nowrap;min-width:44px;padding-top:1px;flex-shrink:0}
+.stop-name{font-weight:500;font-size:14px;flex:1;line-height:1.3}
+.stop-couple{color:#D06080}
+.stop-chk{min-width:28px;min-height:28px;border-radius:6px;border:1.5px solid var(--sand-d);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:none;font-size:14px;color:transparent;transition:all .2s}
+.stop-chk.chk{background:var(--sage);border-color:var(--sage);color:var(--white)}
+.stop-desc{font-size:13px;color:var(--ink-m);line-height:1.5;margin-bottom:8px}
+.mlink{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--ocean-m);text-decoration:none;background:#EBF4FA;padding:5px 10px;border-radius:20px;margin-bottom:8px;font-weight:500;min-height:32px}
+.opts{background:var(--sand);border-radius:var(--rs);padding:10px 12px;margin-top:6px}
+.opts-ttl{font-size:10px;color:var(--ink-l);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px;font-weight:500}
+.opt{font-size:13px;color:var(--ink-m);margin-bottom:8px;padding-left:10px;border-left:2px solid var(--sand-d);line-height:1.4}
+.opt strong{color:var(--ink);font-weight:500}
+.opt .res{font-size:10px;color:var(--terr);font-weight:500}
+.opt-ml{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--ocean-m);text-decoration:none;background:#EBF4FA;padding:3px 7px;border-radius:10px;margin-left:4px}
+/* Quick expense */
+.qe-tog{display:flex;align-items:center;gap:6px;background:none;border:1.5px solid var(--sand-d);border-radius:20px;padding:5px 12px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink-l);cursor:pointer;margin-top:8px;min-height:34px}
+.qe-pan{display:none;background:var(--sand);border-radius:var(--rs);padding:10px;margin-top:8px}
+.qe-pan.open{display:block}
+.qe-row{display:flex;gap:8px;margin-bottom:8px}
+.qe-inp,.qe-sel{border:1.5px solid var(--sand-d);border-radius:var(--rs);padding:9px 10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:var(--white);width:100%;min-height:42px}
+.qe-btn{background:var(--ocean);color:var(--white);border:none;border-radius:var(--rs);padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;min-height:42px;white-space:nowrap;flex-shrink:0}
+/* Notes */
+.notes-lbl{font-size:11px;color:var(--ink-l);margin:12px 0 4px;text-transform:uppercase;letter-spacing:.06em}
+.notes-area{width:100%;border:1.5px solid var(--sand-d);border-radius:var(--rs);padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:var(--white);resize:vertical;min-height:72px;line-height:1.5}
+.notes-area:focus{outline:none;border-color:var(--ocean-m)}
+/* Checklist */
+.prog-bar{height:5px;border-radius:3px;background:var(--sand-d);margin-bottom:5px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;background:var(--sage);transition:width .4s}
+.prog-txt{font-size:11px;color:var(--ink-l);margin-bottom:16px}
+.cl-grp{margin-bottom:20px}
+.cl-grp-ttl{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.cl-grp-ttl::after{content:'';flex:1;height:1px;background:var(--sand-d)}
+.cl-item{background:var(--white);border-radius:var(--rs);padding:12px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px;box-shadow:0 1px 3px var(--sh)}
+.cl-item.done{opacity:.45}
+.cl-chk{min-width:26px;min-height:26px;border-radius:6px;border:1.5px solid var(--sand-d);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:none;font-size:14px;color:transparent;transition:all .2s}
+.cl-chk.chk{background:var(--sage);border-color:var(--sage);color:var(--white)}
+.cl-chk.urg{border-color:var(--terr)}
+.cl-cont{flex:1;min-width:0}
+.cl-title{font-weight:500;font-size:13px;margin-bottom:2px}
+.cl-desc{font-size:12px;color:var(--ink-l);line-height:1.4}
+.cl-meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;align-items:center}
+.cl-dl{font-size:11px;padding:2px 7px;border-radius:8px;font-weight:500}
+.cl-dl.urgent{background:#FEE8E0;color:var(--terr)}.cl-dl.soon{background:#FEF6E8;color:var(--gold)}.cl-dl.ok{background:#F0F7EC;color:var(--sage)}
+.cl-st{font-size:11px;padding:4px 10px;border-radius:8px;font-weight:500;cursor:pointer;border:none;min-height:28px}
+.st-p{background:#F0F0F0;color:var(--ink-l)}.st-r{background:#FEF6E8;color:var(--gold)}.st-c{background:#F0F7EC;color:var(--sage)}
+.sect-ttl{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;margin-bottom:4px}
+.sect-sub{font-size:12px;color:var(--ink-l);margin-bottom:16px}
+/* Map */
+#view-map.active{display:block}
+#map-toolbar{position:fixed;top:52px;left:0;right:0;z-index:150;background:var(--white);border-bottom:1px solid var(--sand-d);padding:5px 10px 5px;box-shadow:0 2px 6px var(--sh)}
+.chips-row{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:3px}
+.chips-row::-webkit-scrollbar{display:none}
+.chip{border:1.5px solid var(--sand-d);background:var(--white);border-radius:20px;padding:4px 11px;font-family:'DM Sans',sans-serif;font-size:11px;white-space:nowrap;cursor:pointer;flex-shrink:0;min-height:28px;display:inline-flex;align-items:center;transition:all .15s;color:var(--ink-m)}
+#leaflet-map{width:calc(100% - 24px);margin:0 12px;border-radius:16px;overflow:hidden;height:calc(100dvh - 200px);min-height:300px;box-shadow:0 2px 12px var(--shl)}
+.lf-pin{display:flex;align-items:center;justify-content:center;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2.5px solid rgba(255,255,255,.9);box-shadow:0 2px 6px rgba(0,0,0,.28);cursor:pointer}
+.lf-inner{transform:rotate(45deg);line-height:1}
+
+.pp-drag{width:36px;height:4px;background:var(--sand-d);border-radius:2px;margin:0 auto 12px}
+.pp-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;margin-bottom:3px}
+.pp-det{font-size:12px;color:var(--ink-l);margin-bottom:12px;line-height:1.5}
+.pp-acts{display:flex;gap:8px;flex-wrap:wrap}
+.pp-btn{display:inline-flex;align-items:center;gap:5px;padding:9px 16px;border-radius:20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;text-decoration:none;border:none;cursor:pointer;min-height:40px}
+.pp-nav{background:var(--ocean);color:var(--white)}.pp-sec{background:var(--sand);border:1.5px solid var(--sand-d);color:var(--ink-m)}.pp-del{background:none;border:1.5px solid #fcc;color:var(--terr)}
+#map-overlay{display:none;position:fixed;inset:0;z-index:155}
+/* FAB */
+.fab{position:fixed;bottom:72px;right:14px;z-index:161;width:48px;height:48px;border-radius:50%;background:var(--terr);color:var(--white);border:none;font-size:24px;cursor:pointer;box-shadow:0 3px 14px rgba(196,98,45,.5);display:flex;align-items:center;justify-content:center;line-height:1;opacity:0;pointer-events:none;transition:opacity .2s}
+.fab.visible{opacity:1;pointer-events:auto}
+/* Add place modal */
+.ap-modal{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.45);align-items:flex-end}
+.ap-modal.open{display:flex}
+.ap-sheet{background:var(--white);border-radius:16px 16px 0 0;padding:16px 16px 36px;width:100%;max-height:88vh;overflow-y:auto}
+.ap-drag{width:36px;height:4px;background:var(--sand-d);border-radius:2px;margin:0 auto 14px}
+.ap-ttl{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;margin-bottom:4px}
+.ap-sub{font-size:12px;color:var(--ink-l);margin-bottom:14px}
+.ap-row{display:flex;gap:8px;margin-bottom:10px}
+.ap-inp{border:1.5px solid var(--sand-d);border-radius:var(--rs);padding:11px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--sand);flex:1;min-height:46px}
+.ap-inp:focus{outline:none;border-color:var(--ocean-m)}
+.ap-sbtn{background:var(--ocean-m);color:var(--white);border:none;border-radius:var(--rs);padding:0 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;min-height:46px;white-space:nowrap}
+.ap-res-btn{display:block;width:100%;text-align:left;background:var(--sand);border:1.5px solid var(--sand-d);border-radius:var(--rs);padding:10px 12px;margin-bottom:6px;cursor:pointer;font-size:13px}
+.ap-res-name{font-weight:500;color:var(--ink)}.ap-res-addr{font-size:11px;color:var(--ink-l);margin-top:2px}
+.ap-conf{background:#F0F7EC;border-radius:var(--rs);padding:9px 12px;font-size:12px;color:var(--sage);margin-bottom:10px}
+.ap-row2{display:flex;gap:8px;margin-bottom:8px}
+.ap-fld{display:flex;flex-direction:column;gap:4px;flex:1}
+.ap-fld label{font-size:10px;color:var(--ink-l);text-transform:uppercase;letter-spacing:.06em}
+.ap-sel,.ap-note{border:1.5px solid var(--sand-d);border-radius:var(--rs);padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:var(--sand);width:100%;min-height:44px}
+.ap-note{margin-bottom:10px}
+.ap-save{width:100%;background:var(--ocean);color:var(--white);border:none;border-radius:var(--rs);padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;min-height:48px}
+.ap-cancel{width:100%;margin-top:8px;background:none;border:none;padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-l);cursor:pointer}
+/* Expenses */
+.exp-sum{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.exp-card{background:var(--white);border-radius:var(--rs);padding:12px;box-shadow:0 1px 3px var(--sh)}
+.exp-card-lbl{font-size:10px;color:var(--ink-l);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.exp-card-val{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300}
+.exp-card-sub{font-size:11px;color:var(--ink-l);margin-top:1px}
+.exp-rate-row{display:flex;align-items:center;gap:8px;background:var(--white);border-radius:var(--rs);padding:10px 12px;box-shadow:0 1px 3px var(--sh);margin-bottom:14px}
+.exp-rate-lbl{font-size:12px;color:var(--ink-m);flex:1}
+.exp-rate-inp{border:1.5px solid var(--sand-d);border-radius:6px;padding:6px 8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:var(--sand);width:72px;text-align:right;min-height:36px}
+.g-ttl{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400;margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+.g-ttl::after{content:'';flex:1;height:1px;background:var(--sand-d)}
+.bd-item{background:var(--white);border-radius:var(--rs);padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px var(--sh);margin-bottom:5px}
+.bd-name{flex-shrink:0;font-size:12px;font-weight:500;min-width:80px}
+.bd-bar{height:5px;border-radius:3px;background:var(--sand-d);flex:1;overflow:hidden}
+.bd-fill{height:100%;border-radius:3px;background:var(--ocean-m);transition:width .4s}
+.bd-val{font-size:12px;color:var(--ink-l);white-space:nowrap;min-width:52px;text-align:right}
+.exp-form{background:var(--white);border-radius:var(--r);padding:14px;margin-bottom:14px;box-shadow:0 1px 3px var(--sh)}
+.exp-fld{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
+.exp-fld label{font-size:10px;color:var(--ink-l);text-transform:uppercase;letter-spacing:.06em}
+.exp-inp,.exp-sel{border:1.5px solid var(--sand-d);border-radius:var(--rs);padding:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--sand);width:100%;min-height:44px}
+.exp-inp:focus,.exp-sel:focus{outline:none;border-color:var(--ocean-m)}
+.exp-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.exp-btn{background:var(--ocean);color:var(--white);border:none;border-radius:var(--rs);padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;width:100%;min-height:46px;margin-top:4px}
+.exp-item{background:var(--white);border-radius:var(--rs);padding:11px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px var(--sh);margin-bottom:6px}
+.exp-cat{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.exp-info{flex:1;min-width:0}
+.exp-desc{font-weight:500;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exp-meta{font-size:11px;color:var(--ink-l);margin-top:1px}
+.exp-vals{text-align:right;flex-shrink:0}
+.exp-eur{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400}
+.exp-brl{font-size:10px;color:var(--ink-l)}
+.exp-del{min-width:36px;min-height:36px;background:none;border:none;cursor:pointer;color:var(--ink-l);font-size:18px;display:flex;align-items:center;justify-content:center;border-radius:6px;flex-shrink:0}
+.empty{font-size:13px;color:var(--ink-l);padding:12px 0;text-align:center}
+
+/* ── LUGARES ── */
+.places-cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:14px}
+.places-cats::-webkit-scrollbar{display:none}
+.pcat{border:1.5px solid var(--sand-d);background:var(--white);border-radius:20px;padding:5px 12px;font-size:11px;cursor:pointer;flex-shrink:0;min-height:30px;display:inline-flex;align-items:center;color:var(--ink-m);transition:all .15s}
+.pcat.active{font-weight:500}
+.place-item{background:var(--white);border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;box-shadow:0 1px 3px var(--sh)}
+.place-item-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.place-item-info{flex:1;min-width:0}
+.place-item-name{font-weight:500;font-size:13px;margin-bottom:2px}
+.place-item-detail{font-size:11px;color:var(--ink-l);line-height:1.4}
+.place-item-actions{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.place-item-btn{font-size:11px;padding:4px 10px;border-radius:10px;border:1.5px solid var(--sand-d);background:none;cursor:pointer;color:var(--ink-m);font-family:"DM Sans",sans-serif;min-height:28px}
+.place-item-btn.map-btn{background:#EBF4FA;border-color:var(--ocean-m);color:var(--ocean-m)}
+.place-item-btn.del-btn{color:var(--terr);border-color:#fcc}
+.place-add-bar{display:flex;gap:8px;margin-bottom:14px}
+.place-add-inp{flex:1;border:1.5px solid var(--sand-d);border-radius:var(--rs);padding:10px 12px;font-family:"DM Sans",sans-serif;font-size:14px;color:var(--ink);background:var(--white);min-height:44px}
+.place-add-inp:focus{outline:none;border-color:var(--ocean-m)}
+.place-add-btn{background:var(--ocean);color:var(--white);border:none;border-radius:var(--rs);padding:0 16px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;cursor:pointer;min-height:44px;white-space:nowrap}
+.place-search-results{background:var(--white);border-radius:var(--rs);box-shadow:0 3px 12px var(--sh);margin-bottom:10px;overflow:hidden;display:none}
+.place-search-results.open{display:block}
+.psr-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--sand-d);transition:background .15s}
+.psr-item:last-child{border-bottom:none}
+.psr-item:active{background:var(--sand)}
+.psr-name{font-weight:500;font-size:13px}
+.psr-addr{font-size:11px;color:var(--ink-l);margin-top:2px}
+
+/* ── IA CHAT ── */
+.ai-view{display:flex;flex-direction:column;height:calc(100dvh - 52px - 60px);padding:0}
+.ai-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{max-width:88%;line-height:1.5;font-size:13px;padding:10px 14px;border-radius:14px;word-break:break-word}
+.ai-msg.user{background:var(--ocean);color:var(--white);align-self:flex-end;border-bottom-right-radius:4px}
+.ai-msg.assistant{background:var(--white);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px;box-shadow:0 1px 3px var(--sh)}
+.ai-msg.assistant em{color:var(--ink-l);font-style:normal;font-size:12px}
+.ai-thinking{display:flex;gap:4px;align-items:center;padding:12px 14px;background:var(--white);border-radius:14px;border-bottom-left-radius:4px;align-self:flex-start;box-shadow:0 1px 3px var(--sh)}
+.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--ink-l);animation:aiPulse 1.2s ease-in-out infinite}
+.ai-dot:nth-child(2){animation-delay:.2s}.ai-dot:nth-child(3){animation-delay:.4s}
+@keyframes aiPulse{0%,60%,100%{transform:scale(.8);opacity:.5}30%{transform:scale(1.1);opacity:1}}
+.ai-input-row{padding:10px 12px;background:var(--white);border-top:1px solid var(--sand-d);display:flex;gap:8px;align-items:flex-end}
+.ai-textarea{flex:1;border:1.5px solid var(--sand-d);border-radius:var(--rs);padding:9px 12px;font-family:"DM Sans",sans-serif;font-size:14px;color:var(--ink);background:var(--sand);resize:none;max-height:120px;line-height:1.4;min-height:44px;overflow-y:auto}
+.ai-textarea:focus{outline:none;border-color:var(--ocean-m)}
+.ai-send{background:var(--ocean);color:var(--white);border:none;border-radius:var(--rs);width:44px;height:44px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.ai-send:disabled{opacity:.4;cursor:default}
+.ai-presets{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:8px 12px 0}
+.ai-presets::-webkit-scrollbar{display:none}
+.ai-preset{background:var(--sand);border:1.5px solid var(--sand-d);border-radius:20px;padding:5px 12px;font-size:11px;cursor:pointer;flex-shrink:0;color:var(--ink-m);min-height:30px;white-space:nowrap}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--sand-d);border-radius:2px}
+@media(prefers-color-scheme:dark){
+  body{background:#1C1C28}
+  .day-card,.stop,.cl-item,.exp-card,.exp-form,.place-item,.exp-item,.modal-sheet,.ai-msg.assistant{background:#252535;color:#E8E6E0}
+  .view{background:#1C1C28}
+  .inp,.sel,.ta,.qe-inp,.qe-sel,.exp-inp,.exp-sel,.notes-area,.ai-ta{background:#252535;color:#E8E6E0;border-color:#3A3A50}
+  .opts,.qe-pan{background:#252535}
+  .tab-bar,.ai-inp-row{background:#252535;border-color:#3A3A50}
+}
+
+/* ── REDESIGN: Places & Map Panel ── */
+.places-cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:12px}
+.places-cats::-webkit-scrollbar{display:none}
+.pcat{border:1.5px solid var(--sand-d);background:var(--white);border-radius:20px;padding:5px 14px;font-size:12px;cursor:pointer;flex-shrink:0;min-height:32px;display:inline-flex;align-items:center;color:var(--ink-m);transition:all .15s;font-weight:400}
+.pcat.active{font-weight:500}
+.place-item{background:var(--white);border-radius:var(--r);padding:14px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;box-shadow:0 1px 4px var(--sh);position:relative;transition:box-shadow .15s}
+.place-item:active{box-shadow:0 2px 8px var(--shl)}
+.place-item.is-custom{border-left:3px solid var(--terr)}
+.pi-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.pi-info{flex:1;min-width:0}
+.pi-name{font-weight:500;font-size:14px;margin-bottom:2px;line-height:1.3}
+.pi-dest{font-size:11px;color:var(--ocean-m);font-weight:500;margin-bottom:3px}
+.pi-detail{font-size:12px;color:var(--ink-l);line-height:1.4;margin-bottom:2px}
+.pi-acts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.pi-btn{font-size:12px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--sand-d);background:none;cursor:pointer;color:var(--ink-m);font-family:'DM Sans',sans-serif;min-height:34px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:all .15s;white-space:nowrap}
+.pi-btn.map{background:var(--ocean);border-color:var(--ocean);color:#fff}
+.pi-btn.gmap{background:var(--sand);border-color:var(--sand-d);color:var(--ink-m)}
+.pi-btn.del{background:#FEF0EC;color:var(--terr);border-color:#fdd}
+.pi-custom-badge{display:inline-block;background:#FEF0EC;color:var(--terr);font-size:10px;font-weight:500;padding:2px 7px;border-radius:8px;margin-bottom:4px}
+/* Busca de lugares */
+.place-search-wrap{position:relative;margin-bottom:12px}
+.place-search-field{width:100%;border:1.5px solid var(--sand-d);border-radius:var(--r);padding:13px 52px 13px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--white);min-height:50px;box-shadow:0 1px 4px var(--sh);transition:border-color .2s}
+.place-search-field:focus{outline:none;border-color:var(--ocean-m);box-shadow:0 0 0 3px rgba(46,123,166,.12)}
+.place-search-go{position:absolute;right:7px;top:50%;transform:translateY(-50%);background:var(--ocean);color:#fff;border:none;border-radius:var(--rs);width:38px;height:38px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.place-search-go:active{background:var(--ocean-m)}
+.place-results-list{border-radius:var(--r);overflow:hidden;margin-bottom:14px;box-shadow:0 4px 20px var(--shl);display:none}
+.place-results-list.open{display:block}
+.sr-item{padding:13px 14px;cursor:pointer;border-bottom:1px solid var(--sand-d);background:var(--white);display:flex;align-items:center;gap:10px;transition:background .1s;-webkit-tap-highlight-color:transparent}
+.sr-item:last-child{border-bottom:none}
+.sr-item:active{background:var(--sand)}
+.sr-icon{font-size:20px;flex-shrink:0}
+.sr-text{flex:1;min-width:0}
+.sr-name{font-weight:500;font-size:13px;color:var(--ink);margin-bottom:2px}
+.sr-addr{font-size:11px;color:var(--ink-l)}
+.sr-add-icon{font-size:22px;color:var(--ocean-m);flex-shrink:0}
+.sr-empty{padding:16px 14px;text-align:center;color:var(--ink-l);font-size:13px;background:var(--white)}
+/* Place panel (mapa) */
+#place-panel{display:none;position:fixed;bottom:60px;left:0;right:0;z-index:160;background:var(--white);border-radius:20px 20px 0 0;box-shadow:0 -6px 32px var(--shl);padding:0;max-height:55vh;overflow-y:auto}
+.pp-drag-bar{width:36px;height:4px;background:var(--sand-d);border-radius:2px;margin:14px auto 0}
+.pp-body{padding:14px 16px 16px}
+.pp-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:8px}
+.pp-emoji{font-size:32px;line-height:1;flex-shrink:0;margin-top:2px}
+.pp-head-text{flex:1;min-width:0}
+.pp-name{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:400;line-height:1.2;margin-bottom:6px}
+.pp-tags{display:flex;gap:6px;flex-wrap:wrap}
+.pp-tag{font-size:11px;font-weight:500;padding:3px 9px;border-radius:10px}
+.pp-tag.dest{background:var(--sand-d);color:var(--ink-m)}
+.pp-tag.day{background:#EBF4FA;color:var(--ocean-m)}
+.pp-tag.custom{background:#FEF0EC;color:var(--terr)}
+.pp-detail{font-size:13px;color:var(--ink-m);line-height:1.5;margin-bottom:14px}
+.pp-acts{display:flex;gap:8px;flex-wrap:wrap}
+.pp-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 18px;border-radius:22px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;text-decoration:none;border:none;cursor:pointer;min-height:44px;transition:all .15s;white-space:nowrap}
+.pp-btn:active{opacity:.8}
+.pp-nav{background:var(--ocean);color:#fff}
+.pp-sec{background:var(--sand);border:1.5px solid var(--sand-d);color:var(--ink-m)}
+.pp-del{background:#FEF0EC;color:var(--terr);border:1.5px solid #fdd}
+/* Busca nav */
+.nav-search{display:none}
+
+
+/* ════ BOTTOM SHEETS (modais redesenhados) ════ */
+.bs{background:var(--white);border-radius:24px 24px 0 0;padding:0 16px 40px;width:100%;max-height:92vh;overflow-y:auto;position:relative}
+.bs-handle{width:40px;height:4px;border-radius:2px;background:var(--sand-d);margin:12px auto 0}
+.bs-head{display:flex;align-items:center;justify-content:space-between;padding:14px 0 4px;margin-bottom:4px}
+.bs-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--ink)}
+.bs-close{width:32px;height:32px;border-radius:50%;background:var(--sand-d);border:none;cursor:pointer;font-size:14px;color:var(--ink-l);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bs-hint{font-size:13px;color:var(--ink-l);margin-bottom:14px;line-height:1.5}
+.bs-section-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-l);font-weight:500;margin:14px 0 8px}
+.bs-confirm-card{background:var(--sand);border-radius:var(--r);padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.bs-confirm-card .cc-icon{font-size:28px;flex-shrink:0}
+.bs-confirm-card .cc-name{font-weight:500;font-size:15px;margin-bottom:2px}
+.bs-confirm-card .cc-addr{font-size:12px;color:var(--ink-l)}
+.bs-cta{width:100%;background:var(--ocean);color:#fff;border:none;border-radius:14px;padding:15px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;margin-top:12px;min-height:52px;transition:opacity .2s}
+.bs-cta:active{opacity:.8}
+.bs-back{width:100%;background:none;border:none;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink-l);cursor:pointer;margin-top:4px}
+.bs-del{width:100%;background:#FEF0EC;color:var(--terr);border:none;border-radius:14px;padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:8px;min-height:48px}
+
+/* Campos modernos */
+.mf-grp{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.mf-lbl{font-size:12px;font-weight:500;color:var(--ink-m);letter-spacing:.01em}
+.mf-inp{border:1.5px solid var(--sand-d);border-radius:12px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--sand);width:100%;min-height:48px;transition:border-color .2s,box-shadow .2s}
+.mf-inp:focus{outline:none;border-color:var(--ocean-m);background:var(--white);box-shadow:0 0 0 3px rgba(46,123,166,.10)}
+.mf-ta{border:1.5px solid var(--sand-d);border-radius:12px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--sand);width:100%;min-height:90px;resize:vertical;line-height:1.5;transition:border-color .2s}
+.mf-ta:focus{outline:none;border-color:var(--ocean-m);background:var(--white);box-shadow:0 0 0 3px rgba(46,123,166,.10)}
+.mf-maps{font-size:13px;color:var(--ink-l)}
+.mf-row2{display:flex;gap:10px;margin-bottom:0}
+.sfield{display:flex;gap:8px;margin-bottom:12px}
+.sfield-inp{flex:1;border:1.5px solid var(--sand-d);border-radius:12px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--sand);min-height:50px;transition:all .2s}
+.sfield-inp:focus{outline:none;border-color:var(--ocean-m);background:var(--white);box-shadow:0 0 0 3px rgba(46,123,166,.10)}
+.sfield-btn{background:var(--ocean);color:#fff;border:none;border-radius:12px;padding:0 20px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;min-height:50px;white-space:nowrap;flex-shrink:0;transition:opacity .2s}
+.sfield-btn:active{opacity:.8}
+
+/* Type chips (substituem os selects) */
+.type-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.type-chip{border:1.5px solid var(--sand-d);background:var(--sand);border-radius:20px;padding:7px 14px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;flex-shrink:0;color:var(--ink-m);transition:all .18s;min-height:36px;display:inline-flex;align-items:center;gap:4px}
+.type-chip:active{opacity:.7}
+.type-chip.sel{background:var(--ocean);color:#fff;border-color:var(--ocean);font-weight:500}
+.type-chip.sel-dest{background:var(--terr);color:#fff;border-color:var(--terr);font-weight:500}
+
+/* Resultados de busca no modal */
+#ap-results .sr-item{padding:13px 4px;border-bottom:1px solid var(--sand-d);display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#ap-results .sr-item:last-child{border-bottom:none}
+#ap-results .sr-item:active{opacity:.7}
+
+/* Botão editar parada */
+.stop-edit-btn{width:32px;height:32px;border-radius:50%;background:var(--sand-d);border:none;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.7;transition:opacity .2s;flex-shrink:0}
+.stop-edit-btn:active{opacity:1}
+
+
+/* ── MALA ── */
+.mala-weight-bar{background:var(--white);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;box-shadow:0 1px 4px var(--sh)}
+.mala-weight-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-l);margin-bottom:8px;font-weight:500}
+.mala-weight-row{display:flex;align-items:center;gap:10px}
+.mala-weight-track{flex:1;height:8px;border-radius:4px;background:var(--sand-d);overflow:hidden}
+.mala-weight-fill{height:100%;border-radius:4px;background:var(--sage);transition:width .4s}
+.mala-weight-fill.warn{background:var(--gold)}
+.mala-weight-fill.over{background:var(--terr)}
+.mala-weight-num{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;min-width:48px;text-align:right}
+.mala-weight-max{font-size:11px;color:var(--ink-l)}
+.mala-grp{margin-bottom:20px}
+.mala-grp-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1.5px solid var(--sand-d)}
+.mala-grp.sec-F .mala-grp-title{color:var(--ocean-m)}
+.mala-grp.sec-L .mala-grp-title{color:#B03060}
+.mala-grp.sec-AB .mala-grp-title{color:var(--sage)}
+.mala-grp.sec-TODO{margin-top:6px}
+.mala-grp.sec-TODO .mala-grp-hdr{border-bottom-color:var(--gold)}
+.mala-grp.sec-TODO .mala-grp-title{color:var(--gold)}
+.mala-item.todo-item{border-left:3px solid var(--gold)}
+.mala-grp-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;flex:1}
+.mala-grp-prog{font-size:11px;color:var(--ink-l);font-weight:500}
+.mala-item{background:var(--white);border-radius:var(--rs);padding:12px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px var(--sh);transition:opacity .2s}
+.mala-item.done{opacity:.4}
+.mala-chk{width:24px;height:24px;border-radius:6px;border:1.5px solid var(--sand-d);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:none;font-size:14px;color:transparent;transition:all .2s}
+.mala-chk.chk{background:var(--sage);border-color:var(--sage);color:var(--white)}
+.mala-info{flex:1;min-width:0}
+.mala-name{font-weight:500;font-size:13px;margin-bottom:2px}
+.mala-tip{font-size:11px;color:var(--ink-l);line-height:1.4}
+.mala-qty{flex-shrink:0;background:var(--sand-d);border-radius:6px;padding:3px 8px;font-size:12px;font-weight:500;color:var(--ink-m)}
+.mala-who{flex-shrink:0;font-size:11px;padding:2px 7px;border-radius:8px;font-weight:500}
+.mala-who.F{background:#EBF4FA;color:var(--ocean-m)}
+.mala-who.L{background:#FDEDF0;color:#B03060}
+.mala-who.AB{background:#F0F7EC;color:var(--sage)}
+.mala-who.TODO{background:#FEF6E8;color:var(--gold)}
+
+
+/* ════ CHAT IA ════ */
+#view-ai.active{display:flex;flex-direction:column}
+.chat-wrap{display:flex;flex-direction:column;height:calc(100dvh - 52px - 60px);background:var(--sand)}
+.chat-header{background:var(--ocean);padding:14px 16px 12px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.chat-avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.chat-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:400;color:#fff;letter-spacing:.02em}
+.chat-sub{font-size:11px;color:rgba(255,255,255,.65);margin-top:1px}
+.chat-presets{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:10px 14px;flex-shrink:0;background:var(--white);border-bottom:1px solid var(--sand-d)}
+.chat-presets::-webkit-scrollbar{display:none}
+.chat-preset{background:var(--sand);border:1.5px solid var(--sand-d);border-radius:20px;padding:7px 14px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;flex-shrink:0;color:var(--ink-m);white-space:nowrap;transition:all .15s;min-height:34px}
+.chat-preset:active{background:var(--ocean);color:#fff;border-color:var(--ocean)}
+.chat-messages{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:12px;overscroll-behavior:contain}
+.chat-msg-user{align-self:flex-end;max-width:82%;display:flex;flex-direction:column;align-items:flex-end}
+.chat-msg-ai{align-self:flex-start;max-width:88%;display:flex;flex-direction:column;align-items:flex-start}
+.chat-bubble{padding:11px 15px;border-radius:18px;font-size:14px;line-height:1.55;word-break:break-word}
+.chat-msg-user .chat-bubble{background:var(--ocean);color:#fff;border-bottom-right-radius:5px}
+.chat-msg-ai .chat-bubble{background:var(--white);color:var(--ink);border-bottom-left-radius:5px;box-shadow:0 1px 4px var(--sh)}
+.chat-time{font-size:10px;color:var(--ink-l);margin-top:3px;padding:0 4px}
+.chat-typing{align-self:flex-start;background:var(--white);border-radius:18px;border-bottom-left-radius:5px;padding:12px 16px;display:flex;gap:5px;align-items:center;box-shadow:0 1px 4px var(--sh)}
+.chat-dot{width:7px;height:7px;border-radius:50%;background:var(--ink-l);animation:chatPulse 1.3s ease-in-out infinite}
+.chat-dot:nth-child(2){animation-delay:.2s}
+.chat-dot:nth-child(3){animation-delay:.4s}
+@keyframes chatPulse{0%,60%,100%{transform:scale(.7);opacity:.4}30%{transform:scale(1);opacity:1}}
+.chat-input-bar{display:flex;align-items:flex-end;gap:10px;padding:10px 14px 12px;background:var(--white);border-top:1px solid var(--sand-d);flex-shrink:0}
+.chat-input{flex:1;border:1.5px solid var(--sand-d);border-radius:22px;padding:10px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--sand);resize:none;line-height:1.4;min-height:44px;max-height:100px;overflow-y:auto;transition:border-color .2s}
+.chat-input:focus{outline:none;border-color:var(--ocean-m);background:var(--white)}
+.chat-send{width:44px;height:44px;border-radius:50%;background:var(--ocean);border:none;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.chat-send:active{background:var(--ocean-m);transform:scale(.95)}
+.chat-send:disabled{opacity:.4;cursor:default}
+
+
+.modal{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.45);align-items:flex-end}
+.modal.open{display:flex}
+
+
+/* ── Contexto histórico ── */
+.ctx-section{margin-bottom:14px}
+.ctx-label{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-l);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ctx-label::after{content:'';flex:1;height:1px;background:var(--sand-d)}
+.ctx-card{background:linear-gradient(135deg,var(--ocean) 0%,#0D3550 100%);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;color:var(--sand);position:relative;overflow:hidden}
+.ctx-card::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.06)}
+.ctx-card-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.ctx-icon{font-size:22px;flex-shrink:0;line-height:1}
+.ctx-title{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:400;color:var(--gold-l);letter-spacing:.02em}
+.ctx-text{font-size:13px;line-height:1.65;color:rgba(245,239,228,.88)}
+
+
+/* ── Paradas sugeridas ── */
+.stop.suggested{
+  border-left-color:var(--gold);
+  background:linear-gradient(135deg,var(--white) 0%,#FFFDF5 100%);
+}
+.stop-suggested-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:#FEF6E8;color:var(--gold);
+  border:1px solid #F0D080;
+  border-radius:10px;padding:3px 9px;
+  font-size:11px;font-weight:500;
+  margin-bottom:6px;
+}
+
+
+/* Swipe hint */
+.swipe-hint{
+  position:fixed;left:0;top:50%;transform:translateY(-50%);
+  width:3px;height:40px;border-radius:0 3px 3px 0;
+  background:var(--sand-d);opacity:0;transition:opacity .3s;
+  pointer-events:none;z-index:190;
+}
+#view-day.active ~ .swipe-hint,
+#view-day.active + .swipe-hint{ opacity:.6; }
+
+
+/* ── Transições de view ── */
+.view{
+  animation: none;
+}
+.view.active{
+  animation: viewFadeIn 150ms ease-out forwards;
+}
+@keyframes viewFadeIn{
+  from{opacity:0; transform:translateY(4px);}
+  to{opacity:1; transform:translateY(0);}
+}
+#view-day.active{
+  animation: viewSlideIn 200ms cubic-bezier(.25,.46,.45,.94) forwards;
+}
+@keyframes viewSlideIn{
+  from{opacity:0; transform:translateX(24px);}
+  to{opacity:1; transform:translateX(0);}
+}
+
+</style>
+</head>
+<body>
+<div class="swipe-hint" id="swipe-hint"></div>
+<nav class="nav">
+  <div class="nav-title">Flavio <span>&</span> Lethi · Itália 2026</div>
+  <input class="nav-search" id="nav-search" placeholder="🔍 Buscar..." oninput="searchRoteiro(this.value)" type="search">
+</nav>
+<!-- ═══ TIMELINE ═══ -->
+<div id="view-timeline" class="view active">
+  <div class="trip-hdr">
+    <h2>Itália · Maggio 2026</h2>
+    <div class="trip-dates">16 de maio — 1 de junho · Flavio & Lethi</div>
+    <div class="trip-stats">
+      <div class="stat"><div class="stat-num">15</div><div class="stat-label">Dias</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Destinos</div></div>
+      <div class="stat"><div class="stat-num">2</div><div class="stat-label">Carros</div></div>
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Hotéis</div></div>
+    </div>
+    <div id="trip-countdown" style="margin-top:16px;position:relative;z-index:1;"></div>
+  </div>
+  <div class="alert-urgent">
+    <div class="icon">⚡</div>
+    <div>
+      <div class="title">Coliseu — venda abre 18/04</div>
+      <div class="desc">coopculture.it · Horário 08h30 de 18/05 · Full Experience</div>
+      <div class="deadline">🗓 Urgente</div>
+    </div>
+  </div>
+  <div class="alert-urgent" style="background:linear-gradient(135deg,#5A3800,#9A6A10)">
+    <div class="icon">⚽</div>
+    <div>
+      <div class="title">Roma × Lazio — ingresso pendente</div>
+      <div class="desc">Jogo 17/05 às 15h · asroma.com / vivaticket.com</div>
+      <div class="deadline">🎟 Comprar o quanto antes</div>
+    </div>
+  </div>
+  <div class="alert-urgent" style="background:linear-gradient(135deg,#3D5535,#6B7F5E)">
+    <div class="icon">🍝</div>
+    <div>
+      <div class="title">Experiência gastronômica — encaixar no melhor dia</div>
+      <div class="desc">Aula de culinária ou jantar com local em Trastevere. Dias 17, 18 ou 19. Pesquisar: Airbnb Experiences "cucina romana" · Withlocals · EatWith</div>
+      <div class="deadline">🗓 Flexível — qualquer noite em Roma</div>
+    </div>
+  </div>
+
+  <div class="dest-blk">
+    <div class="dest-lbl"><span>🏛</span><span class="dest-name">Roma</span><div class="dest-line"></div><span class="dest-dates">17–20 mai</span></div>
+    <div class="days-grid">
+      <div class="day-card" onclick="showDay('roma1')"><div class="day-num"><div class="dn-n">17</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Chegada + Derby della Capitale</div><div class="day-sub">FCO 11h30 · Piemonte Hotel</div><div class="day-tags"><span class="dtag warn">⚽ Ingresso pendente</span><span class="dtag food">Jantar Trastevere</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('roma2')"><div class="day-num"><div class="dn-n">18</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Coliseu + Cripta dos Capuchinhos</div><div class="day-sub">Entrada 08h30 · Via Veneto · Trevi</div><div class="day-tags"><span class="dtag view">Coliseu 08h30</span><span class="dtag couple">♡ Trevi</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('roma3')"><div class="day-num"><div class="dn-n">19</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Museus Vaticanos · Roma livre</div><div class="day-sub">Vaticano 08h · Prati · Campo de' Fiori · Trastevere</div><div class="day-tags"><span class="dtag star">⭐ Vaticano</span><span class="dtag couple">♡ Castel S.Angelo</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('roma4')"><div class="day-num"><div class="dn-n">20</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Partida para Sardenha</div><div class="day-sub">Voo Ciampino → Cagliari 10h55</div><div class="day-tags"><span class="dtag warn">Saída 08h30</span></div></div><div class="day-arrow">›</div></div>
+    </div>
+  </div>
+
+  <div class="dest-blk">
+    <div class="dest-lbl"><span>🏝</span><span class="dest-name">Sardenha</span><div class="dest-line"></div><span class="dest-dates">20–25 mai · ALAMO</span></div>
+    <div class="days-grid">
+      <div class="day-card" onclick="showDay('sard1')"><div class="day-num"><div class="dn-n">20</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Chegada em Cala Gonone</div><div class="day-sub">ALAMO Cagliari 12h30 · San Francisco Hotel</div><div class="day-tags"><span class="dtag boat">Reserve barco privado!</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('sard2')"><div class="day-num"><div class="dn-n">21</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Golfo di Orosei — barco privado ⭐</div><div class="day-sub">Cala Luna · Cala Mariolu · Goloritzé</div><div class="day-tags"><span class="dtag boat">Barco privado</span><span class="dtag couple">♡</span><span class="dtag star">⭐</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('sard3')"><div class="day-num"><div class="dn-n">22</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Cala Gonone → Palau</div><div class="day-sub">Cala Brandinchi · Capo d'Orso</div><div class="day-tags"><span class="dtag view">Cala Brandinchi</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('sard4')"><div class="day-num"><div class="dn-n">23</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Arquipélago La Maddalena ⭐</div><div class="day-sub">Praia Rosa Budelli · Hotel Miralonga</div><div class="day-tags"><span class="dtag boat">Barco arquipélago</span><span class="dtag couple">♡</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('sard5')"><div class="day-num"><div class="dn-n">24</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Caprera + La Maddalena</div><div class="day-sub">Cala Coticcio · aperitivo Vermentino</div><div class="day-tags"><span class="dtag nature">Cala Coticcio</span><span class="dtag couple">♡</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('sard6')"><div class="day-num"><div class="dn-n">25</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">La Maddalena → Nápoles</div><div class="day-sub">Devolução 10h · Voo 13h50</div><div class="day-tags"><span class="dtag warn">Devolução 10h</span><span class="dtag couple">♡ Jantar NAP</span></div></div><div class="day-arrow">›</div></div>
+    </div>
+  </div>
+
+  <div class="dest-blk">
+    <div class="dest-lbl"><span>🍋</span><span class="dest-name">Sorrento + Costa</span><div class="dest-line"></div><span class="dest-dates">25–29 mai · AVIS</span></div>
+    <div class="days-grid">
+      <div class="day-card" onclick="showDay('costa1')"><div class="day-num"><div class="dn-n">25</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Chegada em Sorrento</div><div class="day-sub">AVIS NAP 15h30 · Villa Igea</div><div class="day-tags"><span class="dtag view">Vista Sky Bar</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('costa2')"><div class="day-num"><div class="dn-n">26</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Ravello + Amalfi + Fiordo</div><div class="day-sub">Saída 07h30 · Terraço do Infinito ⭐</div><div class="day-tags"><span class="dtag star">Ravello ⭐</span><span class="dtag couple">♡</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('costa3')"><div class="day-num"><div class="dn-n">27</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Positano — dia inteiro</div><div class="day-sub">Plano A: trilha · Plano B: praia + rooftop</div><div class="day-tags"><span class="dtag star">Positano ⭐</span><span class="dtag hike">Sentiero?</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('costa4')"><div class="day-num"><div class="dn-n">28</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Dia livre em Sorrento</div><div class="day-sub">Baia di Leranto · jantar especial</div><div class="day-tags"><span class="dtag couple">♡ Jantar da viagem</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('costa5')"><div class="day-num"><div class="dn-n">29</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Sorrento → Capri</div><div class="day-sub">Devolução AVIS 08h · Ferry Capri</div><div class="day-tags"><span class="dtag warn">Devolução 08h</span><span class="dtag boat">Ferry Capri</span></div></div><div class="day-arrow">›</div></div>
+    </div>
+  </div>
+
+  <div class="dest-blk">
+    <div class="dest-lbl"><span>⛵</span><span class="dest-name">Capri</span><div class="dest-line"></div><span class="dest-dates">29–31 mai</span></div>
+    <div class="days-grid">
+      <div class="day-card" onclick="showDay('capri1')"><div class="day-num"><div class="dn-n">29</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Chegada em Capri</div><div class="day-sub">Marina Grande · Piazzetta · Weber Ambassador</div><div class="day-tags"><span class="dtag boat">Reserve barco</span><span class="dtag view">Faraglioni</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('capri2')"><div class="day-num"><div class="dn-n">30</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Volta de barco + Anacapri ⭐</div><div class="day-sub">Gruta Azul · Monte Solaro · Piazzetta</div><div class="day-tags"><span class="dtag boat">Barco 08h30</span><span class="dtag star">Monte Solaro ⭐</span><span class="dtag couple">♡</span></div></div><div class="day-arrow">›</div></div>
+      <div class="day-card" onclick="showDay('capri3')"><div class="day-num"><div class="dn-n">31</div><div class="dn-m">Mai</div></div><div class="day-info"><div class="day-tt">Partida — Capri → Brasil</div><div class="day-sub">Ferry 15h · Voo NAP 19h35</div><div class="day-tags"><span class="dtag warn">Ferry 15h</span><span class="dtag warn">Voo 19h35</span></div></div><div class="day-arrow">›</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DAY DETAIL ═══ -->
+<div id="view-day" class="view">
+  <div class="day-detail-hdr">
+    <button class="back-btn" onclick="showView('timeline')">←</button>
+    <div><div id="dd-title" class="day-dtitle"></div><div id="dd-date" class="day-ddate" class="dd-date"></div></div>
+  </div>
+  <div id="day-detail-content"></div>
+</div>
+
+<!-- ═══ CHECKLIST ═══ -->
+<div id="view-checklist" class="view">
+  <div class="sect-title">Reservas</div>
+  <div class="sect-sub">Tudo que precisa ser agendado</div>
+  <div class="prog-bar"><div class="prog-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="prog-text" id="progress-text">carregando...</div>
+  <div id="checklist-content"></div>
+</div>
+
+
+<!-- ═══ EXPENSES ═══ -->
+<div id="view-expenses" class="view">
+  <div class="sect-title">Despesas</div>
+  <div class="sect-sub">Registro de gastos da viagem</div>
+  <div class="exp-rate-row">
+    <span class="exp-rate-lbl">💱 Câmbio EUR → BRL</span>
+    <input class="exp-rate-inp" type="number" id="exp-rate" value="6.20" step="0.01" onchange="saveExpRate(this.value)">
+    <span style="font-size:12px;color:var(--ink-light)">BRL</span>
+  </div>
+  <div class="exp-sum">
+    <div class="exp-card"><div class="exp-card-lbl">Total</div><div class="exp-card-val" id="exp-total-eur">€ 0</div><div class="exp-card-sub" id="exp-total-brl">R$ 0</div></div>
+    <div class="exp-card"><div class="exp-card-lbl">Lançamentos</div><div class="exp-card-val" id="exp-count">0</div><div class="exp-card-sub">registros</div></div>
+  </div>
+  <div class="g-title">Por destino</div>
+  <div id="by-dest"></div>
+  <div class="g-title">Novo lançamento</div>
+  <div class="exp-form">
+    <div class="exp-row2">
+      <div class="exp-fld"><label>Destino</label><select class="exp-sel" id="exp-dest"><option value="Roma">Roma</option><option value="Sardenha">Sardenha</option><option value="Sorrento/Costa">Sorrento/Costa</option><option value="Capri">Capri</option><option value="Nápoles">Nápoles</option></select></div>
+      <div class="exp-fld"><label>Categoria</label><select class="exp-sel" id="exp-cat"><option value="🍽 Alimentação">🍽 Alimentação</option><option value="🚗 Transporte">🚗 Transporte</option><option value="🎟 Passeios">🎟 Passeios</option><option value="🏨 Hospedagem">🏨 Hospedagem</option><option value="🛍 Compras">🛍 Compras</option><option value="📦 Outros">📦 Outros</option></select></div>
+    </div>
+    <div class="exp-fld"><label>Descrição</label><input class="exp-inp" type="text" id="exp-desc" placeholder="Ex: Jantar Tandem Ragù"></div>
+    <div class="exp-fld"><label>Valor (€)</label><input class="exp-inp" type="number" id="exp-val" placeholder="0.00" step="0.01" min="0" inputmode="decimal"></div>
+    <button class="exp-btn" onclick="addExpense()">+ Adicionar despesa</button>
+  </div>
+  <div class="g-title">Histórico</div>
+  <div id="exp-list"></div>
+</div>
+
+
+<!-- ═══ MAP ═══ -->
+
+<!-- place-panel e overlay fora do view-map para evitar display:none do parent -->
+<div id="place-panel">
+  <div class="pp-drag-bar"></div>
+  <div class="pp-body" id="place-panel-content"></div>
+</div>
+<div id="map-overlay" onclick="closePanel()"></div>
+
+
+
+<!-- ═══ DAY DETAIL ═══ -->
+<div id="view-day" class="view">
+  <div class="dd-hdr">
+    <button class="back-btn" onclick="showView('timeline')">←</button>
+    <div style="flex:1;min-width:0">
+      <div id="dd-title" class="dd-title"></div>
+      <div id="dd-date" class="dd-date"></div>
+    </div>
+    <div class="dd-actions">
+      <button class="dd-act-btn" onclick="shareDay()">↗ Compartilhar</button>
+    </div>
+  </div>
+  <div id="day-detail-content"></div>
+</div>
+
+<!-- ═══ CHECKLIST ═══ -->
+<div id="view-checklist" class="view">
+  <div class="sect-ttl">Reservas</div>
+  <div class="sect-sub">Tudo que precisa ser agendado</div>
+  <div class="prog-bar"><div class="prog-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="prog-txt" id="progress-text">carregando...</div>
+  <div id="checklist-content"></div>
+</div>
+
+<!-- ═══ MAP ═══ -->
+<div id="view-map" class="view">
+  <div id="map-toolbar">
+    <div class="chips-row" id="map-day-filters"></div>
+    <div class="chips-row" id="map-cat-filters" style="margin-top:4px"></div>
+    <div class="chips-row" id="map-specific-days" style="margin-top:4px;display:none"></div>
+  </div>
+  <div id="leaflet-map"></div>
+  <div id="place-panel">
+    <div class="pp-drag"></div>
+    <div id="place-panel-content"></div>
+  </div>
+  <div id="map-overlay" onclick="closePanel()"></div>
+</div>
+
+<!-- ═══ LUGARES ═══ -->
+<div id="view-places" class="view">
+  <div class="sect-ttl">Lugares</div>
+  <div class="sect-sub">Seus interesses — aparecem automaticamente no mapa</div>
+
+  <!-- Busca -->
+  <div class="place-search-wrap">
+    <input class="place-search-field" id="place-search-inp" type="search"
+      placeholder="🔍  Buscar restaurante, praia, atração..."
+      onkeydown="if(event.key==='Enter'){event.preventDefault();searchPlaces()}"
+      oninput="if(!this.value.trim())closePlaceSearch()">
+    <button class="place-search-go" onclick="searchPlaces()">→</button>
+  </div>
+  <div class="place-results-list" id="place-search-results"></div>
+
+  <!-- Filtros -->
+  <div class="places-cats" id="places-cats"></div>
+
+  <!-- Lista -->
+  <div id="places-list-content"></div>
+</div>
+
+<!-- ═══ IA ═══ -->
+<div id="view-ai" class="view" style="padding:0">
+  <div class="chat-wrap">
+
+    <!-- Cabeçalho -->
+    <div class="chat-header">
+      <div class="chat-avatar">✨</div>
+      <div>
+        <div class="chat-name">Assistente de Viagem</div>
+        <div class="chat-sub">Especialista em Itália · maio 2026</div>
+      </div>
+    </div>
+
+    <!-- Sugestões rápidas -->
+    <div class="chat-presets" id="chat-presets">
+      <button class="chat-preset" onclick="aiPreset(this)">O que fazer em Capri?</button>
+      <button class="chat-preset" onclick="aiPreset(this)">Restaurantes em Positano</button>
+      <button class="chat-preset" onclick="aiPreset(this)">Golfo di Orosei — dicas</button>
+      <button class="chat-preset" onclick="aiPreset(this)">Como ir de Nápoles a Sorrento?</button>
+      <button class="chat-preset" onclick="aiPreset(this)">O que comprar na Sardenha?</button>
+      <button class="chat-preset" onclick="aiPreset(this)">Clima em maio na Costa Amalfitana</button>
+    </div>
+
+    <!-- Mensagens -->
+    <div class="chat-messages" id="ai-messages">
+      <div class="chat-msg chat-msg-ai">
+        <div class="chat-bubble">Olá, Flavio! 🇮🇹 Sou seu assistente especializado na viagem de vocês. Posso ajudar com dicas de restaurantes, o que visitar, como se locomover, o que levar, clima... Pergunte à vontade!</div>
+        <div class="chat-time">agora</div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input-bar">
+      <textarea class="chat-input" id="ai-input" placeholder="Pergunte sobre a viagem..." rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAiMessage()}"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+      <button class="chat-send" id="ai-send-btn" onclick="sendAiMessage()" aria-label="Enviar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ DESPESAS ═══ -->
+<div id="view-expenses" class="view">
+  <div class="sect-ttl">Despesas</div>
+  <div class="sect-sub">Registro de gastos da viagem</div>
+  <div class="exp-rate-row">
+    <span class="exp-rate-lbl">💱 Câmbio EUR → BRL</span>
+    <input class="exp-rate-inp" type="number" id="exp-rate" value="6.20" step="0.01" onchange="saveExpRate(this.value)">
+    <span style="font-size:12px;color:var(--ink-l)">BRL</span>
+    <button onclick="fetchRate()" style="background:var(--sand);border:1.5px solid var(--sand-d);border-radius:var(--rs);padding:4px 10px;font-size:11px;cursor:pointer;color:var(--ink-m)">Atualizar</button>
+  </div>
+  <div class="exp-sum">
+    <div class="exp-card"><div class="exp-card-lbl">Total</div><div class="exp-card-val" id="exp-total-eur">€ 0</div><div class="exp-card-sub" id="exp-total-brl">R$ 0</div></div>
+    <div class="exp-card"><div class="exp-card-lbl">Lançamentos</div><div class="exp-card-val" id="exp-count">0</div><div class="exp-card-sub">registros</div></div>
+  </div>
+  <div class="g-ttl">Por destino</div>
+  <div id="by-dest"></div>
+  <div class="g-ttl">Novo lançamento</div>
+  <div class="exp-form">
+    <div class="exp-row2">
+      <div class="exp-fld"><label>Destino</label><select class="exp-sel" id="exp-dest"><option>Roma</option><option>Sardenha</option><option>Nápoles</option><option>Sorrento/Costa</option><option>Capri</option></select></div>
+      <div class="exp-fld"><label>Categoria</label><select class="exp-sel" id="exp-cat"><option value="🍽 Alimentação">🍽 Alimentação</option><option value="🚗 Transporte">🚗 Transporte</option><option value="🎟 Passeios">🎟 Passeios</option><option value="🏨 Hospedagem">🏨 Hospedagem</option><option value="🛍 Compras">🛍 Compras</option><option value="📦 Outros">📦 Outros</option></select></div>
+    </div>
+    <div class="exp-fld"><label>Descrição</label><input class="exp-inp" type="text" id="exp-desc" placeholder="Ex: Jantar Tandem Ragù"></div>
+    <div class="exp-fld"><label>Valor (€)</label><input class="exp-inp" type="number" id="exp-val" placeholder="0.00" step="0.01" min="0" inputmode="decimal"></div>
+    <button class="exp-btn" onclick="addExpense()">+ Adicionar despesa</button>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:4px">
+    <button class="exp-export" onclick="exportCSV()">⬇ Exportar CSV</button>
+  </div>
+  <div class="g-ttl">Histórico</div>
+  <div id="exp-list"></div>
+</div>
+
+
+<!-- ═══ MALA ═══ -->
+<div id="view-mala" class="view">
+  <div class="sect-ttl">Checklist</div>
+  <div class="sect-sub">Mala de mão · O que comprar · O que reservar</div>
+
+  <!-- Barra de progresso -->
+  <div class="mala-weight-bar">
+    <div class="mala-weight-lbl">Progresso geral</div>
+    <div class="mala-weight-row">
+      <div class="mala-weight-track"><div class="mala-weight-fill" id="mala-fill" style="width:0%"></div></div>
+      <div>
+        <div class="mala-weight-num"><span id="mala-done">0</span><span style="font-size:12px;color:var(--ink-l)">/<span id="mala-total">0</span></span></div>
+        <div class="mala-weight-max">itens</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="mala-content"></div>
+</div>
+
+<!-- TABS -->
+<div class="tab-bar">
+  <button class="tab-item active" onclick="showView('timeline')" id="tab-timeline"><span class="ti">🗓</span><span class="tl">Roteiro</span></button>
+  <button class="tab-item" onclick="showView('places')" id="tab-places"><span class="ti">📍</span><span class="tl">Lugares</span></button>
+  <button class="tab-item" onclick="showView('map')" id="tab-map"><span class="ti">🗺</span><span class="tl">Mapa</span></button>
+  <button class="tab-item" onclick="showView('ai')" id="tab-ai"><span class="ti">✨</span><span class="tl">IA</span></button>
+  <button class="tab-item" onclick="showView('mala')" id="tab-mala"><span class="ti">🧳</span><span class="tl">Checklist</span></button>
+  <button class="tab-item" onclick="showView('expenses')" id="tab-expenses"><span class="ti">💶</span><span class="tl">Despesas</span></button>
+</div>
+
+<button class="fab" id="fab-add" onclick="openAddPlace()">+</button>
+
+<!-- MODAL: Adicionar lugar -->
+<!-- MODAL: Adicionar lugar ao mapa -->
+<div class="modal" id="ap-modal">
+  <div class="bs">
+    <div class="bs-handle"></div>
+    <div class="bs-head">
+      <div class="bs-title">Novo lugar</div>
+      <button class="bs-close" onclick="closeAddPlace()">✕</button>
+    </div>
+    <!-- Step 1: busca -->
+    <div id="ap-step1">
+      <div class="bs-hint">Digite o nome e toque em Buscar para encontrar o lugar.</div>
+      <div class="sfield">
+        <input class="sfield-inp" id="ap-name" type="search" placeholder="Ex: La Fontelina, Capri"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();apSearch()}"
+          oninput="if(!this.value)clearPreview()">
+        <button class="sfield-btn" onclick="apSearch()">Buscar</button>
+      </div>
+      <div id="ap-results"></div>
+    </div>
+    <!-- Step 2: confirmação -->
+    <div id="ap-step2" style="display:none">
+      <div class="bs-confirm-card" id="ap-confirm-card"></div>
+      <div class="bs-section-label">Categoria</div>
+      <div class="type-chips" id="ap-type-chips">
+        <button class="type-chip" data-val="food">🍽 Restaurante</button>
+        <button class="type-chip" data-val="view">📍 Atração</button>
+        <button class="type-chip" data-val="hotel">🏨 Hotel</button>
+        <button class="type-chip" data-val="boat">⛵ Barco</button>
+        <button class="type-chip" data-val="custom">📌 Outro</button>
+      </div>
+      <div class="bs-section-label">Destino</div>
+      <div class="type-chips" id="ap-dest-chips">
+        <button class="type-chip" data-val="Roma">🏛 Roma</button>
+        <button class="type-chip" data-val="Sardenha">🏝 Sardenha</button>
+        <button class="type-chip" data-val="Sorrento/Costa">🍋 Costa</button>
+        <button class="type-chip" data-val="Nápoles">🍕 Nápoles</button>
+        <button class="type-chip" data-val="Capri">⛵ Capri</button>
+      </div>
+      <div class="mf-row">
+        <input class="mf-inp" id="ap-note" type="text" placeholder="Nota opcional (ex: reservar com antecedência)">
+      </div>
+      <input type="hidden" id="ap-coords">
+      <input type="hidden" id="ap-type-val" value="view">
+      <input type="hidden" id="ap-dest-val" value="Roma">
+      <button class="bs-cta" onclick="apSave()">Adicionar ao mapa</button>
+      <button class="bs-back" onclick="apBack()">← Buscar outro lugar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Editar parada -->
+<div class="modal" id="edit-stop-modal">
+  <div class="bs">
+    <div class="bs-handle"></div>
+    <div class="bs-head">
+      <div class="bs-title" id="edit-stop-ttl">Editar parada</div>
+      <button class="bs-close" onclick="closeModal('edit-stop-modal')">✕</button>
+    </div>
+    <div class="mf-row2">
+      <div class="mf-grp" style="flex:0 0 90px">
+        <label class="mf-lbl">Horário</label>
+        <input class="mf-inp" id="es-time" placeholder="08h00" maxlength="6">
+      </div>
+      <div class="mf-grp" style="flex:1">
+        <label class="mf-lbl">Nome da parada</label>
+        <input class="mf-inp" id="es-name" placeholder="Ex: Coliseu">
+      </div>
+    </div>
+    <div class="mf-grp">
+      <label class="mf-lbl">Descrição</label>
+      <textarea class="mf-ta" id="es-desc" placeholder="Endereço, dicas, observações..."></textarea>
+    </div>
+    <div class="bs-section-label">Tipo</div>
+    <div class="type-chips" id="es-type-chips">
+      <button class="type-chip" data-val="view">📍 Atração</button>
+      <button class="type-chip" data-val="food">🍽 Refeição</button>
+      <button class="type-chip" data-val="star">⭐ Destaque</button>
+      <button class="type-chip" data-val="couple">♡ Casal</button>
+      <button class="type-chip" data-val="boat">⛵ Barco</button>
+      <button class="type-chip" data-val="nature">🌿 Natureza</button>
+      <button class="type-chip" data-val="info">ℹ️ Info</button>
+    </div>
+    <div class="mf-grp">
+      <label class="mf-lbl">🗺 Link Maps (opcional)</label>
+      <input class="mf-inp mf-maps" id="es-maps" placeholder="Ex: Colosseo+Roma+Italy">
+    </div>
+    <input type="hidden" id="es-type-val" value="view">
+    <input type="hidden" id="es-day-id">
+    <input type="hidden" id="es-stop-idx">
+    <button class="bs-cta" onclick="saveEditStop()">Salvar alterações</button>
+    <button class="bs-del" onclick="deleteStop()">Remover esta parada</button>
+  </div>
+</div>
+
+<!-- MODAL: Nova parada -->
+<div class="modal" id="add-stop-modal">
+  <div class="bs">
+    <div class="bs-handle"></div>
+    <div class="bs-head">
+      <div class="bs-title">Nova parada</div>
+      <button class="bs-close" onclick="closeModal('add-stop-modal')">✕</button>
+    </div>
+    <div class="bs-hint" id="add-stop-day-label"></div>
+    <div class="mf-row2">
+      <div class="mf-grp" style="flex:0 0 90px">
+        <label class="mf-lbl">Horário</label>
+        <input class="mf-inp" id="ns-time" placeholder="08h00" maxlength="6">
+      </div>
+      <div class="mf-grp" style="flex:1">
+        <label class="mf-lbl">Nome <span style="color:var(--terr)">*</span></label>
+        <input class="mf-inp" id="ns-name" placeholder="Ex: Pizzarium Bonci">
+      </div>
+    </div>
+    <div class="mf-grp">
+      <label class="mf-lbl">Descrição</label>
+      <textarea class="mf-ta" id="ns-desc" placeholder="Endereço, dicas, observações..."></textarea>
+    </div>
+    <div class="bs-section-label">Tipo</div>
+    <div class="type-chips" id="ns-type-chips">
+      <button class="type-chip" data-val="view">📍 Atração</button>
+      <button class="type-chip" data-val="food">🍽 Refeição</button>
+      <button class="type-chip" data-val="star">⭐ Destaque</button>
+      <button class="type-chip" data-val="couple">♡ Casal</button>
+      <button class="type-chip" data-val="boat">⛵ Barco</button>
+      <button class="type-chip" data-val="nature">🌿 Natureza</button>
+      <button class="type-chip" data-val="info">ℹ️ Info</button>
+    </div>
+    <div class="mf-grp">
+      <label class="mf-lbl">🗺 Link Maps (opcional)</label>
+      <input class="mf-inp mf-maps" id="ns-maps" placeholder="Ex: Pizzarium+Bonci+Roma">
+    </div>
+    <input type="hidden" id="ns-type-val" value="view">
+    <input type="hidden" id="ns-day-id">
+    <button class="bs-cta" onclick="saveNewStop()">Adicionar ao dia</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ══ STATE ══
+let state={checks:{},stopDone:{},plans:{},notes:{},reservas:{},expenses:[],expRate:6.20,customPlaces:[],editedDays:{}};
+async function loadState(){
+  try{
+    const r=await window.storage.get('italia26_v5');
+    if(r){
+      const s=JSON.parse(r.value);
+      Object.assign(state,s);
+      if(state.customPlaces)customPlaces=state.customPlaces;
+      if(state.editedDays)editedDays=state.editedDays;
+    }
+  }catch(e){}
+}
+async function saveState(){
+  state.customPlaces=customPlaces;
+  state.editedDays=editedDays;
+  try{await window.storage.set('italia26_v5',JSON.stringify(state))}catch(e){}
+}
+
+// ══ ROTEIRO EDITÁVEL ══
+// editedDays sobrepõe days — permite edição sem perder o original
+let editedDays={};
+// stops customizados por dia
+function getDayData(id){
+  // Se o dia foi editado, mesclar stops editados sobre o original
+  const base=JSON.parse(JSON.stringify(days[id]||{}));
+  if(!editedDays[id])return base;
+  const ed=editedDays[id];
+  if(ed.extraStops){
+    base.stops=[...(base.stops||[]),...ed.extraStops];
+    // Ordenar por horário se possível
+    base.stops.sort((a,b)=>{
+      const ta=a.time||'99h',tb=b.time||'99h';
+      return ta.localeCompare(tb);
+    });
+  }
+  if(ed.editedStops){
+    ed.editedStops.forEach(es=>{
+      if(es._deleted){base.stops=base.stops.filter((_,i)=>i!==es._origIdx);return;}
+      if(es._origIdx!==undefined&&base.stops[es._origIdx]){
+        Object.assign(base.stops[es._origIdx],es);
+      }
+    });
+  }
+  return base;
+}
+
+function resetDayEdits(dayId){
+  delete editedDays[dayId];
+  saveState();
+  showDay(dayId);
+}
+
+const days={
+  roma1:{title:'Chegada + Derby della Capitale',date:'Dom 17 mai · Roma',dest:'Roma',
+    context:[
+      {icon:'🏟',title:'Estádio Olímpico',text:'Inaugurado em 1953, o Stadio Olimpico fica na colina Foro Italico, construída por Mussolini. Roma e Lazio dividem o mesmo estádio — o Derby della Capitale é considerado um dos clássicos mais intensos da Europa. Roma torce no setor Sul, Lazio no Norte.'},
+      {icon:'🍝',title:'Cacio e Pepe',text:'O prato mais romano de todos. Feito com apenas 3 ingredientes — pecorino romano, pimenta-do-reino e massa. A técnica é o segredo: o queijo não pode empelotar. Em Trastevere você encontra a versão mais autêntica, longe dos restaurantes turísticos.'},
+    ],
+    alerts:[{type:'blue',text:'✈️ Chegada FCO 11h30. Hotel: Piemonte Hotel, Via Vicenza 32c — próximo à Termini.'}],
+    stops:[
+      {time:'13h',type:'info',name:'Check-in · Piemonte Hotel',desc:'Via Vicenza 32c · 3 noites + café da manhã',maps:'Piemonte+Hotel+Via+Vicenza+Roma'},
+      {time:'15h',type:'star',name:'⚽ Roma × Lazio — Derby della Capitale',desc:'Estádio Olímpico. Chegue 1h antes. Dinheiro vivo para cerveja dentro.',maps:'Stadio+Olimpico+Roma'},
+      {time:'19h30',type:'food',name:'Jantar · Trastevere',desc:'Bairro local. Peça cacio e pepe.',maps:'Trastevere+Rome+restaurants',options:[
+        {name:'Supplì Roma',detail:'Via San Francesco a Ripa 137 · street food romano',maps:'Suppli+Roma+Trastevere'},
+        {name:'Trattoria local',detail:'Qualquer cantina · sem reserva',maps:'Trastevere+trattoria+Rome'},{name:'Enoteca Ferrara',detail:'Piazza Trilussa 41 · adega com cozinha romana classica · ambiente romantico · RESERVAR',maps:'Enoteca+Ferrara+Trastevere+Roma',reservar:true},
+      ]},
+    ],notes:true},
+  roma2:{title:'Coliseu · Foro Romano · Palatino',date:'Seg 18 mai · Roma',dest:'Roma',
+    context:[
+      {icon:'🏛',title:'Coliseu — 72 d.C.',text:'Maior anfiteatro já construído: 50.000 espectadores, 80 arcos, 4 andares. Levou apenas 8 anos para construir — com mão de obra escrava judaica após a destruição de Jerusalém em 70 d.C. Os jogos podiam durar 100 dias seguidos. O nome Coliseu vem da estátua colossal de Nero que ficava ao lado, hoje desaparecida.'},
+      {icon:'🗺',title:'Foro Romano',text:'Por 1.000 anos foi o centro político, religioso e comercial do mundo ocidental. Aqui Júlio César foi assassinado (44 a.C.), Marco Antônio fez seu discurso e os imperadores celebravam seus triunfos. Hoje são ruínas, mas caminhando pelo Foro você percorre literalmente o coração da civilização romana.'},
+      {icon:'👑',title:'Monte Palatino',text:'A colina mais antiga de Roma — segundo a lenda, onde Rômulo fundou a cidade em 753 a.C. Foi onde os imperadores construíram seus palácios. A palavra palácio em todas as línguas ocidentais vem de Palatinus. Vista do Foro Romano de cima é uma das mais bonitas de Roma.'},
+      {icon:'💡',title:'Dica prática',text:'O ingresso do Coliseu inclui Foro Romano e Palatino. A visita completa leva 3-4h. Chegue às 08h30 (abertura) para o Coliseu quase vazio — em julho tem fila de 2h mesmo com ingresso. Sapatos confortáveis são essenciais: são 3km de caminhada no paralelepípedo.'},
+    ],
+    alerts:[{type:'green',text:'🎟 Ingresso Coliseu €24 reservado para hoje. Chegue 08h15.'}],
+    stops:[
+      {time:'08h30',type:'star',name:'Coliseu + Foro Romano + Palatino',desc:'Comece cedo — menos calor e menos gente. ~2h30 no total.',maps:'Colosseum+Rome+Italy'},
+      {time:'11h30',type:'food',name:'Almoço leve pós-Coliseu',desc:'',maps:'restaurants+near+Colosseum+Rome',options:[
+        {name:'Pastasciutta',detail:'~€7,50 · prato do dia simples',maps:'Pastasciutta+restaurant+Rome'},
+        {name:'Trattoria local',detail:'Cantina perto do Foro',maps:'trattoria+near+Roman+Forum'},
+      ]},
+      {time:'14h30',type:'view',name:'Cripta dos Capuchinhos',desc:'Via Vittorio Veneto 27 · ~€9 · ~45 min · cobrir ombros e joelhos',maps:'Capuchin+Crypt+Via+Vittorio+Veneto+Rome'},
+      {time:'16h30',type:'couple',name:'♡ Fontana di Trevi → Piazza di Spagna',desc:'Tarde dourada. Luz perfeita para fotos. 15 min a pé da Cripta.',couple:true,maps:'Trevi+Fountain+Rome'},
+      {time:'20h',type:'food',name:'Jantar',desc:'',options:[
+        {name:'Giallo Luna',detail:'~€7,50 · sem reserva',maps:'Giallo+Luna+Rome'},
+        {name:'Trattoria de bairro',detail:'Tonnarelli cacio e pepe',maps:'cacio+e+pepe+restaurant+Rome'},
+      ]},
+    ],notes:true},
+  roma3:{title:'Museus Vaticanos · Roma livre',date:'Ter 19 mai · Roma',dest:'Roma',
+    context:[
+      {icon:'⛪',title:'Vaticano — o menor país do mundo',text:'Com apenas 0,44 km², é o menor Estado soberano do planeta. Tornou-se independente da Itália em 1929 pelo Tratado de Latrão, assinado por Mussolini e o Papa Pio XI. Tem sua própria moeda (euro vaticano, raridade para colecionadores), correio, rádio e guarda suíça desde 1506.'},
+      {icon:'🎨',title:'Museus Vaticanos — 500 anos de coleção',text:'Fundados pelo Papa Júlio II em 1503 com uma única estátua (o Laocoonte, encontrada enterrada em Roma). Hoje são 54 galerias com 70.000 obras. A Escola de Atenas de Rafael, as tapeçarias flamengas e os mapas geográficos do séc. XVI estão no caminho para a Sistina.'},
+      {icon:'✨',title:'Capela Sistina — Michelangelo',text:'Michelangelo levou 4 anos pintando o teto (1508-1512) — deitado em andaimes, não de costas como o mito diz. Pintou 300 figuras em 500m². O Juízo Final na parede do altar veio 23 anos depois, quando ele tinha 60 anos. Os cardeais se reúnem aqui para eleger o Papa — o conclave.'},
+      {icon:'🏛',title:'Basílica de São Pedro',text:'A maior igreja do mundo — cabe Notre-Dame inteira dentro dela. Construída sobre o túmulo de São Pedro, o primeiro papa, crucificado de cabeça para baixo em 64 d.C. A cúpula de Michelangelo tem 136m de altura e levou 120 anos para construir. Da cúpula você vê toda Roma em 360°.'},
+    ],
+    alerts:[{type:'amber',text:'🎟 Museus Vaticanos: reservar com antecedência em museivaticani.va (~€20 pp). Entrada às 08h é o único horário tranquilo. Se não conseguir ingresso, a Basílica + Praça são gratuitas e sem reserva — e igualmente inesquecíveis.'}],
+    planAB:{
+      question:'Conseguiram ingresso para os Museus Vaticanos?',
+      A:'✅ Sim — Museus 08h + tarde livre em Roma',
+      B:'❌ Não — Manhã em Roma + Basílica à tarde'
+    },
+    stops:[
+      {time:'07h45',type:'star',name:'⭐ Museus Vaticanos + Capela Sistina',desc:'Entrada 08h — único horário sem multidão. Trajeto: Pinacoteca → Mapas Geográficos → Capela Sistina → saída interna para a Basílica. ~2h30.',maps:'Vatican+Museums+Rome',couple:true},
+      {time:'10h30',type:'view',name:'Basílica de São Pedro + cúpula',desc:'Saída direta dos Museus pela Basílica — sem fila. Suba à cúpula (€8 a pé · €10 de elevador) para a melhor vista de Roma.',maps:'Saint+Peters+Basilica+Vatican',couple:true},
+      {time:'12h',type:'food',name:'Almoço no Prati',desc:'Bairro imediatamente fora do Vaticano — bom e sem turistas excessivos.',maps:'Prati+neighborhood+Rome+restaurants',options:[
+        {name:'Pizzarium Bonci',detail:'Via della Meloria 43 · melhor pizza al taglio de Roma',reservar:false,maps:'Pizzarium+Bonci+Rome'},
+        {name:"Osteria dell'Angelo",detail:'Via G. Bettolo 24 · cacio e pepe clássico · ambiente local',reservar:false,maps:'Osteria+dell+Angelo+Rome'},
+      ]},
+      {time:'15h',type:'view',name:'Palazzo Farnese — opcional',suggested:true,desc:'Um dos palácios renascentistas mais belos de Roma · afrescos dos Carracci que rivalizam com a Sistina · Visita gratuita qui/dom às 15h e 17h · Reservar em viaggiatoriaccademici.it',maps:'Palazzo+Farnese+Roma'},
+      {time:'14h',type:'view',name:'Tarde livre — Campo dei Fiori + Trastevere',desc:'Mercado do Campo dei Fiori (até ~14h), ruelas de Trastevere. O melhor de Roma sem roteiro fixo. Ótimo momento para aula de culinária se encontrarem algo interessante.',maps:'Campo+de+Fiori+Rome'},
+      {time:'17h',type:'couple',name:"♡ Castel Sant'Angelo ao entardecer",desc:'A ponte com as estátuas de anjos com o pôr do sol é uma das vistas mais românticas de Roma.',maps:'Castel+Sant+Angelo+Rome',couple:true},
+      {time:'20h',type:'food',name:'Último jantar em Roma',desc:'',options:[
+        {name:"All'Antico Vinaio",detail:'Via della Rosetta 6 · schiacciata · ~€10 · sem reserva',reservar:false,maps:'All+Antico+Vinaio+Via+della+Rosetta+Rome'},
+        {name:'Trattoria em Trastevere',detail:'Se não foram no Dia 17',reservar:false,maps:'Trastevere+restaurants+Rome'},
+      ]},
+    ],notes:true},
+  roma4:{title:'Partida para Sardenha',date:'Qua 20 mai · Roma → Sardenha',dest:'Roma',
+    context:[
+      {icon:'✈️',title:'Aeroporto de Ciampino',text:'O menor dos dois aeroportos de Roma, usado principalmente por companhias low-cost. Fica a 15km do centro — mais perto que o Fiumicino. Construído em 1916, foi o primeiro aeroporto da Itália e hoje também o mais antigo em operação do país.'},
+    ],
+    alerts:[{type:'red',text:'✈️ Voo Roma Ciampino (CIA) → Cagliari 10h55. Sair do hotel às 08h30.'}],
+    stops:[
+      {time:'07h',type:'food',name:'Café da manhã + check-out',desc:'Café incluso. Último espresso romano.'},
+      {time:'08h30',type:'info',name:'Transfer para Ciampino',desc:'Uber/táxi ~€25–35 · ~30 min.',maps:'Rome+Ciampino+Airport'},
+      {time:'10h55',type:'star',name:'✈️ Roma → Cagliari',desc:'Chegada 12h. Retirada ALAMO no aeroporto às 12h30.',maps:'Cagliari+Elmas+Airport'},
+    ],notes:false},
+  sard1:{title:'Chegada em Cala Gonone',date:'Qua 20 mai · Sardenha',dest:'Sardenha',
+    context:[
+      {icon:'🏝',title:'Sardenha — a ilha dos centenários',text:'A Sardenha é uma das 5 Zonas Azuis do mundo — regiões onde as pessoas vivem mais de 100 anos em proporção muito acima da média global. Os sardos atribuem isso à alimentação (pecorino, vinho Cannonau, pão pizoccheri), ao ritmo de vida e aos laços comunitários fortes.'},
+      {icon:'🌊',title:'Golfo di Orosei',text:'Considerado o trecho de costa mais selvagem da Itália. As praias só são acessíveis de barco ou por trilhas de horas — o que preservou a água em um azul turquesa impossível. A região faz parte do Parque Nacional do Gennargentu, criado em 1998.'},
+      {icon:'🐟',title:'Culinária sarda',text:'Completamente diferente da italiana continental. Culurgiones são pastéis recheados de batata e menta, fechados à mão com uma trança típica. O porceddu (leitão assado em espeto de mirto) é o prato de festa. O vinho local Cannonau (grenache) tem o maior teor de resveratrol do mundo — talvez o segredo dos centenários.'},
+    ],
+    alerts:[{type:'amber',text:'🚗 Drive Cagliari → Cala Gonone ~2h30. Hotel: San Francisco Hotel, Via Magellano 8. Reserve o barco privado logo no check-in!'}],
+    stops:[
+      {time:'15h30',type:'info',name:'Check-in · San Francisco Hotel',desc:'Via Magellano 8 · Cala Gonone · à beira-mar · café incluso',maps:'San+Francisco+Hotel+Cala+Gonone+Sardinia'},
+      {time:'16h30',type:'view',name:'Cala Fuili ou Praia Central',desc:'Cala Fuili: 5 min de carro. Primeiro banho no mar sardo.',maps:'Cala+Fuili+Cala+Gonone+Sardinia'},
+      {time:'20h',type:'food',name:'Jantar em Cala Gonone',desc:'Peça culurgiones ou frutos do mar.',maps:'restaurants+Cala+Gonone+Sardinia',options:[
+        {name:'Ristorante Le Terrazze',detail:'Na orla · vista golfo',maps:'Ristorante+Le+Terrazze+Cala+Gonone'},
+        {name:'Trattoria local',detail:'Culinária sarda tradicional',maps:'trattoria+Cala+Gonone'},
+      ]},
+    ],notes:true},
+  sard2:{title:'Golfo di Orosei — barco privado ⭐',date:'Qui 21 mai · Cala Gonone',dest:'Sardenha',
+    context:[
+      {icon:'🪨',title:'Cala Goloritzé — UNESCO',text:'Eleita a praia mais bela da Europa pela Lonely Planet. O arco natural de pedra calcária que emerge do mar tem 30m de altura. Só acessível de barco ou por 2h de trilha pela Serra Ovasi. As águas têm entre 15-20m de visibilidade — é por isso que o snorkel aqui é diferente de qualquer lugar.'},
+      {icon:'🏊',title:'Cala Mariolu',text:'O nome vem de mariolo — ladrão em sardo — porque a praia ficava escondida e era usada por contrabandistas. Pedras brancas arredondadas, água azul-esmeralda e verde, com fundo de areia branca visível a 10m de profundidade. Uma das praias mais fotografadas da Itália.'},
+    ],
+    alerts:[{type:'green',text:'🚤 Barco privado — só vocês dois. Saída 08h. Protetor solar, água, snorkel.'}],
+    stops:[
+      {time:'08h–17h',type:'boat',name:'🚤 Barco privado · Golfo di Orosei ⭐',desc:'Cala Luna, Cala Mariolu, Cala Goloritzé (UNESCO). Paradas para mergulho.',couple:true,maps:'Gulf+of+Orosei+Cala+Gonone+Sardinia'},
+      {time:'19h30',type:'food',name:'Jantar pós-dia inesquecível',desc:'',maps:'restaurants+Cala+Gonone',options:[
+        {name:'Frutos do mar no porto',detail:'Orata al forno ou aragosta',maps:'seafood+restaurant+Cala+Gonone'},
+        {name:'Trattoria local',detail:'Porceddu (leitão assado)',maps:'trattoria+Cala+Gonone'},
+      ]},
+    ],notes:true},
+  sard3:{title:'Cala Gonone → Palau',date:'Sex 22 mai · Sardenha',dest:'Sardenha',
+    context:[
+      {icon:'🏖',title:'Cala Brandinchi — "Taiti sardo"',text:'O apelido não é exagero: a água tem tom turquesa caribenho mesmo sendo Mediterrâneo. Fica em San Teodoro, no meio do caminho entre Cala Gonone e Palau. A areia é fina e branca, o fundo é raso e plano — perfeita para entrar devagar e apreciar a cor.'},
+    ],
+    alerts:[{type:'blue',text:'🚗 Drive ~1h30. Parada em Cala Brandinchi. Hotel: Club Esse Posada, Palau.'}],
+    stops:[
+      {time:'10h',type:'view',name:'🏖 Cala Brandinchi — parada obrigatória',desc:'Uma das mais bonitas da Sardenha no caminho. Água cor de Caribe.',couple:true,maps:'Cala+Brandinchi+San+Teodoro+Sardinia'},
+      {time:'15h30',type:'info',name:'Check-in · Club Esse Posada',desc:'Via Del Vecchio Marino · Palau · café incluso',maps:'Club+Esse+Posada+Palau+Sardinia'},
+      {time:'17h',type:'view',name:'Capo d\'Orso — o urso de granito',desc:'~€5 · caminhada 10 min · vista para o arquipélago e Córsega.',maps:'Capo+d+Orso+Palau+Sardinia'},
+      {time:'20h',type:'food',name:'Jantar em Palau',desc:'Bottarga sobre massa + Vermentino.',maps:'restaurants+Palau+Sardinia'},
+    ],notes:true},
+  sard4:{title:'Arquipélago de La Maddalena ⭐',date:'Sáb 23 mai · Sardenha',dest:'Sardenha',
+    context:[
+      {icon:'⛵',title:'La Maddalena — Parque Nacional',text:'Arquipélago com 7 ilhas principais e dezenas de ilhotas, protegido como Parque Nacional Marinho desde 1994. Napoleão ficou aqui exilado brevemente em 1793 antes de Elba. Garibaldi, herói da unificação italiana, escolheu a ilha de Caprera para viver e morrer — a casa dele é museu aberto ao público.'},
+      {icon:'💧',title:'A água de La Maddalena',text:'A transparência vem da combinação de fundos de granito rosa (que não soltam sedimentos), correntes que renovam a água constantemente e ausência de rios na região. O granito cor-de-rosa é a rocha característica da ilha e aparece em formações escultóricas nas praias.'},
+    ],
+    alerts:[{type:'blue',text:'Ferry Palau → La Maddalena ~20 min (~€8 pp). Hotel: Hotel Miralonga, check-in partir 15h.'}],
+    stops:[
+      {time:'20h',type:'star',name:'Sagra local — perguntar no hotel',suggested:true,desc:'Em maio ha festas tradicionais sardas com musica ao vivo, comida local e danca tipica. Perguntar no Club Esse Posada se ha alguma nos arredores. O tipo de experiencia que nao esta em nenhum guia.',maps:'La+Maddalena+festa+tradizionale'},
+      {time:'09h–17h',type:'boat',name:'⛵ Arquipélago La Maddalena ⭐',desc:'Budelli (Praia Rosa), Spargi, Santa Maria. Só acessíveis por barco.',couple:true,maps:'La+Maddalena+Archipelago+Sardinia',options:[
+        {name:'Catamarã Sportoutdoor',detail:'~€120 pp · almoço incluído · intimista',reservar:true,maps:'La+Maddalena+catamaran+tour'},
+        {name:'Barco coletivo Civitatis',detail:'~€60 pp · saída Palau',maps:'La+Maddalena+boat+tour+Palau'},
+      ]},
+      {time:'17h30',type:'info',name:'Check-in · Hotel Miralonga',desc:'Strada Panoramica Via Don Vico 1 · La Maddalena',maps:'Hotel+Miralonga+La+Maddalena+Sardinia'},
+      {time:'20h',type:'food',name:'Jantar em La Maddalena',desc:'Ricci di mare se disponível.',maps:'restaurants+La+Maddalena+Sardinia'},
+    ],notes:true},
+  sard5:{title:'Dia livre na Sardenha',date:'Dom 24 mai · Sardenha',dest:'Sardenha',
+    context:[
+      {icon:'🌿',title:'Juniper e Macchia mediterrânea',text:'A vegetação baixa e aromática que cobre as colinas sardas — rosmaninho, murta, lentisco e zimbro — é chamada de macchia. O zimbro (ginepro) é especialmente importante: é usado para defumar a carne, aromatizar a grappa e fazer cestas. O cheiro forte ao caminhar faz parte da experiência sarda.'},
+    ],
+    stops:[
+      {time:'08h30',type:'nature',name:'Cala Coticcio "Tahiti"',desc:'Caprera. Trilha 40 min ou barco. Azul-turquesa entre granito rosa. €3 pp + guia.',couple:true,maps:'Cala+Coticcio+Caprera+La+Maddalena'},
+      {time:'12h',type:'view',name:'Cala Portese + praias Caprera',desc:'Acessível de carro. Almoço na areia.',maps:'Cala+Portese+Caprera+Sardinia'},
+      {time:'18h',type:'couple',name:'♡ Aperitivo pôr do sol · Vermentino',desc:'Qualquer bar com vista para o porto.',couple:true,maps:'La+Maddalena+porto+Sardinia'},
+      {time:'20h',type:'star',name:'Ultimo jantar na Sardenha',desc:'O mais memoravel da ilha.',couple:true,suggested:true,options:[{name:'Ristorante Aqua · La Maddalena',detail:'Frutos do mar fresquissimos, vista para o arquipelago · RESERVAR 1-2 dias antes',maps:'Ristorante+Aqua+La+Maddalena',reservar:true},{name:'Il Gabbiano · Palau',detail:'Vista para a Corsega · frutos do mar grelhados · RESERVAR',maps:'Ristorante+Il+Gabbiano+Palau',reservar:true}]},
+    ],notes:true},
+  sard6:{title:'Sardenha → Nápoles',date:'Seg 25 mai · Sardenha',dest:'Sardenha',
+    context:[
+      {icon:'🍕',title:'Chegando em Nápoles',text:'Nápoles é o caos mais fascinante da Itália. Foi capital do Reino das Duas Sicílias por séculos e ainda tem personalidade completamente própria — diferente do Norte e do Centro. A pizza foi inventada aqui: a Margherita foi criada em 1889 em homenagem à Rainha Margherita de Savoia, com as cores da bandeira italiana (tomate, mussarela, manjericão).'},
+    ],
+    alerts:[{type:'red',text:'⚠️ Check-out até 10h. Drive ~3h. Devolução ALAMO 10h. Voo 13h50.'}],
+    stops:[
+      {time:'09h30',type:'info',name:'Ferry + drive Cagliari',desc:'Ferry ~20 min + drive ~2h30. Devolução ALAMO aeroporto.',maps:'Cagliari+Elmas+Airport'},
+      {time:'13h50',type:'star',name:'✈️ Cagliari → Nápoles',desc:'Chegada 15h05. Retirada AVIS Capodichino 15h30.',maps:'Naples+Capodichino+Airport'},
+      {time:'19h30',type:'couple',name:'♡ Jantar em Nápoles',desc:'Primeiro contato com a Campânia.',couple:true,maps:'Naples+historic+center+restaurants',options:[
+        {name:"L'Antica Pizzeria da Michele ⭐",detail:'Via Cesare Sersale 1 · a pizzaria mais famosa do mundo · só Margherita e Marinara desde 1870 · fila de 30-40min, sem reserva, pagamento em dinheiro · a pizza de Eat Pray Love',maps:'Antica+Pizzeria+Da+Michele+Napoli',reservar:false},
+        {name:'Tandem Ragù',detail:'Via G. Paladino 51 · ragù napolitano · reservar',reservar:true,maps:'Tandem+Ragu+Naples'},
+        {name:'Borgo Marinari',detail:'Atrás do Castelo do Ovo · frutos do mar com vista',maps:'Borgo+Marinari+Naples'},
+        {name:'Da Nennella',detail:'Bairro Espanhol · garçons cantam · ~€15 pp',maps:'Trattoria+Da+Nennella+Naples'},
+      ]},
+    ],notes:true},
+  costa1:{title:'Chegada em Sorrento',date:'Seg 25 mai · Sorrento/Costa',dest:'Sorrento/Costa',
+    context:[
+      {icon:'🍋',title:'Sorrento e o limoncello',text:'Sorrento é a capital mundial do limoncello. Os limões aqui (Limone di Sorrento IGP) são enormes, de casca grossa e perfumada — usados principalmente pela casca, não pelo suco. A Costa Amalfitana inteira é coberta de limoeiros em terraços suspensos sobre o mar, uma paisagem única.'},
+      {icon:'🌊',title:'Costa Amalfitana — UNESCO',text:'Patrimônio Mundial da UNESCO desde 1997. A SS163 — a estrada que liga Sorrento a Salerno — foi construída entre 1832 e 1853 na rocha viva sobre o mar. Tem 40km de curvas fechadas, túneis e viadutos. Em maio o trânsito já é intenso — saída cedo é essencial.'},
+    ],
+    alerts:[{type:'blue',text:'🚗 AVIS retirado em Nápoles 15h30. Use A3 + SS145. Hotel: Villa Igea, Via Capo 96 · 4 noites + café.'}],
+    stops:[
+      {time:'16h30',type:'info',name:'Check-in · Villa Igea',desc:'Via Capo 96 · Sorrento',maps:'Villa+Igea+Via+Capo+Sorrento'},
+      {time:'18h',type:'couple',name:'♡ Sorrento centro + Vista Sky Bar',desc:'Corso Italia. Vista Sky Bar: rooftop com Vesúvio e Capri ao fundo.',couple:true,maps:'Vista+Sky+Bar+Sorrento'},
+      {time:'20h30',type:'food',name:'Jantar em Sorrento',desc:'Gnocchi alla sorrentina — prato símbolo da cidade.',options:[
+        {name:'Tavern Allegra',detail:'Da lista · reservar com antecedência',reservar:true,maps:'Tavern+Allegra+Sorrento'},
+        {name:'O\'Parruchiano La Favorita',detail:'Corso Italia 71 · jardim de limoneiros · desde 1868',maps:'O+Parruchiano+La+Favorita+Sorrento'},
+      ]},
+    ],notes:true},
+  costa2:{title:'Ravello · Amalfi · Atrani',date:'Ter 26 mai · Sorrento/Costa',dest:'Sorrento/Costa',
+    context:[
+      {icon:'🎵',title:'Ravello — a cidade da música',text:'Richard Wagner compôs parte de Parsifal aqui em 1880, inspirado pelos jardins da Villa Rufolo. Desde 1953 o Festival de Ravello acontece todo verão no terraço suspenso sobre o mar — um dos cenários mais bonitos de qualquer festival do mundo. Villa Cimbrone era o retiro secreto de Greta Garbo e seu amante Leopold Stokowski nos anos 1930.'},
+      {icon:'⚓',title:'Amalfi — a primeira república marítima',text:'Entre os séculos IX e XI, Amalfi era uma das cidades mais poderosas do Mediterrâneo — antes que Veneza, Gênova e Pisa a superassem. Os amalfitanos inventaram a bússola náutica e o sistema de navegação que abriu o Mediterrâneo ao comércio. A Tavola Amalfitana, código marítimo do séc. XI, foi lei em todo o Mediterrâneo por 300 anos.'},
+      {icon:'🏘',title:'Atrani',text:'O menor município da Itália continental — menos de 1km² e cerca de 900 habitantes. Praticamente fundida com Amalfi, mas sem os turistas. A única praia acessível por escadaria, a piazza minúscula e os prédios coloridos que chegam até a água fazem dela um dos lugares mais fotografados da costa sem que quase ninguém saiba o nome.'},
+    ],
+    alerts:[{type:'blue',text:'🚗 Saída 07h30 pela SS163. Priorize barco/transfer. Volte de noite com trânsito esvaziado.'}],
+    stops:[
+      {time:'09h–13h',type:'couple',name:'♡ Ravello — jardins suspensos ⭐',desc:'Villa Cimbrone: Terraço do Infinito. Villa Rufolo: jardins medievais.',couple:true,maps:'Ravello+Amalfi+Coast'},
+      {time:'13h',type:'food',name:'Almoço em Amalfi',desc:'',maps:'Amalfi+restaurants',options:[
+        {name:'Lido Azzurro',detail:'Beira-mar · frutos do mar',maps:'Ristorante+Lido+Azzurro+Amalfi'},
+        {name:'Pasticceria Andrea Pansa',detail:'Café histórico · delizie al limone',maps:'Pasticceria+Pansa+Amalfi'},
+      ]},
+      {time:'14h30',type:'view',name:'Amalfi — Duomo + centro',desc:'Duomo árabe-normando ~€3.',maps:'Amalfi+Cathedral+Italy'},
+      {time:'16h',type:'star',name:'Fiordo di Furore',desc:'Estacione na SS163, desça ~5 min. Prainha num fiorde.',couple:true,maps:'Fiordo+di+Furore+Amalfi+Coast'},
+      {time:'19h30',type:'food',name:'Retorno + aperitivo opcional em Positano',desc:'',options:[
+        {name:'Franco\'s Bar · Positano',detail:'Rooftop · pôr do sol sobre as casas coloridas',maps:'Franco+Bar+Positano'},
+        {name:'Jantar em Sorrento',detail:'Se voltarem direto',maps:'restaurants+Sorrento'},
+      ]},
+    ],notes:true},
+  costa3:{title:'Positano — dia inteiro',date:'Qua 27 mai · Sorrento/Costa',dest:'Sorrento/Costa',
+    context:[
+      {icon:'🎨',title:'Positano',text:'At\u00e9 1950 era vila de pescadores. Steinbeck a descreveu em 1953 como um sonho que parece irreal e desencadeou o turismo. Hoje \u00e9 uma das cidades mais caras da It\u00e1lia.'},
+      {icon:'🚶',title:'Sentiero degli Dei — Trilha dos Deuses',text:'O nome vem da crença de que os deuses gregos usavam este caminho para se deslocar entre o Olimpo e o Mar. São 7,8km de trilha entre Agerola e Nocelle, a 600m de altitude, com vista permanente do mar e da costa. É uma das 10 trilhas mais bonitas da Europa. Descida por 1.800 degraus até Positano.'},
+    ],
+    planAB:{question:'Como querem o dia de Positano?',A:'🥾 Ativo — Sentiero degli Dei + Positano',B:'🏖 Contemplativo — praia + rooftop + jantar'},
+    alerts:[{type:'blue',text:'🚗 Saída 07h30. Estacione no topo (Viale Pasitea). Ferry recomendado para o retorno (~€20 pp).'}],
+    stops:[
+      {time:'08h',type:'couple',name:'Manha lenta em Positano',suggested:true,desc:'Sem destino. Cafe e cornetto com vista para o mar. Sentar e respirar. As melhores memorias de viagem sao os momentos em que paramos.',maps:'Positano+bar+colazione'},
+      {time:'09h',type:'star',name:'Positano ⭐',desc:'Ruelas e escadarias até a Spiaggia Grande. Praia del Fornillo: 10 min pela Via Positanesi d\'America.',couple:true,maps:'Positano+Amalfi+Coast'},
+      {time:'13h',type:'food',name:'Almoço em Positano',desc:'',options:[
+        {name:'La Tagliata',detail:'Vista panorâmica épica · RESERVAR',reservar:true,maps:'La+Tagliata+Positano'},
+        {name:'Pizzaria à beira-mar',detail:'Pizza napoletana · sem reserva',maps:'pizza+restaurant+Positano'},
+      ]},
+      {time:'14h30',type:'view',name:'Praia + rooftops ao fim da tarde',desc:'Fornillo para nadar. Franco\'s Bar ou Filla Fiorentino para o pôr do sol.',couple:true,maps:'Spiaggia+del+Fornillo+Positano'},
+      {time:'19h30',type:'food',name:'Retorno a Sorrento',desc:'',options:[
+        {name:'Ferry Positano → Sorrento',detail:'~€20 pp · ~35 min · recomendado',maps:'Positano+ferry+port'},
+        {name:'Drive noturno SS163',detail:'Estrada vazia, costa iluminada',maps:'SS163+Amalfi+Coast'},
+      ]},
+    ],notes:true},
+  costa4:{title:'Furore · Praiano · Snorkeling',date:'Qui 28 mai · Sorrento/Costa',dest:'Sorrento/Costa',
+    context:[
+      {icon:'🎬',title:'Fiordo di Furore',text:'O fiordo mais meridional da Europa — tecnicamente um canyão de calcário onde um riacho encontra o mar. Tem apenas 30m de largura. Cenas do filme Amarcord de Fellini foram gravadas aqui. Em agosto acontece o Campeonato Mundial de Salto da Ponte — atletas saltam da ponte da SS163 (30m de altura) direto no fiordo.'},
+      {icon:'🌊',title:'Praiano — o segredo da costa',text:'Enquanto Positano e Amalfi explodiram de turismo, Praiano manteve o ritmo de village. Os moradores são na maioria pescadores e artesãos de cerâmica. A marina de Praiano — Gavitella — fica ao final de 300 degraus e tem água tão clara quanto qualquer praia famosa da costa.'},
+    ],
+    alerts:[{type:'green',text:'☀️ Dia sem roteiro fixo. Plano B disponível: Pompeia (30 min de carro).'}],
+    stops:[
+      {time:'Manhã',type:'view',name:'Praias nos arredores',desc:'',options:[
+        {name:'Baia di Leranto',detail:'Trilha 30 min · praia selvagem · snorkeling',maps:'Baia+di+Leranto+Punta+Campanella'},
+        {name:'Marina del Cantone',detail:'De carro · mar transparente',maps:'Marina+del+Cantone+Sorrento'},
+        {name:'Marina Piccola · Sorrento',detail:'Prático · sem deslocamento',maps:'Marina+Piccola+Sorrento'},
+      ]},
+      {time:'Tarde',type:'view',name:'Centro de Sorrento',desc:'Limoncello, sandálias, cerâmica, roupas de linho.',maps:'Sorrento+city+center'},
+      {time:'20h',type:'couple',name:'♡ O jantar da Costa Amalfitana ⭐',desc:'O jantar mais especial da região. Escolham com calma.',couple:true,options:[
+        {name:'Tavern Allegra',detail:'Se não foi ainda · reservar',reservar:true,maps:'Tavern+Allegra+Sorrento'},
+        {name:'O\'Parruchiano La Favorita',detail:'Se não foi ainda',maps:'O+Parruchiano+La+Favorita+Sorrento'},
+        {name:'Restaurante com vista para o mar',detail:'Peixe do dia + Falanghina',maps:'sea+view+restaurant+Sorrento'},
+      ]},
+    ],notes:true},
+  costa5:{title:'Sorrento → Capri',date:'Sex 29 mai · Sorrento/Costa',dest:'Sorrento/Costa',
+    context:[
+      {icon:'🚗',title:'Devolução do carro — AVIS Nápoles',text:'O aeroporto de Capodichino fica no norte de Nápoles. A devolução é às 08h — saída de Sorrento às 06h30 pela A3 (40km, ~40min). Atenção: o GPS italiano às vezes sugere a SS145 pela costa, que pode demorar 1h30 no trânsito matinal. Prefira a autoestrada.'},
+    ],
+    alerts:[{type:'red',text:'⚠️ Devolução AVIS Capodichino até 08h00. Saiam de Sorrento às ~06h.'}],
+    stops:[
+      {time:'06h',type:'info',name:'Saída de Sorrento',desc:'Drive ~1h pela A3 até Aeroporto Nápoles.',maps:'Naples+Capodichino+Airport'},
+      {time:'07h45',type:'info',name:'Devolução AVIS · Capodichino',desc:'Até 08h00. CNH física + passaporte.',maps:'AVIS+Naples+Capodichino+Airport'},
+      {time:'08h15',type:'info',name:'Transfer → Porto de Nápoles',desc:'Táxi/Uber ~€15 · ~20 min · Molo Beverello.',maps:'Molo+Beverello+Naples+Ferry'},
+      {time:'~09h30',type:'boat',name:'⛴️ Ferry Nápoles → Capri',desc:'~50 min. A vista de Capri chegando pelo mar é inesquecível.',couple:true,maps:'Capri+ferry+Naples'},
+    ],notes:false},
+  capri1:{title:'Chegada em Capri · Explorar a ilha',date:'Sex 29 mai · Capri',dest:'Capri',
+    context:[
+      {icon:'🏝',title:'Capri — 2.000 anos de fuga da realidade',text:'O imperador Augusto trocou a ilha de Ischia por Capri em 29 a.C., dizendo que ela tinha clima mais saudável. Tibério governou o Império Romano de Capri por 10 anos (26-37 d.C.) sem nunca voltar a Roma. Na Belle Époque virou refúgio de artistas, escritores e aristocratas europeus. Axel Munthe, Graham Greene e Pablo Neruda viveram aqui.'},
+      {icon:'🪨',title:'Faraglioni',text:'Os três rochedos que emergem do mar ao sul da ilha são o símbolo de Capri. Têm nomes: Stella (ligado à costa), Mezzo (separado) e Scopolo (o mais distante, onde vive a lagartinha azul Lacerta caerulea — espécie encontrada apenas em Capri). Passar de barco pelos arcos naturais entre eles traz boa sorte, segundo a tradição local.'},
+      {icon:'🔵',title:'Gruta Azul — Grotta Azzurra',text:'Descoberta por pescadores em 1826 e revelada ao mundo pelo pintor alemão August Kopisch. A luz entra por uma abertura submersa, refrata na areia branca do fundo e ilumina a caverna inteira em azul fosforescente. Na época romana era santuário de Netuno — foram encontradas estátuas no fundo. Entra-se deitado no barquinho.'},
+    ],
+    alerts:[{type:'amber',text:'🚤 Sem pressa de reservar o barco ao chegar. Reserve hoje ou amanhã conforme o ânimo.'}],
+    stops:[
+      {time:'10h30',type:'info',name:'Chegada Marina Grande',desc:'Locker ~€5. Reserve barco para amanhã. brasilecapri.com — guia em português.',maps:'Marina+Grande+Capri'},
+      {time:'11h30',type:'view',name:'Piazzetta + Funicular + Faraglioni',desc:'Funicular ~€2,20. Via Tragara → miradouro dos Faraglioni.',maps:'Piazza+Umberto+I+Capri'},
+      {time:'15h',type:'info',name:'Check-in · Hotel Weber Ambassador',desc:'Via Marina Piccola 118 · vista para os Faraglioni · café incluso',maps:'Hotel+Weber+Ambassador+Capri'},
+      {time:'16h30',type:'view',name:'Marina Piccola — banho de mar',desc:'Praia ao lado do hotel. Mar turquesa, Faraglioni na frente.',couple:true,maps:'Marina+Piccola+Capri'},
+      {time:'20h',type:'food',name:'Primeiro jantar em Capri',
+        options:[
+          {name:'Il Geranio ⭐',detail:'Jardim suspenso sobre o mar próximo aos Jardins de Augusto · melhor relação vista/comida/preço da ilha · RESERVAR',maps:'Il+Geranio+Capri',reservar:true},
+          {name:'La Palette',detail:'Mais casual, ótima para a chegada · boa seleção de vinhos locais · sem reserva necessária',maps:'La+Palette+Capri+restaurant'},
+        ]},
+    ],notes:true},
+  capri2:{title:'Capri — barco + Gruta Azul',date:'Sáb 30 mai · Capri',dest:'Capri',
+    context:[
+      {icon:'⛰',title:'Monte Solaro — 589 metros',text:'O ponto mais alto de Capri, em Anacapri. Da seggiovia (teleférico de cadeira aberta) você vê o Vesúvio, a Península de Sorrento, a Costa Amalfitana e — nos dias claros — a Sicília e a Calábria. Anacapri foi por séculos isolada de Capri: a única ligação era uma escada de 881 degraus chamada Scala Fenicia, construída pelos gregos.'},
+      {icon:'🌸',title:'Gardens of Augustus',text:'Construídos no local da antiga villa do imperador Augusto. Os jardins suspensos sobre o mar foram reformados no início do séc. XX por Friedrich Krupp, industrial alemão que construiu a Via Krupp — a estrada em ziguezague que desce os penhascos até Marina Piccola. Krupp foi expulso da ilha em 1902 após escândalos, mas a estrada ficou.'},
+    ],
+    alerts:[{type:'green',text:'🚤 O grande dia de Capri. Barco privado de manhã. Tarde em Anacapri.'}],
+    stops:[
+      {time:'08h30–13h',type:'boat',name:'Scooter por Capri — opcional',suggested:true,desc:'Aluguel ~30 euros/dia · estrada entre Capri e Anacapri tem curvas incriveis sobre o mar · completamente diferente de ir a pe · exige CNH',maps:'scooter+rental+Capri'},
+      {time:'10h',type:'boat',name:'🚤 Barco privado — volta completa ⭐',desc:'Faraglioni por baixo do arco. Gruta Azul (€14 pp + gorjeta em dinheiro). brasilecapri.com.',couple:true,maps:'Marina+Grande+Capri+boat+tours'},
+      {time:'13h',type:'food',name:'Almoço pós-barco',desc:'',options:[
+        {name:'La Fontelina Beach Club',detail:'Faraglioni na frente · só por barco · RESERVAR',reservar:true,maps:'La+Fontelina+Capri'},
+        {name:'Restaurante Marina Grande',detail:'Sem reserva · peixe do dia',maps:'restaurant+Marina+Grande+Capri'},
+      ]},
+      {time:'15h–18h30',type:'couple',name:'Por do sol · Bar Caprense',suggested:true,desc:'Apos descer do teleferico, o Bar Caprense serve vinho Falanghina com vista para o Vesuvio. Quase nenhum turista sabe. Um dos momentos mais bonitos de Capri.',maps:'Bar+Caprense+Anacapri'},
+      {time:'17h',type:'star',name:'Anacapri + Monte Solaro ⭐',desc:'Ônibus ~€2,20. Seggiovia ~€13 pp · 589m · vista 360° para Vesúvio e Costa.',couple:true,maps:'Monte+Solaro+Anacapri+Capri'},
+      {time:'19h',type:'couple',name:'♡ Piazzetta ao entardecer',desc:'Turistas de bate-volta foram. Limoncello com os Faraglioni ao fundo.',couple:true,maps:'Piazza+Umberto+I+Capri'},
+      {time:'20h30',type:'food',name:'Jantar final em Capri ⭐',couple:true,desc:'O último jantar especial da viagem.',options:[
+        {name:'Villa Franca Rooftop',detail:'Sofisticado · RESERVAR',reservar:true,maps:'Hotel+Villa+Franca+Capri+rooftop'},
+        {name:'Capri Rooftop ou Zuma',detail:'Se não foi na noite anterior',maps:'Capri+Rooftop+restaurant'},
+        {name:'Trattoria local',detail:'Totani e patate + Falanghina',maps:'trattoria+Capri+Island'},
+      ]},
+    ],notes:true},
+  capri3:{title:'Último dia em Capri · Voo de volta',date:'Dom 31 mai · Capri',dest:'Capri',
+    context:[
+      {icon:'🛫',title:'Rota de volta',text:'Ferry Capri → Nápoles (Molo Beverello) · ~1h. Do porto ao Aeroporto de Capodichino são 4km (~20min de táxi). O voo NAP→FCO→GIG→POA é longo — use a mochila com tudo que precisar no avião (carregador, remédio, documentos) e deixe a mala despachada se conseguirem no check-in.'},
+      {icon:'💭',title:'Uma última coisa',text:'Os italianos têm uma expressão: il dolce far niente — a doce arte de não fazer nada. Capri é o lugar perfeito para isso. Não tentem cobrir tudo no último dia. Um café na Piazzetta, olhar os barcos chegando em Marina Grande, um gelato de limão. A viagem já foi.'},
+    ],
+    alerts:[{type:'red',text:'✈️ Voo NAP 19h35 → FCO → GIG → POA (01/06 09h45). Ferry de Capri às 15h no máximo.'}],
+    stops:[
+      {time:'Manhã',type:'view',name:'Última manhã em Capri',desc:'Antes das 10h — silenciosa e local. Espresso, compras de limoncello e cerâmica.',couple:true,maps:'Piazza+Umberto+I+Capri'},
+      {time:'15h',type:'boat',name:'⛴️ Ferry Capri → Nápoles',desc:'~50 min. Táxi/Alibus até Capodichino ~€15.',maps:'Marina+Grande+Capri+ferry'},
+      {time:'19h35',type:'star',name:'✈️ NAP → FCO → GIG → POA',desc:'Chegada Porto Alegre 01/06 às 09h45.',maps:'Naples+Capodichino+Airport+NAP'},
+    ],notes:false},
+};
+
+// ══ CHECKLIST DATA ══
+const reservas=[
+  {group:'⚡ Urgente',items:[
+    {id:'coliseu',title:'Coliseu · Full Experience',desc:'coopculture.it · 08h30 de 18/05 · esgota em minutos',deadline:'urgent',deadlineText:'⚡ Venda abre 18/04',where:'coopculture.it',maps:'Colosseum+Rome'},
+    {id:'roma_lazio',title:'Roma × Lazio',desc:'Jogo 17/05 às 15h',deadline:'urgent',deadlineText:'⚡ Comprar o quanto antes',where:'asroma.com / vivaticket.com',maps:'Stadio+Olimpico+Roma'},
+    {id:'idp',title:'Permissão Internacional de Dirigir',desc:'Obrigatória na Europa junto com CNH física. Emitir no DETRAN.',deadline:'urgent',deadlineText:'⚡ Emitir antes de viajar',where:'DETRAN'},
+    {id:'cnh',title:'CNH física válida',desc:'Locadoras NÃO aceitam CNH eletrônica.',deadline:'urgent',deadlineText:'⚡ Verificar agora',where:'Carteira física'},
+    {id:'cartao',title:'Cartão de crédito físico internacional',desc:'AVIS e ALAMO exigem cartão físico. Sem digitais.',deadline:'urgent',deadlineText:'⚡ Confirmar antes',where:'Banco emissor'},
+  ]},
+  {group:'🚤 Barcos',items:[
+    {id:'barco_orosei',title:'Barco privado · Golfo di Orosei',desc:'Só vocês dois · 21/05 · Skipper Gomone ou Daymar',deadline:'soon',deadlineText:'Reservar antes',where:'Porto Cala Gonone',maps:'Gulf+of+Orosei+boat+tours+Cala+Gonone'},
+    {id:'barco_maddalena',title:'Barco · La Maddalena',desc:'23/05 · ~€60–120 pp',deadline:'soon',deadlineText:'Reservar antes',where:'GetYourGuide / Civitatis',maps:'La+Maddalena+boat+tour'},
+    {id:'barco_capri',title:'Barco privado · Capri',desc:'30/05 · Gruta Azul + Faraglioni',deadline:'soon',deadlineText:'Reservar com antecedência',where:'brasilecapri.com',maps:'Marina+Grande+Capri+boat'},
+  ]},
+  {group:'🍽 Restaurantes',items:[
+    {id:'gastronomia',title:'Experiência gastronômica · Roma',desc:'Aula de culinária ou jantar com local — qualquer dia/noite em Roma',deadline:'soon',deadlineText:'Pesquisar antes',where:'Airbnb Experiences · Withlocals · EatWith',maps:'Trastevere+Rome+cooking+experience'},
+    {id:'tavern',title:'Tavern Allegra · Sorrento',desc:'25 ou 28/05',deadline:'ok',deadlineText:'Antes da viagem',where:'Site / telefone',maps:'Tavern+Allegra+Sorrento'},
+    {id:'tagliata',title:'La Tagliata · Positano',desc:'27/05 · vista panorâmica',deadline:'ok',deadlineText:'Antes da viagem',where:'Site / telefone',maps:'La+Tagliata+Positano'},
+    {id:'fontelina',title:'La Fontelina · Capri',desc:'30/05 · almoço pós-barco',deadline:'ok',deadlineText:'Reservar com antecedência',where:'lafontelina.com',maps:'La+Fontelina+Capri'},
+    {id:'villa_franca',title:'Villa Franca Rooftop · Capri',desc:'30/05 · jantar especial',deadline:'ok',deadlineText:'Antes da viagem',where:'Hotel Villa Franca',maps:'Hotel+Villa+Franca+Capri'},
+  ]},
+];
+
+// ══ MAP DATA ══
+// Cada place tem: coords (lat,lng) para pin direto no Maps, e addr para fallback de busca
+const places=[
+  // HOTÉIS
+  {dest:'Roma',type:'hotel',icon:'🏨',name:'Piemonte Hotel',detail:'Via Vicenza 32c · Roma · 17–20 mai',coords:'41.9014,12.4994',addr:'Piemonte Hotel Via Vicenza 32c Roma'},
+  {dest:'Sardenha',type:'hotel',icon:'🏨',name:'San Francisco Hotel',detail:'Via Magellano 8 · Cala Gonone · 20–22 mai',coords:'40.2845,9.5951',addr:'San Francisco Hotel Via Magellano 8 Cala Gonone Sardinia'},
+  {dest:'Sardenha',type:'hotel',icon:'🏨',name:'Club Esse Posada',detail:'Via Del Vecchio Marino · Palau · 22–23 mai',coords:'41.1781,9.3825',addr:'Club Esse Posada Via Del Vecchio Marino Palau Sardinia'},
+  {dest:'Sardenha',type:'hotel',icon:'🏨',name:'Hotel Miralonga',detail:'Strada Panoramica Via Don Vico 1 · La Maddalena · 23–25 mai',coords:'41.2168,9.4027',addr:'Hotel Miralonga Strada Panoramica La Maddalena Sardinia'},
+  {dest:'Sorrento/Costa',type:'hotel',icon:'🏨',name:'Villa Igea',detail:'Via Capo 96 · Sorrento · 25–29 mai',coords:'40.6264,14.3758',addr:'Villa Igea Via Capo 96 Sorrento Italy'},
+  {dest:'Capri',type:'hotel',icon:'🏨',name:'Hotel Weber Ambassador',detail:'Via Marina Piccola 118 · Capri · 29–31 mai',coords:'40.5496,14.2390',addr:'Hotel Weber Ambassador Via Marina Piccola 118 Capri Italy'},
+  // LOCADORAS
+  {dest:'Sardenha',type:'car',icon:'🚗',name:'ALAMO · Aeroporto Cagliari',detail:'Retirada 20/05 12h30 · Devolução 25/05 10h00',coords:'39.2516,9.0542',addr:'Aeroporto di Cagliari Elmas'},
+  {dest:'Sorrento/Costa',type:'car',icon:'🚗',name:'AVIS · Aeroporto Nápoles',detail:'Retirada 25/05 15h30 · Devolução 29/05 08h00',coords:'40.8868,14.2908',addr:'Aeroporto Napoli Capodichino'},
+  // ATRAÇÕES ROMA
+  {dest:'Roma',type:'view',icon:'⛪',name:'Basílica de São Pedro · Vaticano',detail:'Praça São Pedro · entrada gratuita · cúpula €8–10',coords:'41.9022,12.4539',addr:'Piazza San Pietro Vatican City Rome'},
+  {dest:'Roma',type:'view',icon:'🏰',name:'Castel Sant\'Angelo',detail:'No caminho do Vaticano · ponte + vista Tibre',coords:'41.9031,12.4663',addr:'Castel Sant Angelo Rome'},
+  {dest:'Roma',type:'view',icon:'⛪',name:'Cripta dos Capuchinhos',detail:'Via Vittorio Veneto 27 · 09h30–18h30',coords:'41.9056,12.4881',addr:'Museo Cripta Cappuccini Via Vittorio Veneto 27 Roma'},
+  {dest:'Roma',type:'view',icon:'⛲',name:'Fontana di Trevi',detail:'Piazza di Trevi · Roma',coords:'41.9009,12.4833',addr:'Fontana di Trevi Roma'},
+  {dest:'Roma',type:'view',icon:'🏟',name:'Estádio Olímpico · Roma × Lazio',detail:'Viale dei Gladiatori · Jogo 17/05 15h',coords:'41.9340,12.4546',addr:'Stadio Olimpico Roma'},
+  {dest:'Roma',type:'food',icon:'🍽',name:'All\'Antico Vinaio',detail:'Via della Rosetta 6 · schiacciata · ~€10',coords:'41.8992,12.4773',addr:"All'Antico Vinaio Via della Rosetta Roma"},
+  {dest:'Roma',type:'food',icon:'🍽',name:'Supplì Roma · Trastevere',detail:'Via San Francesco a Ripa 137 · street food romano',coords:'41.8883,12.4709',addr:'Suppli Roma Via San Francesco a Ripa Trastevere'},
+  // SARDENHA
+  {dest:'Sardenha',type:'view',icon:'🏖',name:'Cala Brandinchi',detail:'San Teodoro · parada no caminho para Palau',coords:'40.7714,9.6508',addr:'Cala Brandinchi San Teodoro Sardinia'},
+  {dest:'Sardenha',type:'view',icon:'🐻',name:'Capo d\'Orso',detail:'Palau · formação de granito · pôr do sol',coords:'41.2011,9.3680',addr:"Capo d'Orso Palau Sardinia"},
+  {dest:'Sardenha',type:'view',icon:'🏊',name:'Cala Coticcio "Tahiti"',detail:'Ilha Caprera · trilha 40 min · €3 pp + guia',coords:'41.2294,9.4731',addr:'Cala Coticcio Caprera La Maddalena Sardinia'},
+  // COSTA AMALFITANA
+  {dest:'Sorrento/Costa',type:'view',icon:'🌿',name:'Villa Cimbrone · Ravello',detail:'Via Santa Chiara 26 · Terraço do Infinito ⭐',coords:'40.6459,14.6122',addr:'Villa Cimbrone Via Santa Chiara 26 Ravello'},
+  {dest:'Sorrento/Costa',type:'view',icon:'🌿',name:'Villa Rufolo · Ravello',detail:'Piazza Duomo · jardins medievais',coords:'40.6489,14.6121',addr:'Villa Rufolo Piazza Duomo Ravello'},
+  {dest:'Sorrento/Costa',type:'view',icon:'🌊',name:'Fiordo di Furore',detail:'SS163 entre Amalfi e Positano',coords:'40.6111,14.5387',addr:'Fiordo di Furore Amalfi Coast'},
+  {dest:'Sorrento/Costa',type:'view',icon:'🏖',name:'Positano',detail:'Spiaggia Grande + del Fornillo',coords:'40.6281,14.4843',addr:'Positano Amalfi Coast Italy'},
+  {dest:'Sorrento/Costa',type:'view',icon:'🌊',name:'Baia di Leranto',detail:'Punta Campanella · trilha 30 min · snorkeling',coords:'40.5738,14.3476',addr:'Baia di Leranto Punta Campanella Sorrento'},
+  {dest:'Nápoles',type:'food',icon:'🍽',name:'Tandem Ragù · Nápoles',detail:'Via G. Paladino 51 · ragù napolitano · reservar',coords:'40.7502,14.2588',addr:'Tandem Ragu Via Paladino 51 Naples'},
+  {dest:'Nápoles',type:'food',icon:'🍽',name:'Borgo Marinari · Nápoles',detail:'Atrás do Castelo do Ovo · frutos do mar com vista',coords:'40.8281,14.2479',addr:'Borgo Marinari Castel dell Ovo Naples'},
+  {dest:'Sorrento/Costa',type:'food',icon:'🍽',name:'La Tagliata · Positano',detail:'Vista panorâmica · RESERVAR',coords:'40.6275,14.4790',addr:'La Tagliata Positano Amalfi'},
+  {dest:'Sorrento/Costa',type:'food',icon:'🍽',name:'O\'Parruchiano La Favorita · Sorrento',detail:'Corso Italia 71 · jardim de limoneiros · desde 1868',coords:'40.6267,14.3753',addr:"O'Parruchiano La Favorita Corso Italia Sorrento"},
+  {dest:'Sorrento/Costa',type:'food',icon:'🍽',name:'Tavern Allegra · Sorrento',detail:'Sorrento · reservar com antecedência',coords:'40.6262,14.3756',addr:'Tavern Allegra Sorrento Italy'},
+  // CAPRI
+  {dest:'Capri',type:'view',icon:'🪨',name:'Faraglioni · Capri',detail:'As 3 rochas icônicas da ilha',coords:'40.5481,14.2505',addr:'Faraglioni Capri Italy'},
+  {dest:'Capri',type:'view',icon:'🔵',name:'Gruta Azul',detail:'Norte da ilha · barco a remo ~€14 pp',coords:'40.5630,14.1993',addr:'Grotta Azzurra Blue Grotto Capri'},
+  {dest:'Capri',type:'view',icon:'⛰',name:'Monte Solaro · Anacapri',detail:'Seggiovia ~€13 · 589m · vista 360°',coords:'40.5560,14.2118',addr:'Monte Solaro Anacapri Capri'},
+  {dest:'Capri',type:'view',icon:'🌸',name:'Gardens of Augustus',detail:'Via G. Matteotti · jardins suspensos',coords:'40.5490,14.2319',addr:'Gardens of Augustus Capri Italy'},
+  {dest:'Capri',type:'food',icon:'🍽',name:'La Fontelina Beach Club',detail:'Acesso por barco ou escadaria · RESERVAR',coords:'40.5484,14.2277',addr:'La Fontelina Beach Club Capri'},
+  // NÁPOLES
+  {dest:'Nápoles',type:'hotel',icon:'🚢',name:'Molo Beverello — Porto de Nápoles',detail:'Ferry para Capri · sair ~2h antes',coords:'40.8394,14.2547',addr:'Molo Beverello Naples ferry terminal'},
+  {dest:'Nápoles',type:'car',icon:'🚗',name:'AVIS · Aeroporto Capodichino',detail:'Retirada 25/05 15h30 · Devolução 29/05 08h',coords:'40.8868,14.2908',addr:'Aeroporto Napoli Capodichino'},
+  {dest:'Nápoles',type:'food',icon:'🍽',name:'Tandem Ragù · Nápoles',detail:'Via G. Paladino 51 · ragù napolitano · reservar',coords:'40.8487,14.2564',addr:'Tandem Ragu Via Paladino 51 Naples'},
+  {dest:'Nápoles',type:'food',icon:'🍽',name:'Borgo Marinari · Nápoles',detail:'Atrás do Castelo do Ovo · frutos do mar',coords:'40.8281,14.2479',addr:'Borgo Marinari Castel dell Ovo Naples'},
+  {dest:'Nápoles',type:'food',icon:'🍽',name:'Trattoria Da Nennella',detail:'Bairro Espanhol · garçons cantam · sem reserva',coords:'40.8440,14.2490',addr:'Trattoria Da Nennella Naples'},
+  {dest:'Capri',type:'food',icon:'🍽',name:'Villa Franca Rooftop',detail:'Viale Tommaso de Tommaso 4 · jantar especial',coords:'40.5504,14.2351',addr:'Hotel Villa Franca Capri rooftop'},
+];
+
+
+// ══ MALA DATA ══
+const malaItems=[
+
+  // ══ FLAVIO ══
+  {group:'👕 Roupas — Flavio', who:'F', items:[
+    {id:'mf01',name:'Camisetas',qty:7,tip:'Dry-fit ou algodão leve — não amassam e secam rápido'},
+    {id:'mf02',name:'Camisa social leve',qty:2,tip:'Uma para Roma/Sardenha, outra para Costa/Capri'},
+    {id:'mf03',name:'Shorts / bermudas',qty:4,tip:''},
+    {id:'mf04',name:'Calça jeans leve',qty:1,tip:'Roma + jantares'},
+    {id:'mf05',name:'Calça chino leve',qty:1,tip:'Alternando com a jeans'},
+    {id:'mf06',name:'Cuecas',qty:8,tip:'Lavar 3-4 à mão — seca em uma noite com ar condicionado'},
+    {id:'mf07',name:'Meias',qty:6,tip:'Idem — lavar à mão conforme precisar'},
+    {id:'mf08',name:'Short de banho',qty:2,tip:''},
+    {id:'mf09',name:'Moletom ou casaco leve',qty:1,tip:'Barco no Golfo di Orosei e noites de maio (~15°C)'},
+    {id:'mf10',name:'Pijama leve',qty:1,tip:'Opcional — short + camiseta resolve'},
+  ]},
+  {group:'👟 Calçados — Flavio', who:'F', items:[
+    {id:'fc01',name:'Tênis confortável',qty:1,tip:'Paralelepípedo em Roma — nada de sandália fina'},
+    {id:'fc02',name:'Aquashoes / tênis de água',qty:1,tip:'Praias de pedra na Sardenha e Capri'},
+    {id:'fc03',name:'Sandália ou chinelo',qty:1,tip:'Hotel e lazer'},
+  ]},
+  {group:'🧴 Higiene — Flavio', who:'F', items:[
+    {id:'fh01',name:'Desodorante sólido ou creme',qty:1,tip:'Aerossol não passa na bagagem de mão'},
+    {id:'fh02',name:'Shampoo sólido',qty:1,tip:'Economiza espaço — barra dura semanas'},
+    {id:'fh03',name:'Aparelho de barbear',qty:1,tip:''},
+    {id:'fh04',name:'Protetor labial com FPS',qty:1,tip:''},
+  ]},
+  {group:'⚡ Eletrônicos — Flavio', who:'F', items:[
+    {id:'fe01',name:'Carregador de celular',qty:1,tip:''},
+    {id:'fe02',name:'Fone de ouvido',qty:1,tip:'Voos longos POA→GRU→FCO'},
+    {id:'fe03',name:'Óculos de sol',qty:1,tip:''},
+  ]},
+  {group:'📋 Documentos — Flavio', who:'F', items:[
+    {id:'fd01',name:'Passaporte',qty:1,tip:'Validade mínima 6 meses além da data de volta'},
+    {id:'fd02',name:'CNH física',qty:1,tip:'Obrigatório para ALAMO e AVIS'},
+    {id:'fd03',name:'IDP — Permissão Internacional de Dirigir',qty:1,tip:'Obrigatório para locadoras na Itália'},
+    {id:'fd04',name:'Cartão de crédito físico com chip',qty:1,tip:'Pedágios e parquímetros não aceitam aproximação'},
+  ]},
+
+  // ══ LETHI ══
+  {group:'👗 Roupas — Lethi', who:'L', items:[
+    {id:'ml01',name:'Blusas versáteis',qty:7,tip:'Mix de básicas e uma ou duas com estilo para jantar'},
+    {id:'ml02',name:'Vestidos casuais',qty:3,tip:'Servem para praia, passeio e jantar com acessório'},
+    {id:'ml03',name:'Vestido ou conjunto especial',qty:1,tip:'Jantar especial em Ravello ou Capri'},
+    {id:'ml04',name:'Shorts',qty:3,tip:''},
+    {id:'ml05',name:'Calça leve',qty:2,tip:'Uma para city tour, uma mais arrumada'},
+    {id:'ml06',name:'Biquíni',qty:2,tip:''},
+    {id:'ml07',name:'Saída de praia',qty:1,tip:'Funciona como saia casual também'},
+    {id:'ml08',name:'Calcinha',qty:8,tip:'Lavar à mão — seca em uma noite'},
+    {id:'ml09',name:'Sutiã',qty:3,tip:''},
+    {id:'ml10',name:'Sutiã de biquíni extra',qty:1,tip:'Para variar com calcinha normal'},
+    {id:'ml11',name:'Cardigan ou casaco leve',qty:1,tip:'Barco e noites mais frias'},
+  ]},
+  {group:'👟 Calçados — Lethi', who:'L', items:[
+    {id:'lc01',name:'Tênis confortável',qty:1,tip:'Paralelepípedo em Roma e degraus em Positano'},
+    {id:'lc02',name:'Aquashoes / tênis de água',qty:1,tip:'Praias de pedra na Sardenha e Capri'},
+    {id:'lc03',name:'Sandália confortável e elegante',qty:1,tip:'Serve para passeio e jantares — chave para economizar espaço'},
+  ]},
+  {group:'🧴 Higiene — Lethi', who:'L', items:[
+    {id:'lh01',name:'Desodorante sólido ou creme',qty:1,tip:'Aerossol não passa na bagagem de mão'},
+    {id:'lh02',name:'Shampoo e condicionador sólidos',qty:1,tip:'Economiza espaço — barra dura semanas'},
+    {id:'lh03',name:'Protetor labial com FPS',qty:1,tip:''},
+    {id:'lh04',name:'Maquiagem de viagem (mínimo)',qty:1,tip:'Só o essencial — BB cream, rímel, batom'},
+  ]},
+  {group:'⚡ Eletrônicos — Lethi', who:'L', items:[
+    {id:'le01',name:'Carregador de celular',qty:1,tip:''},
+    {id:'le02',name:'Fone de ouvido',qty:1,tip:'Voos longos'},
+    {id:'le03',name:'Óculos de sol',qty:1,tip:''},
+  ]},
+  {group:'📋 Documentos — Lethi', who:'L', items:[
+    {id:'ld01',name:'Passaporte',qty:1,tip:'Validade mínima 6 meses além da data de volta'},
+    {id:'ld02',name:'CNH física',qty:1,tip:'Obrigatório para as locadoras'},
+    {id:'ld03',name:'IDP — Permissão Internacional de Dirigir',qty:1,tip:'Obrigatório para locadoras na Itália'},
+    {id:'ld04',name:'Cartão de crédito físico com chip',qty:1,tip:''},
+  ]},
+
+  // ══ AMBOS ══
+  {group:'🏊 Praia e Água — Ambos', who:'AB', items:[
+    {id:'pa01',name:'Snorkel + máscara',qty:2,tip:'Um para cada — Golfo di Orosei e Gruta Azul são imperdíveis'},
+    {id:'pa02',name:'Protetor solar FPS 50+',qty:3,tip:'Caro e difícil na Itália — trazer estoque de casa'},
+    {id:'pa03',name:'Case waterproof para celular',qty:1,tip:'As cores embaixo da água no Golfo di Orosei são incríveis'},
+    {id:'pa04',name:'Toalha de microfibra',qty:2,tip:'Leve e seca em minutos — uma para cada'},
+    {id:'pa05',name:'Repelente',qty:1,tip:'Noites quentes na Sardenha'},
+  ]},
+  {group:'💊 Saúde — Ambos', who:'AB', items:[
+    {id:'sa01',name:'Antiemético (Dramin ou Plasil)',qty:1,tip:'Travessia de barco para Capri pode ser agitada'},
+    {id:'sa02',name:'Ibuprofeno ou analgésico',qty:1,tip:''},
+    {id:'sa03',name:'Antialérgico',qty:1,tip:''},
+    {id:'sa04',name:'Band-aids',qty:1,tip:'Bolhas de calçado novo em Roma'},
+    {id:'sa05',name:'Medicamentos pessoais',qty:1,tip:'Para os 15 dias completos'},
+  ]},
+  {group:'⚡ Eletrônicos — Ambos', who:'AB', items:[
+    {id:'ea01',name:'Powerbank 20.000mAh',qty:1,tip:'App aberto o dia todo + 2 celulares'},
+    {id:'ea02',name:'Adaptador de tomada europeu (Type C/F)',qty:2,tip:'Um na mala, um na mochila'},
+    {id:'ea03',name:'Cabo USB extra',qty:1,tip:''},
+  ]},
+  {group:'🎒 Bagagem — Ambos', who:'AB', items:[
+    {id:'ba01',name:'Mala de mão (max 55×40×20 cm)',qty:2,tip:'Verificar limite exato da companhia — geralmente 7-10 kg'},
+    {id:'ba02',name:'Mochila de cabine',qty:2,tip:'Eletrônicos, documentos e espaço livre para compras na volta'},
+    {id:'ba03',name:'Packing cubes / organizadores',qty:1,tip:'Fundamental para maximizar espaço em mala de mão'},
+    {id:'ba04',name:'Cadeado para mala',qty:2,tip:''},
+    {id:'ba05',name:'Sacola reutilizável leve dobrável',qty:2,tip:'Supermercados italianos cobram pela sacola'},
+    {id:'ba06',name:'Saquinhos plásticos zip para molhados',qty:1,tip:'Roupa de banho, protetor solar'},
+  ]},
+  {group:'💶 Dinheiro e Docs — Ambos', who:'AB', items:[
+    {id:'di01',name:'€ 200–300 em espécie',qty:1,tip:'Mercados pequenos, gorjetas, emergências'},
+    {id:'di02',name:'Cópia das confirmações das locadoras',qty:1,tip:'ALAMO: 1388216603COUNT · AVIS: 47322395BR1'},
+    {id:'di03',name:'Seguro viagem',qty:1,tip:'Cópia digital e impressa'},
+  ]},
+
+  // ══ AINDA PRECISAMOS ══
+  {group:'⚡ Urgente — Comprar agora', who:'TODO', items:[
+    {id:'ck01',name:'Ingressos do Coliseu',qty:2,tip:'coopculture.it · Full Experience · 18/05 às 08h30 · venda já aberta'},
+    {id:'ck02',name:'Ingressos Roma × Lazio',qty:2,tip:'17/05 às 15h · asroma.com / vivaticket.com'},
+  ]},
+  {group:'📅 Reservar antes de embarcar', who:'TODO', items:[
+    {id:'ck03',name:'Museus Vaticanos + Capela Sistina',qty:2,tip:'museivaticani.va · ~€20 pp · reservar com semanas de antecedência'},
+    {id:'ck04',name:'Barco privado — Golfo di Orosei',qty:1,tip:'Reservar no check-in do San Francisco Hotel em Cala Gonone'},
+    {id:'ck05',name:'Barco — Arquipélago La Maddalena',qty:1,tip:'Reservar com antecedência na temporada'},
+    {id:'ck06',name:'Barco — Capri (ferry Nápoles)',qty:1,tip:'Molo Beverello → Capri · comprar antes para garantir horário'},
+    {id:'ck07',name:'Experiência gastronômica em Roma',qty:1,tip:'Airbnb Experiences, Withlocals ou EatWith · qualquer noite 17–19/mai'},
+    {id:'ck08',name:'La Fontelina Beach Club — Capri',qty:2,tip:'Acesso por barco ou escadaria · RESERVAR — lotado na temporada'},
+    {id:'ck09',name:'La Tagliata — Positano',qty:2,tip:'Vista panorâmica · RESERVAR com antecedência'},
+    {id:'ck10',name:'Tavern Allegra — Sorrento',qty:2,tip:'RESERVAR com antecedência'},
+  ]},
+  {group:'🛒 Comprar antes de viajar', who:'TODO', items:[
+    {id:'ck11',name:'Snorkel + máscara',qty:2,tip:'Mais barato e melhor seleção aqui do que na Itália'},
+    {id:'ck12',name:'Aquashoes',qty:2,tip:'Um par para cada'},
+    {id:'ck13',name:'Protetor solar FPS 50+',qty:3,tip:'Caro na Itália — trazer estoque'},
+    {id:'ck14',name:'Toalha de microfibra',qty:2,tip:''},
+    {id:'ck15',name:'Packing cubes',qty:1,tip:'Organização essencial para mala de mão em 15 noites'},
+    {id:'ck16',name:'Desodorante sólido ou creme',qty:2,tip:'Um para cada'},
+    {id:'ck17',name:'Shampoo sólido',qty:2,tip:''},
+    {id:'ck18',name:'IDP — Permissão Internacional de Dirigir',qty:2,tip:'Emitir no DETRAN ou despachante — leva alguns dias'},
+    {id:'ck19',name:'Seguro viagem',qty:2,tip:'Contratar antes de embarcar'},
+    {id:'ck20',name:'Câmbio de euros',qty:1,tip:'€ 200–300 pp'},
+    {id:'ck21',name:'Case waterproof para celular',qty:1,tip:''},
+  ]},
+];
+
+// ══ MAP ENGINE ══
+let leafletMap=null, leafletMarkers=[], mapDestFilter='all', mapCatFilter='all', mapDayFilter='all';
+let customPlaces=[];
+
+
+
+// ══ MALA DATA ══
+
+// ══ MAP ENGINE ══
+
+const destGroups=[
+  {id:'all',  label:'Todos',        dest:null,             center:[41.9,13.0],    zoom:6,  color:'#1B4F72'},
+  {id:'roma', label:'🏛 Roma',      dest:'Roma',           center:[41.9009,12.4833],zoom:13,color:'#8B2500'},
+  {id:'sard', label:'🏝 Sardenha',  dest:'Sardenha',       center:[40.5,9.2],     zoom:9,  color:'#1D9E75'},
+  {id:'costa',label:'🍋 Costa',     dest:'Sorrento/Costa', center:[40.628,14.484],zoom:12, color:'#C9973A'},
+  {id:'capri',label:'⛵ Capri',     dest:'Capri',          center:[40.553,14.223],zoom:13, color:'#2E7BA6'},
+  {id:'napoli',label:'🍕 Nápoles', dest:'Nápoles',        center:[40.853,14.268],zoom:13, color:'#8B4500'},
+];
+const catGroups=[
+  {id:'all',   label:'Todas',            color:'#555'},
+  {id:'hotel', label:'🏨 Hotéis',       color:'#1B4F72'},
+  {id:'car',   label:'🚗 Locadoras',    color:'#5D6D7E'},
+  {id:'view',  label:'📍 Atrações',     color:'#1D9E75'},
+  {id:'food',  label:'🍽 Restaurantes', color:'#C9973A'},
+  {id:'boat',  label:'⛵ Barcos',       color:'#2E7BA6'},
+  {id:'custom',label:'📌 Meus lugares',color:'#C4622D'},
+];
+const catColors={hotel:'#1B4F72',car:'#5D6D7E',view:'#1D9E75',food:'#C9973A',boat:'#2E7BA6',nature:'#6B7F5E',custom:'#C4622D'};
+const catEmoji={hotel:'🏨',car:'🚗',view:'📍',food:'🍽',boat:'⛵',nature:'🌿',custom:'📌'};
+
+function mapsUrl(q){return'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q.replace(/\+/g,' '));}
+function placeUrl(p){
+  if(p.coords){const[la,ln]=p.coords.split(',');return'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.addr||p.name)+'&center='+la+','+ln;}
+  return'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.addr||p.name||'');
+}
+function navUrl(p){
+  if(p.coords){const[la,ln]=p.coords.split(',');return'https://www.google.com/maps/dir/?api=1&destination='+la+','+ln;}
+  return'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(p.addr||p.name||'');
+}
+
+// Geocoding
+function geocodeItaly(query,limit){
+  const url='https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(query+' Italy')+'&limit='+limit+'&accept-language=pt&addressdetails=1';
+  return fetch(url)
+    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(data=>{
+      if(!data||!data.length)return[];
+      return data.map(d=>({lat:parseFloat(d.lat),lon:parseFloat(d.lon),name:d.name||d.display_name.split(',')[0],addr:d.display_name.split(',').slice(1,4).join(',').trim()}));
+    });
+}
+
+// Mapa
+function initLeafletMap(){
+  const el=document.getElementById('leaflet-map');
+  if(!window.L||!el||el.offsetHeight<10){setTimeout(initLeafletMap,150);return;}
+  try{
+    leafletMap=L.map('leaflet-map',{zoomControl:true,preferCanvas:false}).setView([41.9,13.0],6);
+    const tiles=[
+      {url:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',opts:{subdomains:'abcd',maxZoom:19}},
+      {url:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',opts:{maxZoom:19}},
+    ];
+    let tl=null;
+    function tryTile(i){
+      if(i>=tiles.length)return;
+      if(tl)leafletMap.removeLayer(tl);
+      tl=L.tileLayer(tiles[i].url,{...tiles[i].opts,attribution:'© OSM'}).addTo(leafletMap);
+      const t=new Image();
+      t.onerror=()=>tryTile(i+1);
+      t.src=tiles[i].url.replace('{s}','a').replace('{z}','6').replace('{x}','34').replace('{y}','23').replace('{r}','');
+    }
+    tryTile(0);
+    setTimeout(()=>{resizeMap();renderMapFilters();renderMapPins();},120);
+    leafletMap.on('click',closePanel);
+    // Geolocation button
+    const geoBtn=L.control({position:'topright'});
+    geoBtn.onAdd=function(){
+      const b=L.DomUtil.create('button','');
+      b.innerHTML='📍';
+      b.title='Minha localização';
+      b.style.cssText='background:white;border:none;border-radius:8px;padding:6px 8px;font-size:16px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2)';
+      L.DomEvent.on(b,'click',showMyLocation);
+      return b;
+    };
+    geoBtn.addTo(leafletMap);
+  }catch(e){console.error(e);}
+}
+
+function showMyLocation(){
+  if(!navigator.geolocation){alert('Geolocalização não disponível.');return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const{latitude:lat,longitude:lng}=pos.coords;
+    if(leafletMap){
+      const marker=L.circleMarker([lat,lng],{radius:10,fillColor:'#1B4F72',fillOpacity:0.9,color:'white',weight:2}).addTo(leafletMap);
+      leafletMap.setView([lat,lng],15);
+      marker.bindPopup('Você está aqui').openPopup();
+      setTimeout(()=>leafletMap.removeLayer(marker),30000);
+    }
+  },err=>{alert('Não foi possível obter sua localização.');});
+}
+
+function resizeMap(){
+  const toolbar=document.getElementById('map-toolbar');
+  const el=document.getElementById('leaflet-map');
+  if(!toolbar||!el)return;
+  const tbH=toolbar.getBoundingClientRect().height;
+  const top=52+tbH;
+  el.style.marginTop=top+'px';
+  el.style.height='calc(100dvh - '+top+'px - 60px)';
+  if(leafletMap)setTimeout(()=>leafletMap.invalidateSize(),80);
+}
+
+function renderMap(){if(!leafletMap)return;renderMapFilters();renderMapPins();}
+
+function renderMapFilters(){
+  const destEl=document.getElementById('map-day-filters');
+  const catEl=document.getElementById('map-cat-filters');
+  const dayEl=document.getElementById('map-specific-days');
+  if(!destEl||!catEl)return;
+  destEl.innerHTML=destGroups.map(g=>{
+    const act=mapDestFilter===g.id;
+    const s=act?'background:'+g.color+';color:#fff;border-color:'+g.color:'color:'+g.color+';border-color:'+g.color+'44';
+    return'<button class="chip" onclick="setMapDest(\''+g.id+'\')" style="'+s+'">'+g.label+'</button>';
+  }).join('');
+  catEl.innerHTML=catGroups.map(g=>{
+    const act=mapCatFilter===g.id;
+    const s=act?'background:'+g.color+';color:#fff;border-color:'+g.color:'color:'+g.color+';border-color:'+g.color+'44';
+    return'<button class="chip" onclick="setMapCat(\''+g.id+'\')" style="'+s+'">'+g.label+'</button>';
+  }).join('');
+  const dg=destGroups.find(g=>g.id===mapDestFilter);
+  if(dg&&dg.dest){
+    const dd=Object.entries(days).filter(([,v])=>v.dest===dg.dest);
+    if(dd.length){
+      dayEl.style.display='flex';
+      dayEl.innerHTML=['<button class="chip" onclick="setMapDay(\'all\')" style="'+(mapDayFilter==='all'?'background:'+dg.color+';color:#fff;border-color:'+dg.color:'color:'+dg.color+';border-color:'+dg.color+'44')+'">Todos os dias</button>',
+        ...dd.map(([k,d])=>{const act=mapDayFilter===k;const s=act?'background:'+dg.color+';color:#fff;border-color:'+dg.color:'color:'+dg.color+';border-color:'+dg.color+'44';const lbl=d.date?d.date.replace(/[A-Za-záéíóúãõâêîôûàèìòù]+,?\s+/,'').replace(/·.*/,'').trim():k;return'<button class="chip" onclick="setMapDay(\''+k+'\')" style="'+s+'">'+lbl+'</button>';})
+      ].join('');
+      setTimeout(resizeMap,50);
+    } else {dayEl.style.display='none';setTimeout(resizeMap,50);}
+  } else {dayEl.style.display='none';setTimeout(resizeMap,50);}
+}
+
+function setMapDest(id){mapDestFilter=id;mapDayFilter='all';const dg=destGroups.find(g=>g.id===id);if(dg&&dg.center&&leafletMap)leafletMap.setView(dg.center,dg.zoom);renderMapFilters();renderMapPins();}
+function setMapCat(id){mapCatFilter=id;renderMapFilters();renderMapPins();}
+function setMapDay(id){mapDayFilter=id;renderMapFilters();renderMapPins();}
+
+function renderMapPins(){
+  if(!leafletMap)return;
+  leafletMarkers.forEach(m=>leafletMap.removeLayer(m));leafletMarkers=[];
+  const all=[...places,...customPlaces];
+  const dg=destGroups.find(g=>g.id===mapDestFilter);
+  let filtered=all.filter(p=>{
+    if(!p.coords)return false;
+    if(mapDestFilter!=='all'&&(!dg||p.dest!==dg.dest))return false;
+    if(mapCatFilter!=='all'&&p.type!==mapCatFilter)return false;
+    return true;
+  });
+  if(!filtered.length)return;
+  const bounds=[];
+  filtered.forEach(p=>{
+    const[lat,lng]=p.coords.split(',').map(Number);bounds.push([lat,lng]);
+    const color=catColors[p.type]||'#888',emoji=catEmoji[p.type]||'📍';
+    const hi=mapDayFilter!=='all'&&isDayPlace(p,mapDayFilter);
+    const sz=hi?36:28,border=hi?'3px solid #FFD700':'2.5px solid rgba(255,255,255,.9)';
+    const html='<div style="width:'+sz+'px;height:'+sz+'px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:'+color+';border:'+border+';box-shadow:0 2px 6px rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="transform:rotate(45deg);font-size:'+(hi?15:12)+'px;line-height:1">'+emoji+'</span></div>';
+    const mk=L.marker([lat,lng],{icon:L.divIcon({html,className:'',iconSize:[sz,sz],iconAnchor:[sz/2,sz],popupAnchor:[0,-sz]}),zIndexOffset:hi?1000:0});
+    mk.on('click',e=>{L.DomEvent.stopPropagation(e);openPlacePanel(p);});
+    mk.addTo(leafletMap);leafletMarkers.push(mk);
+  });
+  if(bounds.length===1)leafletMap.setView(bounds[0],15);
+  else if(bounds.length>1)leafletMap.fitBounds(bounds,{padding:[50,50],maxZoom:15});
+}
+
+function isDayPlace(p,dayId){
+  const d=days[dayId];
+  if(!d)return false;
+  // Hotel/locadora: destacar só se é do mesmo destino do dia
+  if(p.type==='hotel'||p.type==='car')return p.dest===d.dest;
+  if(!d.stops)return false;
+  const pn=p.name.toLowerCase().split('·')[0].trim();
+  const pw=pn.split(/\s+/).filter(w=>w.length>3);
+  return d.stops.some(function(s){
+    if(s.maps&&pw.some(function(w){return s.maps.toLowerCase().includes(w);}))return true;
+    if(s.name&&pw.some(function(w){return s.name.toLowerCase().includes(w);}))return true;
+    return false;
+  });
+}
+
+function openPlacePanel(p){
+  const emoji=catEmoji[p.type]||'📍';
+  // Descobrir em quais dias do roteiro esse lugar aparece
+  const linkedDays=Object.entries(days).filter(([k,d])=>isDayPlace(p,k)).map(([k,d])=>{
+    const dateShort=d.date?d.date.replace(/[A-Za-záéíóúãõâêîôûàèìòù]+,?\s+/,'').replace(/·.*/,'').trim():'';
+    return dateShort;
+  }).slice(0,2);
+  const destLabel=p.dest||'';
+  let tags='<span class="pp-tag dest">'+destLabel+'</span>';
+  linkedDays.forEach(function(d){tags+='<span class="pp-tag day">'+d+'</span>';});
+  if(p.custom)tags+='<span class="pp-tag custom">📌 Adicionado por você</span>';
+  const delBtn=p.custom
+    ?'<button data-pid="'+p.id+'" class="pp-btn pp-del" id="pp-del-btn">🗑 Remover lugar</button>'
+    :'';
+  document.getElementById('place-panel-content').innerHTML=
+    '<div class="pp-header">'+
+      '<div class="pp-emoji">'+emoji+'</div>'+
+      '<div class="pp-head-text">'+
+        '<div class="pp-name">'+p.name+'</div>'+
+        '<div class="pp-tags">'+tags+'</div>'+
+      '</div>'+
+    '</div>'+
+    (p.detail?'<div class="pp-detail">'+p.detail+'</div>':'')+
+    '<div class="pp-acts">'+
+      '<a href="'+navUrl(p)+'" target="_blank" class="pp-btn pp-nav">🧭 Navegar</a>'+
+      '<a href="'+placeUrl(p)+'" target="_blank" class="pp-btn pp-sec">🗺 Google Maps</a>'+
+      delBtn+
+    '</div>';
+  // Handler para remover
+  const d2=document.getElementById('pp-del-btn');
+  if(d2)d2.onclick=function(){removeCustomPlace(this.dataset.pid);};
+  document.getElementById('place-panel').style.display='block';
+  document.getElementById('map-overlay').style.display='block';
+}
+function closePanel(){
+  document.getElementById('place-panel').style.display='none';
+  document.getElementById('map-overlay').style.display='none';
+}
+
+// ══ VIEWS ══
+function showView(v){
+  // Salvar scroll da view atual antes de sair
+  const currentView = document.querySelector('.view.active');
+  if(currentView) saveScrollPos(currentView.id.replace('view-',''));
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(e=>e.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  const tab=document.getElementById('tab-'+(v==='day'?'timeline':v));
+  if(tab)tab.classList.add('active');
+  document.getElementById('fab-add').classList.toggle('visible',v==='map');
+  if(v==='timeline'){refreshDayProgress();clearSearch();restoreScrollPos('timeline');}
+  if(v==='checklist')renderChecklist();
+  if(v==='map')setTimeout(()=>{if(!leafletMap)initLeafletMap();else{resizeMap();renderMapFilters();renderMapPins();}},120);
+  if(v==='places')renderPlaces();
+  if(v==='mala'){if(!state.mala)state.mala={};renderMala();}
+  if(v==='expenses'){const r=document.getElementById('exp-rate');if(r&&state.expRate)r.value=state.expRate;renderExpenses();}
+  if(v!=='map'&&v!=='day'&&typeof window.scrollTo==='function')window.scrollTo(0,0);
+  // URL hash para deep linking
+  history.replaceState(null,'','#'+v);
+  // Wake lock — manter tela ligada no roteiro e mapa
+  if(v==='day'||v==='map')acquireWakeLock();
+  else releaseWakeLock();
+}
+
+// ══ WAKE LOCK ══
+let wakeLock=null;
+async function acquireWakeLock(){
+  if('wakeLock' in navigator&&!wakeLock){
+    try{wakeLock=await navigator.wakeLock.request('screen');}catch(e){}
+  }
+}
+async function releaseWakeLock(){
+  if(wakeLock){try{await wakeLock.release();wakeLock=null;}catch(e){}}
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&(document.getElementById('view-day').classList.contains('active')||document.getElementById('view-map').classList.contains('active')))acquireWakeLock();});
+
+// ══ BUSCA NO ROTEIRO ══
+function searchRoteiro(q){
+  if(!q){clearSearch();return;}
+  q=q.toLowerCase();
+  document.querySelectorAll('.day-card').forEach(card=>{
+    const txt=card.textContent.toLowerCase();
+    card.classList.toggle('search-match',txt.includes(q));
+    card.style.display=txt.includes(q)?'':'none';
+  });
+  document.querySelectorAll('.dest-blk').forEach(blk=>{
+    const hasVisible=[...blk.querySelectorAll('.day-card')].some(c=>c.style.display!=='none');
+    blk.style.display=hasVisible?'':'none';
+  });
+}
+function clearSearch(){
+  document.querySelectorAll('.day-card').forEach(c=>{c.style.display='';c.classList.remove('search-match');});
+  document.querySelectorAll('.dest-blk').forEach(b=>b.style.display='');
+  const s=document.getElementById('nav-search');if(s)s.value='';
+}
+
+// ══ DAY DETAIL ══
+function showDay(id){
+  const raw=getDayData(id);if(!raw||!raw.title)return;
+  document.getElementById('dd-title').textContent=raw.title;
+  document.getElementById('dd-date').textContent=raw.date;
+  const hasEdits=!!editedDays[id];
+  let h='';
+  if(hasEdits){
+    h+='<div style="background:#FEF6E8;border-radius:var(--rs);padding:8px 12px;font-size:12px;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">'
+      +'<span>✏️ Dia com edições personalizadas</span>'
+      +'<button data-action="reset" data-day="'+id+'" style="background:none;border:none;font-size:11px;color:var(--terr);cursor:pointer">Restaurar original</button>'
+      +'</div>';
+  }
+  if(raw.alerts)raw.alerts.forEach(function(a){h+='<div class="abox '+a.type+'">'+a.text+'</div>';});
+  // Contexto histórico
+  if(raw.context&&raw.context.length){
+    h+='<div class="ctx-section"><div class="ctx-label">Saiba antes de ir</div>';
+    raw.context.forEach(function(c){
+      h+='<div class="ctx-card">'
+        +'<div class="ctx-card-head"><span class="ctx-icon">'+c.icon+'</span><span class="ctx-title">'+c.title+'</span></div>'
+        +'<div class="ctx-text">'+c.text+'</div>'
+        +'</div>';
+    });
+    h+='</div>';
+  }
+  if(raw.planAB){
+    const c=state.plans[id]||null;
+    h+='<div class="plan-box"><div class="plan-ttl">📋 '+raw.planAB.question+'</div><div class="plan-btns">'
+      +'<button data-action="plan" data-day="'+id+'" data-plan="A" class="plan-btn'+(c==='A'?' sel':'')+'">'+raw.planAB.A+'</button>'
+      +'<button data-action="plan" data-day="'+id+'" data-plan="B" class="plan-btn'+(c==='B'?' sel':'')+'">'+raw.planAB.B+'</button>'
+      +'</div></div>';
+  }
+  (raw.stops||[]).forEach(function(s,i){
+    const k=id+'_'+i, done=state.stopDone[k]||false;
+    const isSugg=!!s.suggested;
+    h+='<div class="stop type-'+s.type+(done?' done':'')+(isSugg?' suggested':'')+'">';
+    if(isSugg)h+='<div class="stop-suggested-badge">✨ Sugestão</div>';
+    h+='<div class="stop-hdr">';
+    h+='<div class="stop-time">'+(s.time||'')+'</div>';
+    h+='<div class="stop-name">'+s.name+(s.couple?' <span class="stop-couple">♡</span>':'')+'</div>';
+    h+='<button data-action="edit-stop" data-day="'+id+'" data-idx="'+i+'" class="stop-edit-btn">✏️</button>';
+    h+='<button data-action="check-stop" data-day="'+id+'" data-idx="'+i+'" class="stop-chk'+(done?' chk':'')+'">'+(done?'✓':'')+'</button>';
+    h+='</div>';
+    if(s.desc)h+='<div class="stop-desc">'+s.desc+'</div>';
+    if(s.maps)h+='<a href="'+mapsUrl(s.maps)+'" target="_blank" class="mlink">📍 Abrir no Maps</a>';
+    if(s.options){
+      h+='<div class="opts"><div class="opts-ttl">Opções</div>';
+      s.options.forEach(function(o){
+        h+='<div class="opt"><strong>'+o.name+'</strong>'+(o.reservar?' <span class="res">· Reservar!</span>':'')
+          +'<br>'+o.detail+(o.maps?'<a href="'+mapsUrl(o.maps)+'" target="_blank" class="opt-ml">📍</a>':'')+'</div>';
+      });
+      h+='</div>';
+    }
+    h+='<button data-action="qe-tog" data-qe="qe_'+id+'_'+i+'" class="qe-tog">💶 Registrar despesa</button>'
+      +'<div class="qe-pan" id="qe_'+id+'_'+i+'">'
+      +'<div class="qe-row">'
+      +'<input class="qe-inp" type="text" id="qd_'+id+'_'+i+'" placeholder="Descrição" style="flex:1">'
+      +'<input class="qe-inp" type="number" id="qv_'+id+'_'+i+'" placeholder="€" inputmode="decimal" style="width:80px;flex-shrink:0">'
+      +'<button data-action="add-qe" data-day="'+id+'" data-idx="'+i+'" data-dest="'+raw.dest+'" class="qe-btn">+</button>'
+      +'</div>'
+      +'<select class="qe-sel" id="qc_'+id+'_'+i+'"><option>🍽 Alimentação</option><option>🚗 Transporte</option><option>🎟 Passeios</option><option>🏨 Hospedagem</option><option>🛍 Compras</option><option>📦 Outros</option></select>'
+      +'</div>';
+    h+='</div>';
+  });
+  h+='<button data-action="add-stop" data-day="'+id+'" class="add-stop-btn">＋ Adicionar parada ao dia</button>';
+  if(raw.notes)h+='<div class="notes-lbl">Notas do dia</div>'
+    +'<textarea class="notes-area" data-action="note" data-day="'+id+'" placeholder="Anotações, decisões, dicas de locals...">'
+    +(state.notes[id]||'')+'</textarea>';
+  const cont=document.getElementById('day-detail-content');
+  cont.innerHTML=h;
+  // Event delegation — um único listener para todos os botões do dia
+  cont.onclick=function(e){
+    const t=e.target.closest('[data-action]');
+    if(!t)return;
+    const act=t.dataset.action, d=t.dataset.day, idx=parseInt(t.dataset.idx);
+    if(act==='reset')resetDayEdits(d);
+    else if(act==='plan')choosePlan(d,t.dataset.plan);
+    else if(act==='edit-stop')openEditStop(d,idx);
+    else if(act==='check-stop')doCheckStop(d,idx,t);
+    else if(act==='qe-tog')document.getElementById(t.dataset.qe).classList.toggle('open');
+    else if(act==='add-qe')doAddQE(d,idx,t.dataset.dest);
+    else if(act==='add-stop')openAddStop(d);
+  };
+  cont.onchange=function(e){
+    const t=e.target;
+    if(t.dataset.action==='note')saveNote(t.dataset.day,t.value);
+  };
+  showView('day');
+}
+
+function doCheckStop(id,i,btn){
+  if(navigator.vibrate)navigator.vibrate(40);
+  const k=id+'_'+i;state.stopDone[k]=!state.stopDone[k];saveState();
+  const card=btn.closest('.stop');
+  if(state.stopDone[k]){card.classList.add('done');btn.classList.add('chk');btn.textContent='✓';}
+  else{card.classList.remove('done');btn.classList.remove('chk');btn.textContent='';}
+}
+function doAddQE(dayId,i,dest){
+  const desc=document.getElementById('qd_'+dayId+'_'+i).value.trim();
+  const val=parseFloat(document.getElementById('qv_'+dayId+'_'+i).value);
+  const cat=document.getElementById('qc_'+dayId+'_'+i).value;
+  if(!desc||isNaN(val)||val<=0){alert('Preencha descrição e valor.');return;}
+  state.expenses.unshift({id:Date.now(),dest,cat,desc,val,date:new Date().toLocaleDateString('pt-BR')});
+  document.getElementById('qd_'+dayId+'_'+i).value='';
+  document.getElementById('qv_'+dayId+'_'+i).value='';
+  document.getElementById('qe_'+dayId+'_'+i).classList.remove('open');
+  saveState();
+  const btn=event.target;const orig=btn.textContent;btn.textContent='✓';btn.style.background='var(--sage)';
+  setTimeout(function(){btn.textContent=orig;btn.style.background='var(--ocean)';},1500);
+}
+
+// ══ EDITAR PARADA ══
+function openEditStop(dayId,idx){
+  const d=getDayData(dayId);
+  const s=d.stops[idx];if(!s)return;
+  document.getElementById('es-day-id').value=dayId;
+  document.getElementById('es-stop-idx').value=idx;
+  document.getElementById('es-time').value=s.time||'';
+  document.getElementById('es-name').value=s.name||'';
+  document.getElementById('es-desc').value=s.desc||'';
+  document.getElementById('es-maps').value=s.maps||'';
+  document.getElementById('edit-stop-ttl').textContent=s.name;
+  initChips('es-type-chips','es-type-val',s.type||'view');
+  openModal('edit-stop-modal');
+  setTimeout(()=>document.getElementById('es-name').focus(),200);
+}
+
+function saveEditStop(){
+  const dayId=document.getElementById('es-day-id').value;
+  const idx=parseInt(document.getElementById('es-stop-idx').value);
+  const name=document.getElementById('es-name').value.trim();
+  if(!name){alert('O nome não pode estar vazio.');return;}
+  if(!editedDays[dayId])editedDays[dayId]={};
+  if(!editedDays[dayId].editedStops)editedDays[dayId].editedStops=[];
+  editedDays[dayId].editedStops=editedDays[dayId].editedStops.filter(e=>e._origIdx!==idx);
+  editedDays[dayId].editedStops.push({
+    _origIdx:idx,
+    time:document.getElementById('es-time').value.trim(),
+    name,
+    desc:document.getElementById('es-desc').value.trim(),
+    type:getChipVal('es-type-val'),
+    maps:document.getElementById('es-maps').value.trim(),
+  });
+  saveState();
+  closeModal('edit-stop-modal');
+  showDay(dayId);
+}
+
+function deleteStop(){
+  const dayId=document.getElementById('es-day-id').value;
+  const idx=parseInt(document.getElementById('es-stop-idx').value);
+  if(!confirm('Remover esta parada?'))return;
+  if(!editedDays[dayId])editedDays[dayId]={};
+  if(!editedDays[dayId].editedStops)editedDays[dayId].editedStops=[];
+  editedDays[dayId].editedStops=editedDays[dayId].editedStops.filter(e=>e._origIdx!==idx);
+  editedDays[dayId].editedStops.push({_origIdx:idx,_deleted:true});
+  saveState();
+  closeModal('edit-stop-modal');
+  showDay(dayId);
+}
+
+// ══ ADICIONAR PARADA ══
+function openAddStop(dayId){
+  document.getElementById('ns-day-id').value=dayId;
+  document.getElementById('ns-time').value='';
+  document.getElementById('ns-name').value='';
+  document.getElementById('ns-desc').value='';
+  document.getElementById('ns-maps').value='';
+  // Mostrar nome do dia no hint
+  const d=getDayData(dayId);
+  const lbl=document.getElementById('add-stop-day-label');
+  if(lbl&&d)lbl.textContent='Adicionando ao dia: '+d.date;
+  initChips('ns-type-chips','ns-type-val','view');
+  openModal('add-stop-modal');
+  setTimeout(()=>document.getElementById('ns-name').focus(),200);
+}
+
+function saveNewStop(){
+  const dayId=document.getElementById('ns-day-id').value;
+  const name=document.getElementById('ns-name').value.trim();
+  if(!name){document.getElementById('ns-name').focus();return;}
+  if(!editedDays[dayId])editedDays[dayId]={};
+  if(!editedDays[dayId].extraStops)editedDays[dayId].extraStops=[];
+  editedDays[dayId].extraStops.push({
+    _isExtra:true,
+    time:document.getElementById('ns-time').value.trim(),
+    name,
+    desc:document.getElementById('ns-desc').value.trim(),
+    type:getChipVal('ns-type-val'),
+    maps:document.getElementById('ns-maps').value.trim(),
+  });
+  saveState();
+  closeModal('add-stop-modal');
+  showDay(dayId);
+}
+
+// Modais
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+function choosePlan(id,p){state.plans[id]=p;saveState();showDay(id);}
+function toggleStop(id,i){
+  const k=id+'_'+i;state.stopDone[k]=!state.stopDone[k];saveState();
+  const b=event.target,c=b.closest('.stop');
+  if(state.stopDone[k]){c.classList.add('done');b.classList.add('chk');b.textContent='✓';}
+  else{c.classList.remove('done');b.classList.remove('chk');b.textContent='';}
+}
+function saveNote(id,v){state.notes[id]=v;saveState();}
+function toggleQE(id){document.getElementById(id).classList.toggle('open');}
+function addQE(dayId,i,dest){
+  const desc=document.getElementById('qd_'+dayId+'_'+i).value.trim();
+  const val=parseFloat(document.getElementById('qv_'+dayId+'_'+i).value);
+  const cat=document.getElementById('qc_'+dayId+'_'+i).value;
+  if(!desc||isNaN(val)||val<=0){alert('Preencha descrição e valor.');return;}
+  state.expenses.unshift({id:Date.now(),dest,cat,desc,val,date:new Date().toLocaleDateString('pt-BR')});
+  document.getElementById('qd_'+dayId+'_'+i).value='';document.getElementById('qv_'+dayId+'_'+i).value='';
+  document.getElementById('qe_'+dayId+'_'+i).classList.remove('open');
+  saveState();
+  const btn=event.target;const orig=btn.textContent;btn.textContent='✓';btn.style.background='var(--sage)';
+  setTimeout(()=>{btn.textContent=orig;btn.style.background='var(--ocean)';},1500);
+}
+
+// Progresso
+function refreshDayProgress(){
+  Object.keys(days).forEach(dayId=>{
+    const d=getDayData(dayId);const total=d.stops?d.stops.length:0;if(!total)return;
+    const done=d.stops.filter((_,i)=>state.stopDone[dayId+'_'+i]).length;
+    const cards=document.querySelectorAll('.day-card');
+    const cards2=Array.from(cards).filter(c=>c.getAttribute('onclick')&&c.getAttribute('onclick').includes(dayId));
+    cards2.forEach(card=>{
+      let pg=card.querySelector('.day-prog');
+      if(!pg&&done>0){pg=document.createElement('div');pg.className='day-prog';const info=card.querySelector('.day-info');if(info)info.appendChild(pg);}
+      if(pg){const pct=Math.round(done/total*100);pg.innerHTML='<div class="dp-bar"><div class="dp-fill" style="width:'+pct+'%"></div></div><div class="dp-txt">'+done+'/'+total+'</div>';}
+    });
+  });
+}
+
+// Countdown
+function renderCountdown(){
+  const el=document.getElementById('trip-countdown');if(!el)return;
+  const now=new Date(),trip=new Date('2026-05-16T11:20:00-03:00');
+  const ms=trip-now;
+  if(ms<0){el.innerHTML='<div class="cd-box"><div><div class="cd-lbl">Em andamento</div><div class="cd-sub">Boa viagem! 🇮🇹</div></div><div class="cd-val">✈️</div></div>';return;}
+  const dL=Math.floor(ms/864e5),hL=Math.floor((ms%864e5)/36e5);
+  const next=dL<=5?'⚡ Compra ingressos Coliseu em 18/04!':dL<=20?'🎟 Coliseu abre venda em 18/04':'📋 Verifique checklist de reservas';
+  el.innerHTML='<div class="cd-box"><div><div class="cd-lbl">Faltam para decolar</div><div class="cd-sub">'+next+'</div></div><div class="cd-val">'+dL+'d '+hL+'h</div></div>';
+}
+
+// ══ CHECKLIST ══
+function renderChecklist(){
+  let h='',tot=0,done=0;
+  reservas.forEach(g=>{
+    h+='<div class="cl-grp"><div class="cl-grp-ttl">'+g.group+'</div>';
+    g.items.forEach(item=>{
+      tot++;const st=state.reservas[item.id]||'pendente';const dk=st==='confirmado';if(dk)done++;
+      const sc={pendente:'st-p',reservado:'st-r',confirmado:'st-c'}[st]||'st-p';
+      h+='<div class="cl-item'+(dk?' done':'')+'"><button class="cl-chk'+(dk?' chk':item.deadline==='urgent'?' urg':'')+'" onclick="toggleCheck(\'item.id\')">'+
+        (dk?'✓':'')+'</button><div class="cl-cont"><div class="cl-title">'+item.title+'</div><div class="cl-desc">'+item.desc+'</div>'+
+        '<div class="cl-meta"><span class="cl-dl '+item.deadline+'">'+item.deadlineText+'</span>'+
+        (item.maps?'<a href="'+mapsUrl(item.maps)+'" target="_blank" class="mlink" style="padding:3px 8px;font-size:11px;margin:0">📍</a>':'')+
+        '<button class="cl-st '+sc+'" onclick="cycleStatus(\'item.id\')">'+st+'</button></div>'+
+        '<div style="font-size:11px;color:var(--ink-l);margin-top:3px">'+item.where+'</div></div></div>';
+    });h+='</div>';
+  });
+  document.getElementById('checklist-content').innerHTML=h;
+  const pct=tot?Math.round(done/tot*100):0;
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-text').textContent=done+' de '+tot+' confirmados';
+}
+function toggleCheck(id){if(navigator.vibrate)navigator.vibrate(40);state.reservas[id]=state.reservas[id]==='confirmado'?'pendente':'confirmado';saveState();renderChecklist();}
+function cycleStatus(id){const c={pendente:'reservado',reservado:'confirmado',confirmado:'pendente'};state.reservas[id]=c[state.reservas[id]||'pendente'];saveState();renderChecklist();}
+
+// ══ LUGARES ══
+const placeCats=[
+  {id:'all',label:'Todos',color:'#555'},{id:'food',label:'🍽 Restaurantes',color:'#C9973A'},
+  {id:'view',label:'📍 Atrações',color:'#1D9E75'},{id:'hotel',label:'🏨 Hotéis',color:'#1B4F72'},
+  {id:'boat',label:'⛵ Barcos',color:'#2E7BA6'},{id:'custom',label:'📌 Meus',color:'#C4622D'},
+];
+let placeCatFilter='all';
+
+function renderPlaces(){
+  const catsEl=document.getElementById('places-cats');
+  if(catsEl){
+    catsEl.innerHTML=placeCats.map(function(c){
+      const act=placeCatFilter===c.id;
+      const s=act?'background:'+c.color+';color:#fff;border-color:'+c.color:'color:'+c.color+';border-color:'+c.color+'44';
+      return '<button class="pcat'+(act?' active':'')+'" data-cat="'+c.id+'" style="'+s+'">'+c.label+'</button>';
+    }).join('');
+    catsEl.onclick=function(e){
+      const btn=e.target.closest('[data-cat]');
+      if(btn)setPlaceCat(btn.dataset.cat);
+    };
+  }
+  const all=[...places,...customPlaces];
+  const filtered=placeCatFilter==='all'?all:all.filter(function(p){return p.type===placeCatFilter;});
+  const bg2={hotel:'#DDEEF6',food:'#FEF0E0',view:'#E8EFF4',boat:'#E8EEF5',car:'#FEF6E8',nature:'#EBF4E8',custom:'#FEF0EC'};
+  const listEl=document.getElementById('places-list-content');
+  if(!listEl)return;
+  if(!filtered.length){listEl.innerHTML='<div class="empty">Nenhum lugar nesta categoria</div>';return;}
+  listEl.innerHTML=filtered.map(function(p){
+    const isCustom=!!p.custom;
+    return '<div class="place-item'+(isCustom?' is-custom':'')+'">'
+      +'<div class="pi-icon" style="background:'+(bg2[p.type]||'#F5F5F5')+'">'+(catEmoji[p.type]||'📍')+'</div>'
+      +'<div class="pi-info">'
+      +(isCustom?'<div class="pi-custom-badge">📌 Adicionado por você</div>':'')
+      +'<div class="pi-name">'+p.name+'</div>'
+      +'<div class="pi-dest">'+p.dest+'</div>'
+      +(p.detail?'<div class="pi-detail">'+p.detail+'</div>':'')
+      +'<div class="pi-acts">'
+      +(p.coords?'<button class="pi-btn map" data-action="open-map" data-dest="'+p.dest+'" data-name="'+p.name.replace(/"/g,'&quot;')+'">📍 Ver no mapa</button>':'')
+      +'<a href="'+placeUrl(p)+'" target="_blank" class="pi-btn gmap">🗺 Google Maps</a>'
+      +(isCustom?'<button class="pi-btn del" data-action="del-place" data-id="'+p.id+'">🗑 Remover</button>':'')
+      +'</div></div></div>';
+  }).join('');
+  listEl.onclick=function(e){
+    const t=e.target.closest('[data-action]');if(!t)return;
+    if(t.dataset.action==='open-map')openInMap(t.dataset.dest,t.dataset.name);
+    else if(t.dataset.action==='del-place'){
+      if(confirm('Remover este lugar?'))removeCustomPlace(t.dataset.id);
+    }
+  };
+}
+function setPlaceCat(id){placeCatFilter=id;renderPlaces();}
+function openInMap(dest,name){
+  const dg=destGroups.find(g=>g.dest===dest);
+  if(dg){mapDestFilter=dg.id;mapCatFilter='all';mapDayFilter='all';}
+  showView('map');
+  setTimeout(()=>{const p=[...places,...customPlaces].find(pl=>pl.name===name);if(p&&p.coords)setTimeout(()=>openPlacePanel(p),400);},500);
+}
+function searchPlaces(){
+  const q=document.getElementById('place-search-inp').value.trim();if(!q)return;
+  const res=document.getElementById('place-search-results');
+  res.innerHTML='<div class="sr-item"><div class="sr-name" style="color:var(--ink-l)">🔍 Buscando...</div></div>';
+  res.classList.add('open');
+  const typeGuess=function(name){
+    const n=name.toLowerCase();
+    if(/ristorante|trattoria|osteria|pizz|restaurant|bar|café|cafe/.test(n))return{e:'🍽',l:'Restaurante'};
+    if(/hotel|albergo|hostel|resort|b&b/.test(n))return{e:'🏨',l:'Hotel'};
+    if(/spiaggia|beach|cala|baia/.test(n))return{e:'🏖',l:'Praia'};
+    if(/chiesa|basilica|duomo|museum|museo/.test(n))return{e:'🏛',l:'Atração'};
+    return{e:'📍',l:'Lugar'};
+  };
+  geocodeItaly(q,6).then(data=>{
+    if(!data.length){
+      res.innerHTML='<div class="sr-empty">Nenhum resultado. Tente "'+q+' Italia"</div>';
+      res.classList.add('open');return;
+    }
+    res._data=data;
+    res.innerHTML=data.map(function(d,i){
+      const tg=typeGuess(d.name+' '+d.addr);
+      return '<div class="sr-item" data-idx="'+i+'">'
+        +'<div class="sr-icon">'+tg.e+'</div>'
+        +'<div class="sr-text"><div class="sr-name">'+d.name+'</div><div class="sr-addr">'+d.addr+'</div></div>'
+        +'<div class="sr-add-icon">＋</div>'
+        +'</div>';
+    }).join('');
+    res.onclick=function(e){
+      const item=e.target.closest('.sr-item');
+      if(item)addPlaceFromSearch(parseInt(item.dataset.idx));
+    };
+    res.classList.add('open');
+  }).catch(function(){
+    const qv=document.getElementById('place-search-inp').value.trim();
+    res.innerHTML='<div class="sr-empty" style="padding:14px">'
+      +'<div style="margin-bottom:10px">Não foi possível buscar agora.</div>'
+      +'<a href="https://www.google.com/maps/search/'+encodeURIComponent(qv)+' Italy" target="_blank" '
+      +'style="display:inline-flex;align-items:center;gap:6px;background:var(--ocean);color:#fff;border-radius:20px;padding:10px 16px;font-size:13px;text-decoration:none;font-weight:500">🗺 Buscar no Google Maps</a>'
+      +'</div>';
+    res.classList.add('open');
+  });
+}
+function addPlaceFromSearch(i){
+  const data=document.getElementById('place-search-results')._data;if(!data||!data[i])return;
+  const d=data[i];const lat=d.lat,lng=d.lon;
+  let dest='Roma';
+  if(lng>8.5&&lng<10.2&&lat>38.5&&lat<41.5)dest='Sardenha';
+  else if(lat>40.52&&lat<40.59&&lng>14.18&&lng<14.27)dest='Capri';
+  else if(lat>40.4&&lat<40.75&&lng>14.1&&lng<14.65)dest='Sorrento/Costa';
+  else if(lat>40.8&&lat<40.93&&lng>14.1&&lng<14.35)dest='Nápoles';
+  const nm=(d.name+' '+d.addr).toLowerCase();
+  let type='view';
+  if(/restaurant|ristorante|trattoria|pizz|osteria|bar/.test(nm))type='food';
+  else if(/hotel|albergo|hostel|resort/.test(nm))type='hotel';
+  const p={id:'cp_'+Date.now(),name:d.name,coords:lat.toFixed(5)+','+lng.toFixed(5),dest,type,detail:d.addr||dest,addr:d.name,custom:true};
+  customPlaces.push(p);state.customPlaces=customPlaces;saveState();
+  document.getElementById('place-search-inp').value='';
+  closePlaceSearch();
+  renderPlaces();
+  // Feedback visual de confirmação
+  const inp=document.getElementById('place-search-inp');
+  if(inp){inp.placeholder='✓ '+p.name+' adicionado!';setTimeout(function(){inp.placeholder='🔍  Buscar restaurante, praia, atração...';},2500);}
+}
+
+
+// ── Type chips ──
+function initChips(groupId, hiddenId, defaultVal){
+  const grp = document.getElementById(groupId);
+  if(!grp) return;
+  grp.querySelectorAll('.type-chip').forEach(function(btn){
+    btn.classList.toggle('sel', btn.dataset.val === defaultVal);
+    btn.onclick = function(){
+      grp.querySelectorAll('.type-chip').forEach(b=>b.classList.remove('sel','sel-dest'));
+      btn.classList.add('sel');
+      document.getElementById(hiddenId).value = btn.dataset.val;
+    };
+  });
+  document.getElementById(hiddenId).value = defaultVal;
+}
+function initDestChips(groupId, hiddenId, defaultVal){
+  const grp = document.getElementById(groupId);
+  if(!grp) return;
+  grp.querySelectorAll('.type-chip').forEach(function(btn){
+    btn.classList.toggle('sel-dest', btn.dataset.val === defaultVal);
+    btn.onclick = function(){
+      grp.querySelectorAll('.type-chip').forEach(b=>b.classList.remove('sel','sel-dest'));
+      btn.classList.add('sel-dest');
+      document.getElementById(hiddenId).value = btn.dataset.val;
+    };
+  });
+  document.getElementById(hiddenId).value = defaultVal;
+}
+function getChipVal(hiddenId){ return document.getElementById(hiddenId).value; }
+
+// ══ ADD PLACE MODAL ══
+let apResult=null;
+function openAddPlace(){
+  document.getElementById('ap-modal').classList.add('open');
+  document.getElementById('ap-step1').style.display='';
+  document.getElementById('ap-step2').style.display='none';
+  const n=document.getElementById('ap-name');if(n)n.value='';
+  const note=document.getElementById('ap-note');if(note)note.value='';
+  document.getElementById('ap-coords').value='';
+  document.getElementById('ap-results').innerHTML='';
+  document.getElementById('ap-type-val').value='view';
+  document.getElementById('ap-dest-val').value='Roma';
+  apResult=null;
+  setTimeout(()=>document.getElementById('ap-name').focus(),250);
+}
+function closeAddPlace(){document.getElementById('ap-modal').classList.remove('open');}
+function clearPreview(){
+  apResult=null;
+  document.getElementById('ap-step1').style.display='';
+  document.getElementById('ap-step2').style.display='none';
+  document.getElementById('ap-results').innerHTML='';
+}
+function apBack(){ clearPreview(); }
+function apSearch(){
+  const name=document.getElementById('ap-name').value.trim();if(!name)return;
+  const res=document.getElementById('ap-results');
+  res.innerHTML='<div style="font-size:13px;color:var(--ink-l);padding:10px 4px">🔍 Buscando...</div>';
+  geocodeItaly(name,5).then(function(results){
+    if(!results.length){
+      res.innerHTML='<div style="font-size:13px;color:var(--terr);padding:10px 4px">Nenhum resultado. Tente adicionar "Italy" ao nome.</div>';
+      return;
+    }
+    res._data=results;
+    const typeG=function(n){
+      n=n.toLowerCase();
+      if(/ristorante|trattoria|osteria|pizz|restaurant/.test(n))return'🍽';
+      if(/hotel|albergo|hostel/.test(n))return'🏨';
+      if(/spiaggia|beach|cala/.test(n))return'🏖';
+      if(/chiesa|basilica|museo|museum/.test(n))return'🏛';
+      return'📍';
+    };
+    res.innerHTML=results.map(function(d,i){
+      return'<div class="sr-item" data-idx="'+i+'">'
+        +'<span style="font-size:22px">'+typeG(d.name+' '+d.addr)+'</span>'
+        +'<div><div style="font-weight:500;font-size:14px">'+d.name+'</div>'
+        +'<div style="font-size:12px;color:var(--ink-l);margin-top:2px">'+d.addr+'</div></div>'
+        +'<span style="margin-left:auto;font-size:20px;color:var(--ocean-m)">＋</span>'
+        +'</div>';
+    }).join('');
+    res.onclick=function(e){
+      const item=e.target.closest('[data-idx]');
+      if(item)apSelect(parseInt(item.dataset.idx));
+    };
+  }).catch(function(){
+    const qv=document.getElementById('ap-name').value.trim();
+    res.innerHTML='<div style="padding:10px 0">'
+      +'<div style="font-size:13px;color:var(--terr);margin-bottom:10px">Não foi possível buscar agora.</div>'
+      +'<a href="https://www.google.com/maps/search/'+encodeURIComponent(qv)+' Italy" target="_blank" '
+      +'style="display:inline-flex;align-items:center;gap:6px;background:var(--ocean);color:#fff;border-radius:20px;padding:10px 16px;font-size:13px;text-decoration:none;font-weight:500">🗺 Buscar no Google Maps</a>'
+      +'</div>';
+  });
+}
+function apSelect(i){
+  const data=document.getElementById('ap-results')._data;if(!data||!data[i])return;
+  const d=data[i]; apResult=d;
+  document.getElementById('ap-coords').value=d.lat.toFixed(5)+','+d.lon.toFixed(5);
+  // Inferir destino
+  const lat=d.lat,lng=d.lon;let dest='Roma';
+  if(lng>8.5&&lng<10.2&&lat>38.5&&lat<41.5)dest='Sardenha';
+  else if(lat>40.52&&lat<40.59&&lng>14.18&&lng<14.27)dest='Capri';
+  else if(lat>40.4&&lat<40.75&&lng>14.1&&lng<14.65)dest='Sorrento/Costa';
+  else if(lat>40.8&&lat<40.93&&lng>14.1&&lng<14.35)dest='Nápoles';
+  // Inferir tipo
+  const nm=(d.name+' '+d.addr).toLowerCase();
+  let type='view';
+  if(/ristorante|trattoria|osteria|pizz|restaurant|osteria/.test(nm))type='food';
+  else if(/hotel|albergo|hostel|resort/.test(nm))type='hotel';
+  else if(/spiaggia|beach|cala|baia/.test(nm))type='view';
+  // Mostrar card de confirmação + step 2
+  document.getElementById('ap-confirm-card').innerHTML=
+    '<div class="cc-icon">📍</div>'
+    +'<div><div class="cc-name">'+d.name+'</div><div class="cc-addr">'+(d.addr||'')+'</div></div>';
+  document.getElementById('ap-step1').style.display='none';
+  document.getElementById('ap-step2').style.display='';
+  initChips('ap-type-chips','ap-type-val',type);
+  initDestChips('ap-dest-chips','ap-dest-val',dest);
+  if(leafletMap) leafletMap.setView([lat,lng],15);
+}
+function apSave(){
+  const coords=document.getElementById('ap-coords').value.trim();
+  if(!coords||!apResult){alert('Selecione um resultado primeiro.');return;}
+  const name=apResult.name;
+  const p={
+    id:'cp_'+Date.now(), name, coords,
+    dest: getChipVal('ap-dest-val'),
+    type: getChipVal('ap-type-val'),
+    detail: document.getElementById('ap-note').value.trim() || apResult.addr || 'Adicionado por você',
+    addr: name, custom:true
+  };
+  customPlaces.push(p); state.customPlaces=customPlaces; saveState();
+  closeAddPlace(); renderPlaces();
+  // Ir para o mapa e mostrar o pin
+  mapCatFilter='all';
+  const dg=destGroups.find(g=>g.dest===p.dest);
+  if(dg){mapDestFilter=dg.id;}
+  showView('map');
+  setTimeout(function(){
+    renderMapFilters(); renderMapPins();
+    const[la,lo]=coords.split(',').map(Number);
+    if(leafletMap)leafletMap.setView([la,lo],15);
+    setTimeout(()=>openPlacePanel(p),500);
+  },200);
+}
+function removeCustomPlace(id){
+  customPlaces=customPlaces.filter(p=>p.id!==id);
+  state.customPlaces=customPlaces; saveState();
+  closePanel(); renderMapPins(); renderPlaces();
+}
+
+// ══ SHARE ══
+async function shareDay(){
+  const title=document.getElementById('dd-title').textContent;
+  const url=window.location.href.split('#')[0]+'#day';
+  if(navigator.share){
+    try{await navigator.share({title:'Itália 2026 — '+title,text:'Confira nosso roteiro para '+title,url});}catch(e){}
+  } else {
+    try{await navigator.clipboard.writeText(url);alert('Link copiado!');}catch(e){alert('Link: '+url);}
+  }
+}
+
+// ══ IA CHAT ══
+let aiHistory=[];
+const AI_SYS=`Você é um assistente de viagem especializado na viagem de Flavio Weber Junior e Lethiane Dorneles Caletti à Itália em maio de 2026.
+
+Roteiro: Roma (17-20/mai, hotel Piemonte Via Vicenza 32c), Sardenha/Cala Gonone/La Maddalena (20-25/mai, San Francisco Hotel), Sorrento+Costa Amalfitana (25-29/mai, carro AVIS Nápoles), Capri (29-31/mai).
+Voos: POA→GRU→FCO (chega 17/mai 11h30) | NAP→GIG→POA (31/mai).
+Perfil: casal, ritmo equilibrado, gastronômico + romântico + natureza. Decidem restaurantes na hora. Manhãs cedo.
+
+Responda sempre em português brasileiro. Seja direto, específico e prático. Quando sugerir lugares mencione o nome exato, localização e uma dica prática. Use emojis com moderação.`;
+
+async function sendAiMessage(){
+  const inp=document.getElementById('ai-input');
+  const msg=inp.value.trim();
+  if(!msg)return;
+  inp.value='';inp.style.height='44px';
+  // Esconder presets após primeira mensagem
+  const presets=document.getElementById('chat-presets');
+  if(presets&&aiHistory.length===0)presets.style.display='none';
+  addAiMsg('user',msg);
+  aiHistory.push({role:'user',content:msg});
+  const btn=document.getElementById('ai-send-btn');
+  btn.disabled=true;
+  // Typing indicator
+  const typing=document.createElement('div');
+  typing.className='chat-typing';typing.id='ai-typing';
+  typing.innerHTML='<div class="chat-dot"></div><div class="chat-dot"></div><div class="chat-dot"></div>';
+  document.getElementById('ai-messages').appendChild(typing);
+  scrollAiDown();
+  try{
+    // WORKER_URL: após deploy no Cloudflare, substitua pela URL do seu Worker
+    // Ex: https://italia2026.SEU-USUARIO.workers.dev
+    const WORKER_URL='https://italia2026.flavioweberjunior.workers.dev';
+    const res=await fetch(WORKER_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1024,
+        system:AI_SYS,
+        messages:aiHistory
+      })
+    });
+    document.getElementById('ai-typing')?.remove();
+    if(!res.ok){
+      const err=await res.json().catch(()=>({}));
+      throw new Error(err.error?.message||'HTTP '+res.status);
+    }
+    const data=await res.json();
+    const reply=(data.content&&data.content[0]&&data.content[0].text)||'Não consegui responder agora.';
+    aiHistory.push({role:'assistant',content:reply});
+    addAiMsg('ai',reply);
+  }catch(e){
+    document.getElementById('ai-typing')?.remove();
+    const isNetwork=e.message.includes('fetch')||e.message.includes('network')||e.message.includes('Failed');
+    const errMsg=isNetwork
+      ?'Sem conexão com a internet. Verifique sua rede e tente novamente.'
+      :'Não foi possível responder agora ('+e.message+'). Tente novamente.';
+    addAiMsg('ai',errMsg);
+    // Recolocar a mensagem no input para o usuário tentar de novo
+    inp.value=msg;
+    aiHistory.pop(); // remover a mensagem que não foi respondida
+  }
+  btn.disabled=false;
+  inp.focus();
+}
+
+function addAiMsg(role,text){
+  const isUser=role==='user';
+  const wrap=document.createElement('div');
+  wrap.className=isUser?'chat-msg-user':'chat-msg-ai';
+  const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  // Formatar markdown simples
+  const formatted=text
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+  wrap.innerHTML='<div class="chat-bubble">'+formatted+'</div><div class="chat-time">'+now+'</div>';
+  document.getElementById('ai-messages').appendChild(wrap);
+  scrollAiDown();
+}
+
+function scrollAiDown(){
+  const el=document.getElementById('ai-messages');
+  if(el)setTimeout(()=>{el.scrollTo({top:el.scrollHeight,behavior:'smooth'});},60);
+}
+
+function aiPreset(btn){
+  const inp=document.getElementById('ai-input');
+  if(inp){inp.value=btn.textContent;inp.style.height='auto';}
+  sendAiMessage();
+}
+
+// ══ DESPESAS ══
+function saveExpRate(v){state.expRate=parseFloat(v)||6.20;saveState();}
+async function fetchRate(){
+  try{
+    const r=await fetch('https://api.frankfurter.app/latest?from=EUR&to=BRL');
+    const d=await r.json();
+    if(d.rates&&d.rates.BRL){
+      const rate=d.rates.BRL;
+      document.getElementById('exp-rate').value=rate.toFixed(2);
+      saveExpRate(rate);
+      renderExpenses();
+      alert('Câmbio atualizado: 1 EUR = R$ '+rate.toFixed(2));
+    }
+  }catch(e){alert('Não foi possível buscar o câmbio. Verifique sua conexão.');}
+}
+function addExpense(){
+  const desc=document.getElementById('exp-desc').value.trim();const val=parseFloat(document.getElementById('exp-val').value);
+  if(!desc||isNaN(val)||val<=0){alert('Preencha descrição e valor.');return;}
+  state.expenses.unshift({id:Date.now(),dest:document.getElementById('exp-dest').value,cat:document.getElementById('exp-cat').value,desc,val,date:new Date().toLocaleDateString('pt-BR')});
+  document.getElementById('exp-desc').value='';document.getElementById('exp-val').value='';
+  saveState();renderExpenses();
+}
+function delExpense(id){state.expenses=state.expenses.filter(e=>e.id!==id);saveState();renderExpenses();}
+function exportCSV(){
+  if(!state.expenses.length){alert('Nenhuma despesa para exportar.');return;}
+  const header='Data,Descrição,Categoria,Destino,Euros,Reais';
+  const rate=parseFloat(document.getElementById('exp-rate').value)||state.expRate||6.20;
+  const rows=state.expenses.map(e=>[e.date,'"'+e.desc+'"',e.cat,e.dest,e.val.toFixed(2),(e.val*rate).toFixed(2)].join(','));
+  const csv=[header,...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='despesas_italia2026.csv';a.click();
+  URL.revokeObjectURL(url);
+}
+function renderExpenses(){
+  const rateEl=document.getElementById('exp-rate');const rate=rateEl?parseFloat(rateEl.value)||state.expRate||6.20:state.expRate||6.20;
+  const total=state.expenses.reduce((s,e)=>s+e.val,0);
+  document.getElementById('exp-total-eur').textContent='€ '+total.toFixed(2);
+  document.getElementById('exp-total-brl').textContent='R$ '+(total*rate).toFixed(2);
+  document.getElementById('exp-count').textContent=state.expenses.length;
+  const dests=['Roma','Sardenha','Nápoles','Sorrento/Costa','Capri'];
+  const byDest=dests.map(d=>({name:d,val:state.expenses.filter(e=>e.dest===d).reduce((s,e)=>s+e.val,0)})).filter(d=>d.val>0);
+  const maxD=Math.max(...byDest.map(d=>d.val),1);
+  document.getElementById('by-dest').innerHTML=byDest.length?byDest.map(d=>'<div class="bd-item"><div class="bd-name">'+d.name+'</div><div class="bd-bar"><div class="bd-fill" style="width:'+Math.round(d.val/maxD*100)+'%"></div></div><div class="bd-val">€'+d.val.toFixed(0)+'</div></div>').join(''):'<div class="empty">Nenhuma despesa ainda</div>';
+  const cc={'🍽 Alimentação':'#FEF0E0','🚗 Transporte':'#EBF4FA','🎟 Passeios':'#E8F0E4','🏨 Hospedagem':'#FDF5E0','🛍 Compras':'#FDEDF0','📦 Outros':'#F0F0F0'};
+  document.getElementById('exp-list').innerHTML=state.expenses.length?state.expenses.map(e=>'<div class="exp-item"><div class="exp-cat" style="background:'+(cc[e.cat]||'#F0F0F0')+'">'+e.cat.split(' ')[0]+'</div><div class="exp-info"><div class="exp-desc">'+e.desc+'</div><div class="exp-meta">'+e.cat+' · '+e.dest+' · '+e.date+'</div></div><div class="exp-vals"><div class="exp-eur">€'+e.val.toFixed(2)+'</div><div class="exp-brl">R$'+(e.val*rate).toFixed(0)+'</div></div><button class="exp-del" onclick="delExpense('+e.id+')">×</button></div>').join(''):'<div class="empty">Nenhuma despesa registrada</div>';
+}
+
+
+// ══ MALA ══
+function renderMala(){
+  let totalItems=0, doneItems=0;
+  let h='';
+  malaItems.forEach(function(grp){
+    const grpTotal=grp.items.length;
+    const grpDone=grp.items.filter(it=>state.mala&&state.mala[it.id]).length;
+    totalItems+=grpTotal; doneItems+=grpDone;
+    const secClass='sec-'+(grp.who||'AB');
+    h+='<div class="mala-grp '+secClass+'">';
+    h+='<div class="mala-grp-hdr">';
+    h+='<div class="mala-grp-title">'+grp.group+'</div>';
+    h+='<div class="mala-grp-prog">'+grpDone+'/'+grpTotal+'</div>';
+    h+='</div>';
+    grp.items.forEach(function(item){
+      const done=!!(state.mala&&state.mala[item.id]);
+      const who=item.who||grp.who||'AB';
+      const whoLabel=who==='F'?'Flavio':who==='L'?'Lethi':who==='TODO'?'Pendente':'Ambos';
+      h+='<div class="mala-item'+(done?' done':'')+'" id="mala_'+item.id+'">';
+      h+='<button class="mala-chk'+(done?' chk':'')+'" data-id="'+item.id+'">'+( done?'✓':'')+'</button>';
+      h+='<div class="mala-info">';
+      h+='<div class="mala-name">'+item.name+'</div>';
+      if(item.tip)h+='<div class="mala-tip">'+item.tip+'</div>';
+      h+='</div>';
+      if(item.qty>1)h+='<div class="mala-qty">×'+item.qty+'</div>';
+      h+='<div class="mala-who '+who+'">'+whoLabel+'</div>';
+      h+='</div>';
+    });
+    h+='</div>';
+  });
+  const cont=document.getElementById('mala-content');
+  if(!cont)return;
+  cont.innerHTML=h;
+  cont.onclick=function(e){
+    const btn=e.target.closest('.mala-chk');
+    if(!btn)return;
+    const id=btn.dataset.id;
+    if(!state.mala)state.mala={};
+    state.mala[id]=!state.mala[id];
+    if(navigator.vibrate)navigator.vibrate(40);
+    saveState();
+    btn.classList.toggle('chk',state.mala[id]);
+    btn.textContent=state.mala[id]?'✓':'';
+    btn.closest('.mala-item').classList.toggle('done',state.mala[id]);
+    updateMalaProgress();
+  };
+  // Progresso
+  document.getElementById('mala-total').textContent=totalItems;
+  updateMalaProgress();
+}
+function updateMalaProgress(){
+  let total=0,done=0;
+  malaItems.forEach(g=>g.items.forEach(it=>{total++;if(state.mala&&state.mala[it.id])done++;}));
+  document.getElementById('mala-done').textContent=done;
+  document.getElementById('mala-total').textContent=total;
+  const pct=total?Math.round(done/total*100):0;
+  const fill=document.getElementById('mala-fill');
+  if(fill){
+    fill.style.width=pct+'%';
+    fill.className='mala-weight-fill'+(pct>90?' warn':pct===100?' over':'');
+  }
+}
+
+// ── Scroll memory por view ──
+const scrollMemory = {};
+function saveScrollPos(view){
+  const el = document.getElementById('view-'+view);
+  if(el) scrollMemory[view] = window.scrollY || el.scrollTop || 0;
+}
+function restoreScrollPos(view){
+  setTimeout(function(){
+    const saved = scrollMemory[view] || 0;
+    window.scrollTo({top: saved, behavior:'instant'});
+  }, 20);
+}
+
+// ── Swipe para baixo fecha modais e place-panel ──
+(function(){
+  let sy0=0, sx0=0, swipeEl=null;
+
+  function onTouchStart(e){
+    sy0 = e.touches[0].clientY;
+    sx0 = e.touches[0].clientX;
+    swipeEl = e.currentTarget;
+  }
+
+  function onTouchEnd(e){
+    const dy = e.changedTouches[0].clientY - sy0;
+    const dx = Math.abs(e.changedTouches[0].clientX - sx0);
+    if(dy > 70 && dx < 60){
+      // Swipe para baixo
+      if(swipeEl && swipeEl.classList.contains('bs')){
+        // Fechar o modal pai
+        const modal = swipeEl.closest('.modal');
+        if(modal) modal.classList.remove('open');
+        const apModal = swipeEl.closest('#ap-modal');
+        if(apModal) closeAddPlace();
+      }
+      if(swipeEl && swipeEl.id === 'place-panel'){
+        closePanel();
+      }
+    }
+  }
+
+  // Aplicar nos bottom sheets e place-panel após DOM pronto
+  function attachSwipe(){
+    document.querySelectorAll('.bs').forEach(function(el){
+      el.addEventListener('touchstart', onTouchStart, {passive:true});
+      el.addEventListener('touchend', onTouchEnd, {passive:true});
+    });
+    const pp = document.getElementById('place-panel');
+    if(pp){
+      pp.addEventListener('touchstart', onTouchStart, {passive:true});
+      pp.addEventListener('touchend', onTouchEnd, {passive:true});
+    }
+  }
+
+  // Reaplicar toda vez que um modal abre
+  const origOpen = window.openModal;
+  window.openModal = function(id){
+    origOpen(id);
+    setTimeout(attachSwipe, 50);
+  };
+  const origOpenAdd = window.openAddPlace;
+  window.openAddPlace = function(){
+    origOpenAdd();
+    setTimeout(attachSwipe, 50);
+  };
+
+  document.addEventListener('DOMContentLoaded', attachSwipe);
+  setTimeout(attachSwipe, 500);
+})();
+
+// ══ SWIPE NAVIGATION ══
+(function(){
+  let x0=0, y0=0, t0=0;
+  const THRESHOLD = 60;   // px minimo horizontal
+  const RESTRAINT = 80;   // px maximo vertical
+  const DURATION  = 400;  // ms maximo
+
+  document.addEventListener('touchstart', function(e){
+    const t = e.changedTouches[0];
+    x0 = t.clientX; y0 = t.clientY; t0 = Date.now();
+  }, {passive:true});
+
+  document.addEventListener('touchend', function(e){
+    const t = e.changedTouches[0];
+    const dx = t.clientX - x0;
+    const dy = t.clientY - y0;
+    const dt = Date.now() - t0;
+
+    if(dt > DURATION) return;                    // muito lento
+    if(Math.abs(dy) > RESTRAINT) return;         // muito vertical
+    if(Math.abs(dx) < THRESHOLD) return;         // muito curto
+
+    const dayActive  = document.getElementById('view-day').classList.contains('active');
+    const mapActive  = document.getElementById('view-map').classList.contains('active');
+    const panelOpen  = document.getElementById('place-panel').style.display === 'block';
+    const bsOpen     = document.querySelector('.modal.open');
+
+    if(bsOpen) return; // nao interferir com modais
+
+    if(dx > 0){
+      // Swipe direita — voltar
+      if(dayActive)  { showView('timeline'); return; }
+      if(mapActive && panelOpen){ closePanel(); return; }
+    }
+    // Swipe esquerda — reservado para futuro
+  }, {passive:true});
+})();
+
+// ══ INIT ══
+loadState().then(()=>{
+  renderChecklist();renderCountdown();refreshDayProgress();renderPlaces();
+  if(!state.mala)state.mala={};
+  const r=document.getElementById('exp-rate');if(r&&state.expRate)r.value=state.expRate;
+  // Deep link via hash
+  const hash=location.hash.replace('#','');
+  if(hash&&document.getElementById('view-'+hash))showView(hash);
+});
+</script>
+</body>
+</html>
