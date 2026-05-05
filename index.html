@@ -144,7 +144,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 /* Map */
 #view-map.active{display:block}
 #map-toolbar{
-  position:fixed;top:52px;left:0;right:0;z-index:150;
+  position:fixed;top:52px;left:0;right:0;z-index:1000;
   background:var(--white);border-bottom:1px solid var(--sand-d);
   padding:8px 12px 6px;box-shadow:0 2px 8px var(--sh);
 }
@@ -155,7 +155,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 .chips-row{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:3px}
 .chips-row::-webkit-scrollbar{display:none}
 .chip{border:1.5px solid var(--sand-d);background:var(--white);border-radius:20px;padding:4px 11px;font-family:'DM Sans',sans-serif;font-size:11px;white-space:nowrap;cursor:pointer;flex-shrink:0;min-height:28px;display:inline-flex;align-items:center;transition:all .15s;color:var(--ink-m)}
-#leaflet-map{width:100%;border-radius:0;overflow:hidden;height:calc(100dvh - 52px);min-height:300px;margin-top:0}
+#leaflet-map{width:100%;border-radius:0;overflow:hidden;height:calc(100dvh - 172px);min-height:300px;margin-top:120px}
 .lf-pin{display:flex;align-items:center;justify-content:center;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2.5px solid rgba(255,255,255,.9);box-shadow:0 2px 6px rgba(0,0,0,.28);cursor:pointer}
 .lf-inner{transform:rotate(45deg);line-height:1}
 
@@ -588,6 +588,60 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 .weather-slot-temp{font-size:13px;font-weight:700;color:var(--ink)}
 .weather-slot-rain{font-size:11px;color:#4A90D9}
 
+
+/* ── Frases Italianas ── */
+#view-frases{ padding-bottom: 80px; }
+.frases-hero{
+  background:linear-gradient(135deg,var(--ocean) 0%,#1A5276 100%);
+  color:#fff;padding:20px 16px 16px;text-align:center;
+}
+.frases-hero h2{font-size:20px;font-weight:800;margin:0 0 4px;}
+.frases-hero p{font-size:12px;opacity:.8;margin:0;}
+.frases-flag{font-size:28px;margin-bottom:8px;}
+.frase-section{padding:16px 16px 0;}
+.frase-section-title{
+  font-size:11px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.8px;
+  margin-bottom:10px;display:flex;align-items:center;gap:6px;
+}
+.frase-section-title::after{
+  content:'';flex:1;height:1px;background:var(--sand-d);
+}
+.frase-card{
+  background:var(--white);border:1px solid var(--sand-d);
+  border-radius:12px;padding:12px 14px;margin-bottom:8px;
+  display:flex;align-items:flex-start;gap:12px;
+  cursor:pointer;transition:background .15s;
+  position:relative;
+}
+.frase-card:active{background:var(--sand);}
+.frase-card.copied::after{
+  content:'Copiado!';position:absolute;right:12px;top:12px;
+  background:var(--sage);color:#fff;font-size:10px;font-weight:600;
+  padding:2px 7px;border-radius:6px;
+}
+.frase-emoji{font-size:22px;flex-shrink:0;margin-top:1px;}
+.frase-body{flex:1;}
+.frase-it{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:3px;}
+.frase-pt{font-size:12px;color:var(--muted);line-height:1.4;}
+.frase-tip{
+  font-size:11px;color:var(--terracota);font-style:italic;
+  margin-top:4px;
+}
+.frase-search-wrap{
+  padding:12px 16px 4px;
+  position:sticky;top:52px;background:var(--bg);z-index:10;
+}
+.frase-search{
+  width:100%;padding:9px 14px;border:1px solid var(--sand-d);
+  border-radius:10px;font-size:14px;background:var(--white);
+  color:var(--ink);box-sizing:border-box;
+}
+.frase-copy-hint{
+  text-align:center;font-size:11px;color:var(--muted);
+  padding:8px;margin-bottom:4px;
+}
+
 </style>
 </head>
 <body>
@@ -672,6 +726,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
   <div id="day-detail-content"></div>
 </div>
 
+
+<!-- ═══ FRASES ═══ -->
+<div id="view-frases" class="view">
+  <div class="frases-hero">
+    <div class="frases-flag">🇮🇹</div>
+    <h2>Frases que vão salvar a viagem</h2>
+    <p>Toque em qualquer frase para copiar</p>
+  </div>
+  <div class="frase-search-wrap">
+    <input class="frase-search" type="search" placeholder="🔍 Buscar frase..." oninput="filterFrases(this.value)">
+  </div>
+  <div class="frase-copy-hint">💡 Toque numa frase para copiar em italiano</div>
+  <div id="frases-list"></div>
+</div>
+
 <!-- ═══ CHECKLIST ═══ -->
 <div id="view-checklist" class="view">
   <div class="sect-title">Reservas</div>
@@ -736,6 +805,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
     </div>
   </div>
   <div id="day-detail-content"></div>
+</div>
+
+
+<!-- ═══ FRASES ═══ -->
+<div id="view-frases" class="view">
+  <div class="frases-hero">
+    <div class="frases-flag">🇮🇹</div>
+    <h2>Frases que vão salvar a viagem</h2>
+    <p>Toque em qualquer frase para copiar</p>
+  </div>
+  <div class="frase-search-wrap">
+    <input class="frase-search" type="search" placeholder="🔍 Buscar frase..." oninput="filterFrases(this.value)">
+  </div>
+  <div class="frase-copy-hint">💡 Toque numa frase para copiar em italiano</div>
+  <div id="frases-list"></div>
 </div>
 
 <!-- ═══ CHECKLIST ═══ -->
@@ -890,6 +974,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
   <button class="tab-item" onclick="showView('places')" id="tab-places"><span class="ti">📍</span><span class="tl">Lugares</span></button>
   <button class="tab-item" onclick="showView('map')" id="tab-map"><span class="ti">🗺</span><span class="tl">Mapa</span></button>
   <button class="tab-item" onclick="showView('ai')" id="tab-ai"><span class="ti">✨</span><span class="tl">IA</span></button>
+  <button class="tab-item" onclick="showView('frases')" id="tab-frases"><span class="ti">🇮🇹</span><span class="tl">Frases</span></button>
   <button class="tab-item" onclick="showView('mala')" id="tab-mala"><span class="ti">🧳</span><span class="tl">Checklist</span></button>
   <button class="tab-item" onclick="showView('expenses')" id="tab-expenses"><span class="ti">💶</span><span class="tl">Despesas</span></button>
 </div>
@@ -1038,21 +1123,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
 <script>
 // ══ STATE ══
 let state={checks:{},stopDone:{},plans:{},notes:{},reservas:{},expenses:[],expRate:6.20,customPlaces:[],editedDays:{}};
-async function loadState(){
+function loadState(){
   try{
-    const r=await window.storage.get('italia26_v5');
-    if(r){
-      const s=JSON.parse(r.value);
+    const raw=localStorage.getItem('italia26_v5');
+    if(raw){
+      const s=JSON.parse(raw);
       Object.assign(state,s);
       if(state.customPlaces)customPlaces=state.customPlaces;
       if(state.editedDays)editedDays=state.editedDays;
+      if(state.mala===undefined)state.mala={};
     }
-  }catch(e){}
+  }catch(e){console.warn('loadState error',e);}
 }
-async function saveState(){
+function saveState(){
   state.customPlaces=customPlaces;
   state.editedDays=editedDays;
-  try{await window.storage.set('italia26_v5',JSON.stringify(state))}catch(e){}
+  try{localStorage.setItem('italia26_v5',JSON.stringify(state));}catch(e){console.warn('saveState error',e);}
 }
 
 // ══ ROTEIRO EDITÁVEL ══
@@ -2987,9 +3073,140 @@ function saveQuickNote(){
 function getNoteKey(dayId, stopIdx){ return 'note_'+dayId+'_'+stopIdx; }
 function getNote(dayId, stopIdx){ return localStorage.getItem(getNoteKey(dayId,stopIdx))||''; }
 
+// ══ FRASES ITALIANAS ══
+const FRASES = [
+  // ESSENCIAIS
+  {cat:'Essenciais',emoji:'🆘',it:'Aiuto!',pt:'Socorro!',tip:'Pronúncia: ai-U-to'},
+  {cat:'Essenciais',emoji:'🙏',it:'Per favore',pt:'Por favor',tip:'Use sempre — abre muitas portas'},
+  {cat:'Essenciais',emoji:'😊',it:'Grazie mille',pt:'Muito obrigado/a',tip:'Grazie = obrigado · Mille = mil'},
+  {cat:'Essenciais',emoji:'👋',it:'Buongiorno / Buonasera',pt:'Bom dia / Boa tarde-noite',tip:'Buonasera a partir de 13h'},
+  {cat:'Essenciais',emoji:'✋',it:'Scusi',pt:'Com licença / Desculpe',tip:'Para parar alguém na rua'},
+  {cat:'Essenciais',emoji:'🤝',it:'Piacere',pt:'Prazer em conhecê-lo',tip:'Dito ao apertar a mão'},
+  {cat:'Essenciais',emoji:'👍',it:'Va bene',pt:'Tudo bem / OK',tip:'Muito usado no dia a dia'},
+  {cat:'Essenciais',emoji:'❓',it:'Non capisco',pt:'Não entendo',tip:'Diga isso e o italiano falará mais devagar'},
+  {cat:'Essenciais',emoji:'🔤',it:'Parla inglese?',pt:'Você fala inglês?'},
+  {cat:'Essenciais',emoji:'🐢',it:'Più lentamente, per favore',pt:'Mais devagar, por favor'},
+
+  // RESTAURANTE
+  {cat:'Restaurante',emoji:'🍽',it:'Un tavolo per due, per favore',pt:'Uma mesa para dois, por favor'},
+  {cat:'Restaurante',emoji:'📋',it:'Il menù, per favore',pt:'O cardápio, por favor'},
+  {cat:'Restaurante',emoji:'👆',it:'Vorrei ordinare questo piatto, per favore',pt:'Gostaria de pedir este prato, por favor'},
+  {cat:'Restaurante',emoji:'🍷',it:'Un bicchiere di vino bianco / rosso',pt:'Uma taça de vinho branco / tinto'},
+  {cat:'Restaurante',emoji:'💧',it:'Acqua naturale o frizzante?',pt:'Água com ou sem gás?',tip:'Sempre perguntam isso'},
+  {cat:'Restaurante',emoji:'🤌',it:'Com\u2019è il piatto del giorno?',pt:'Como é o prato do dia?'},
+  {cat:'Restaurante',emoji:'⭐',it:'Era tutto buonissimo!',pt:'Estava tudo delicioso!',tip:'Faça os italianos felizes'},
+  {cat:'Restaurante',emoji:'💳',it:'Il conto, per favore',pt:'A conta, por favor'},
+  {cat:'Restaurante',emoji:'💳',it:'Posso pagare con carta?',pt:'Posso pagar com cartão?'},
+  {cat:'Restaurante',emoji:'🪑',it:'Possiamo sederci fuori?',pt:'Podemos sentar do lado de fora?'},
+  {cat:'Restaurante',emoji:'🌿',it:'Sono allergico/a a...',pt:'Sou alérgico/a a...',tip:'Importante para segurança'},
+
+  // COMPRAS
+  {cat:'Compras',emoji:'💰',it:'Quanto costa questo?',pt:'Quanto custa isso?'},
+  {cat:'Compras',emoji:'🛍',it:'Posso provarlo?',pt:'Posso experimentar?'},
+  {cat:'Compras',emoji:'📏',it:'Che taglia è?',pt:'Qual é o tamanho?'},
+  {cat:'Compras',emoji:'🎨',it:'Avete altri colori?',pt:'Vocês têm outras cores?'},
+  {cat:'Compras',emoji:'🎁',it:'È un regalo — può fare una confezione regalo?',pt:'É um presente — pode embrulhar?'},
+  {cat:'Compras',emoji:'🧾',it:'Posso avere lo scontrino?',pt:'Posso ter o recibo?'},
+  {cat:'Compras',emoji:'📦',it:'Lo prendo',pt:'Vou levar'},
+
+  // TRANSPORTE
+  {cat:'Transporte',emoji:'🗺',it:'Come posso arrivare a...?',pt:'Como chego a...?'},
+  {cat:'Transporte',emoji:'🚕',it:'Mi può portare a questo indirizzo?',pt:'Pode me levar a este endereço?'},
+  {cat:'Transporte',emoji:'⏱',it:'Quanto tempo ci vuole?',pt:'Quanto tempo demora?'},
+  {cat:'Transporte',emoji:'🅿️',it:'Dov’è il parcheggio?',pt:'Onde fica o estacionamento?'},
+  {cat:'Transporte',emoji:'⛽',it:'Dov’è il benzinaio più vicino?',pt:'Onde fica o posto de gasolina mais próximo?'},
+  {cat:'Transporte',emoji:'🚢',it:'A che ora parte il traghetto per...?',pt:'A que horas sai a balsa para...?',tip:'Útil em Capri e La Maddalena'},
+  {cat:'Transporte',emoji:'🅱️',it:'Dov’è la fermata dell’autobus?',pt:'Onde é o ponto de ônibus?'},
+
+  // HOTEL
+  {cat:'Hotel',emoji:'🏨',it:'Ho una prenotazione a nome...',pt:'Tenho uma reserva no nome...'},
+  {cat:'Hotel',emoji:'🔑',it:'Posso avere la chiave della camera?',pt:'Posso ter a chave do quarto?'},
+  {cat:'Hotel',emoji:'🌅',it:'Avete una camera con vista sul mare?',pt:'Vocês têm quarto com vista para o mar?'},
+  {cat:'Hotel',emoji:'⏰',it:'A che ora è il check-out?',pt:'A que horas é o check-out?'},
+  {cat:'Hotel',emoji:'🧹',it:'Potete pulire la camera, per favore?',pt:'Podem limpar o quarto, por favor?'},
+  {cat:'Hotel',emoji:'💒',it:'Siamo novelli sposi!',pt:'Somos recém-noivos!',tip:'🤫 Guarda este para a hora certa'},
+
+  // EMERGÊNCIA
+  {cat:'Emergência',emoji:'🏥',it:'Ho bisogno di un medico',pt:'Preciso de um médico'},
+  {cat:'Emergência',emoji:'💊',it:'Dov’è la farmacia più vicina?',pt:'Onde fica a farmácia mais próxima?'},
+  {cat:'Emergência',emoji:'📞',it:'Chiami la polizia / l’ambulanza',pt:'Chame a polícia / a ambulância'},
+  {cat:'Emergência',emoji:'🪪',it:'Ho perso il passaporto',pt:'Perdi meu passaporte'},
+  {cat:'Emergência',emoji:'💳',it:'Mi hanno rubato il portafoglio',pt:'Me roubaram a carteira'},
+  {cat:'Emergência',emoji:'📍',it:'Dov’è l’ambasciata brasiliana?',pt:'Onde fica a embaixada brasileira?'},
+
+  // SARDENHA / PRAIA
+  {cat:'Praia & Mar',emoji:'⛵',it:'Vorremmo noleggiare una barca',pt:'Gostaríamos de alugar um barco'},
+  {cat:'Praia & Mar',emoji:'🤿',it:'È possibile fare snorkeling qui?',pt:'É possível fazer snorkeling aqui?'},
+  {cat:'Praia & Mar',emoji:'🌊',it:'Il mare è calmo oggi?',pt:'O mar está calmo hoje?',tip:'Crucial para o barco na Sardenha'},
+  {cat:'Praia & Mar',emoji:'☀️',it:'Che bel posto!',pt:'Que lugar lindo!'},
+  {cat:'Praia & Mar',emoji:'📸',it:'Può farci una foto?',pt:'Pode nos tirar uma foto?',tip:'Diga isso e entregue o celular'},
+
+  // ROMANCE
+  {cat:'Romance 💕',emoji:'❤️',it:'Ti amo',pt:'Te amo'},
+  {cat:'Romance 💕',emoji:'🌹',it:'Sei bellissima',pt:'Você é lindíssima',tip:'Para a Lethi'},
+  {cat:'Romance 💕',emoji:'🥂',it:'Salute!',pt:'Saúde! (brinde)',tip:'Pronúncia: sa-LU-te'},
+  {cat:'Romance 💕',emoji:'🌙',it:'Che serata romantica!',pt:'Que noite romântica!'},
+  {cat:'Romance 💕',emoji:'💍',it:'Vuoi sposarmi?',pt:'Você quer casar comigo?',tip:'🤫 A mais importante de todas'},
+];
+
+let frasesFiltered = [...FRASES];
+
+function renderFrases(list){
+  const container = document.getElementById('frases-list');
+  if(!container) return;
+  
+  const cats = [...new Set(list.map(f=>f.cat))];
+  let h = '';
+  
+  cats.forEach(function(cat){
+    const items = list.filter(f=>f.cat===cat);
+    h += '<div class="frase-section">';
+    h += '<div class="frase-section-title">'+cat+'</div>';
+    items.forEach(function(f, idx){
+      const key = cat+'_'+idx;
+      h += '<div class="frase-card" data-it="'+f.it.replace(/"/g,'&quot;')+'" onclick="copyFrase(this)">';
+      h += '<div class="frase-emoji">'+f.emoji+'</div>';
+      h += '<div class="frase-body">';
+      h += '<div class="frase-it">'+f.it+'</div>';
+      h += '<div class="frase-pt">'+f.pt+'</div>';
+      if(f.tip) h += '<div class="frase-tip">💡 '+f.tip+'</div>';
+      h += '</div>';
+      h += '</div>';
+    });
+    h += '</div>';
+  });
+  
+  if(!h) h = '<div style="text-align:center;padding:40px;color:var(--muted)">Nenhuma frase encontrada</div>';
+  container.innerHTML = h;
+}
+
+function filterFrases(q){
+  const ql = q.toLowerCase().trim();
+  if(!ql){ renderFrases(FRASES); return; }
+  const filtered = FRASES.filter(function(f){
+    return f.it.toLowerCase().includes(ql) || 
+           f.pt.toLowerCase().includes(ql) ||
+           (f.tip && f.tip.toLowerCase().includes(ql)) ||
+           f.cat.toLowerCase().includes(ql);
+  });
+  renderFrases(filtered);
+}
+
+function copyFrase(el){
+  const text = el.dataset.it;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){
+      el.classList.add('copied');
+      if(navigator.vibrate) navigator.vibrate(40);
+      setTimeout(function(){ el.classList.remove('copied'); }, 1500);
+    });
+  }
+}
+
 // ══ INIT ══
-loadState().then(()=>{
-  renderChecklist();renderCountdown();refreshDayProgress();renderPlaces();
+loadState();
+(()=>{
+  renderChecklist();renderCountdown();refreshDayProgress();renderPlaces();renderFrases(FRASES);
   if(!state.mala)state.mala={};
   const r=document.getElementById('exp-rate');if(r&&state.expRate)r.value=state.expRate;
   // Deep link via hash
