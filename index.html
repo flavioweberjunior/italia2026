@@ -609,22 +609,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--sand);color:var(--ink);mi
     </div>
     <div id="trip-countdown" style="margin-top:16px;position:relative;z-index:1;"></div>
   </div>
-  <div class="alert-urgent">
-    <div class="icon">⚡</div>
-    <div>
-      <div class="title">Coliseu — venda abre 18/04</div>
-      <div class="desc">coopculture.it · Horário 08h30 de 18/05 · Full Experience</div>
-      <div class="deadline">🗓 Urgente</div>
-    </div>
-  </div>
-  <div class="alert-urgent" style="background:linear-gradient(135deg,#5A3800,#9A6A10)">
-    <div class="icon">⚽</div>
-    <div>
-      <div class="title">Roma × Lazio — ingresso pendente</div>
-      <div class="desc">Jogo 17/05 às 15h · asroma.com / vivaticket.com</div>
-      <div class="deadline">🎟 Comprar o quanto antes</div>
-    </div>
-  </div>
+
+  
   <div class="alert-urgent" style="background:linear-gradient(135deg,#3D5535,#6B7F5E)">
     <div class="icon">🍝</div>
     <div>
@@ -1401,8 +1387,8 @@ const days={
 // ══ CHECKLIST DATA ══
 const reservas=[
   {group:'⚡ Urgente',items:[
-    {id:'coliseu',title:'Coliseu · Full Experience',desc:'coopculture.it · 08h30 de 18/05 · esgota em minutos',deadline:'urgent',deadlineText:'⚡ Venda abre 18/04',where:'coopculture.it',maps:'Colosseum+Rome'},
-    {id:'roma_lazio',title:'Roma × Lazio',desc:'Jogo 17/05 às 15h',deadline:'urgent',deadlineText:'⚡ Comprar o quanto antes',where:'asroma.com / vivaticket.com',maps:'Stadio+Olimpico+Roma'},
+    {id:'coliseu',title:'Coliseu · Full Experience ✅',desc:'coopculture.it · 08h30 de 18/05 · ✅ Comprado',deadline:'done',deadlineText:'⚡ Venda abre 18/04',where:'coopculture.it',maps:'Colosseum+Rome'},
+    {id:'roma_lazio',title:'Roma × Lazio ✅',desc:'Jogo 17/mai · ✅ Ingresso comprado',deadline:'done',deadlineText:'✅ Comprado',where:'',maps:'Stadio+Olimpico+Roma'},
     {id:'idp',title:'Permissão Internacional de Dirigir',desc:'Obrigatória na Europa junto com CNH física. Emitir no DETRAN.',deadline:'urgent',deadlineText:'⚡ Emitir antes de viajar',where:'DETRAN'},
     {id:'cnh',title:'CNH física válida',desc:'Locadoras NÃO aceitam CNH eletrônica.',deadline:'urgent',deadlineText:'⚡ Verificar agora',where:'Carteira física'},
     {id:'cartao',title:'Cartão de crédito físico internacional',desc:'AVIS e ALAMO exigem cartão físico. Sem digitais.',deadline:'urgent',deadlineText:'⚡ Confirmar antes',where:'Banco emissor'},
@@ -1974,9 +1960,9 @@ function showDay(id){
     h+='<div class="stop-hdr">';
     h+='<div class="stop-time">'+(s.time||'')+'</div>';
     h+='<div class="stop-name">'+s.name+(s.couple?' <span class="stop-couple">♡</span>':'')+'</div>';
-    const noteKey='note_'+id+'_'+si;
+    const noteKey='note_'+id+'_'+i;
     const noteVal=localStorage.getItem(noteKey)||'';
-    h+='<button class="stop-note-btn'+(noteVal?' has-note':'')+'" data-note-day="'+id+'" data-note-si="'+si+'" data-note-name="'+s.name.replace(/"/g,'&quot;')+'" title="Adicionar nota">'+(noteVal?'📝':'🖊')+'</button>';
+    h+='<button class="stop-note-btn'+(noteVal?' has-note':'')+'" data-note-day="'+id+'" data-note-si="'+i+'" data-note-name="'+s.name.replace(/"/g,'&quot;')+'" title="Adicionar nota">'+(noteVal?'📝':'🖊')+'</button>';
     h+='<button data-action="edit-stop" data-day="'+id+'" data-idx="'+i+'" class="stop-edit-btn">✏️</button>';
     h+='<button data-action="check-stop" data-day="'+id+'" data-idx="'+i+'" class="stop-chk'+(done?' chk':'')+'">'+(done?'✓':'')+'</button>';
     h+='</div>';
@@ -2972,7 +2958,7 @@ function markTodayCards(){
 // ══ NOTAS RÁPIDAS ══
 let currentNoteKey = null;
 
-function openNote(dayId, stopIdx, stopName){
+function openQuickNote(dayId, stopIdx, stopName){
   currentNoteKey = 'note_'+dayId+'_'+stopIdx;
   const existing = localStorage.getItem(currentNoteKey) || '';
   document.getElementById('note-modal-title').textContent = '📝 ' + stopName;
@@ -2985,7 +2971,7 @@ function openNote(dayId, stopIdx, stopName){
   setTimeout(function(){ ta.focus(); }, 300);
 }
 
-function saveNote(){
+function saveQuickNote(){
   if(!currentNoteKey)return;
   const val = document.getElementById('note-textarea').value.trim();
   if(val) localStorage.setItem(currentNoteKey, val);
@@ -3020,7 +3006,7 @@ loadState().then(()=>{
     <div style="font-size:12px;color:var(--muted);margin-bottom:12px" id="note-modal-sub"></div>
     <textarea id="note-textarea" maxlength="500" placeholder="O que acharam? Preço, memória, dica para próxima vez..."></textarea>
     <div id="note-char-count">0 / 500</div>
-    <button id="note-save-btn" onclick="saveNote()">Salvar nota</button>
+    <button id="note-save-btn" onclick="saveQuickNote()">Salvar nota</button>
   </div>
 </div>
 
